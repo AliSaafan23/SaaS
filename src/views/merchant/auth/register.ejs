@@ -1,0 +1,74 @@
+<div class="pos-login-shell">
+    <div class="pos-auth-wrap mpr-auth-split mpr-auth--register">
+        <%- include('../partials/lang-switcher') %>
+
+        <div class="pos-auth-card">
+            <div class="pos-auth-card-inner">
+                <div class="pos-auth-header">
+                    <h2 data-i18n="auth.register.title">إنشاء حساب تاجر</h2>
+                    <p data-i18n="auth.register.subtitle">بياناتك وبيانات الشركة</p>
+                </div>
+                <div id="registerAlert" class="alert d-none pos-alert"></div>
+                <form id="registerForm" class="pos-auth-form">
+                    <div class="row g-2">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label pos-auth-label" data-i18n="auth.register.name">اسمك</label>
+                            <input type="text" name="name" class="form-control pos-auth-input" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label pos-auth-label" data-i18n="auth.register.phone">الهاتف</label>
+                            <input type="tel" name="phone" class="form-control pos-auth-input" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label pos-auth-label" data-i18n="auth.register.email">البريد الإلكتروني</label>
+                        <input type="email" name="email" class="form-control pos-auth-input" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label pos-auth-label" data-i18n="auth.register.password">كلمة المرور</label>
+                        <input type="password" name="password" class="form-control pos-auth-input" required minlength="8">
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label pos-auth-label" data-i18n="auth.register.companyName">اسم الشركة</label>
+                        <input type="text" name="companyName" class="form-control pos-auth-input" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label pos-auth-label" data-i18n="auth.register.country">الدولة</label>
+                        <select name="countryId" id="registerCountrySelect" class="form-select pos-auth-input" required>
+                            <option value="" data-i18n="auth.register.selectCountry">اختر الدولة</option>
+                        </select>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label pos-auth-label" data-i18n="auth.register.companyPhone">هاتف الشركة</label>
+                            <input type="tel" name="companyPhone" class="form-control pos-auth-input">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label pos-auth-label" data-i18n="auth.register.companyAddress">عنوان الشركة</label>
+                            <input type="text" name="companyAddress" class="form-control pos-auth-input">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-pos-login w-100" id="registerBtn">
+                        <span data-i18n="auth.register.submit">إنشاء الحساب</span>
+                    </button>
+                </form>
+                <p class="text-center mt-4 mb-0">
+                    <span data-i18n="auth.register.hasAccount">لديك حساب؟</span>
+                    <a href="/merchant/login" data-i18n="auth.register.signIn">تسجيل الدخول</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="pos-auth-visual">
+            <div class="pos-auth-visual-inner">
+                <div class="pos-auth-visual-icon"><i class="fas fa-building"></i></div>
+                <h3 class="pos-auth-hero-title">
+                    <span class="pos-auth-hero-line" data-i18n="auth.register.heroLine1">ابدأ مع</span>
+                    <span class="pos-auth-hero-line mpr-auth-hero-accent" data-i18n="common.brand">Gold Pos</span>
+                </h3>
+                <p data-i18n="auth.register.heroDesc">سجّل شركتك في دقائق وفعّل بريدك ثم اختر خطة الاشتراك.</p>
+            </div>
+        </div>
+    </div>
+</div>

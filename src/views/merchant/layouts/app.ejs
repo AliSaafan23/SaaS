@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Pos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/vendor/css/core.css">
+    <link rel="stylesheet" href="/admin/vendor/libs/node-waves/node-waves.css">
+    <link rel="stylesheet" href="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <link rel="stylesheet" href="/merchant/css/merchant-portal.css">
+    <script src="/merchant/js/merchant-i18n.js"></script>
+    <%- typeof style !== 'undefined' ? style : '' %>
+</head>
+<body class="pos-body mpr-portal" data-page-title-key="<%= typeof pageTitleKey !== 'undefined' ? pageTitleKey : '' %>">
+    <div class="pos-app">
+        <%- include('../partials/sidebar', { page: typeof page !== 'undefined' ? page : '', merchant: typeof merchant !== 'undefined' ? merchant : null, company: typeof company !== 'undefined' ? company : null }) %>
+        <div class="pos-main">
+            <%- include('../partials/navbar', { merchant: typeof merchant !== 'undefined' ? merchant : null, company: typeof company !== 'undefined' ? company : null, pageTitleKey: typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'nav.home' }) %>
+            <main class="pos-content">
+                <%- body %>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <%- include('../partials/dialog') %>
+    <script src="/admin/vendor/libs/jquery/jquery.js"></script>
+    <script src="/admin/vendor/js/bootstrap.js"></script>
+    <script src="/admin/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="/merchant/js/merchant-api.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => MerchantI18n.init());
+    </script>
+    <button type="button" id="logoutBtn" class="d-none" aria-hidden="true" tabindex="-1"></button>
+    <%- typeof script !== 'undefined' ? script : '' %>
+</body>
+</html>

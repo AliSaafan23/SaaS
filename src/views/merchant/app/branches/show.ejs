@@ -1,0 +1,170 @@
+<%
+const b = typeof branch !== 'undefined' ? branch : null;
+%>
+<div class="mpr-dash-page" data-branch-id="<%= branchId %>">
+
+<nav class="mpr-breadcrumb">
+    <a href="/merchant/home" data-i18n="nav.home">لوحة التحكم</a>
+    <i class="fas fa-chevron-left"></i>
+    <a href="/merchant/ui/branches" data-i18n="nav.branches">الفروع</a>
+    <i class="fas fa-chevron-left"></i>
+    <span><%= b?.name || '—' %></span>
+</nav>
+
+<header class="mpr-dash-top">
+    <div class="mpr-dash-top-main">
+        <span class="mpr-dash-top-badge"><i class="fas fa-store"></i> <%= b?.name || '—' %></span>
+        <h1 class="mpr-dash-top-title" data-i18n="branchDetail.title">تفاصيل الفرع</h1>
+        <p class="mpr-dash-top-sub">
+            <% if (b?.address) { %><%= b.address %><% } %>
+            <% if (b?.phone) { %> · <%= b.phone %><% } %>
+        </p>
+    </div>
+    <div class="mpr-dash-top-actions">
+        <button type="button" class="mpr-btn-ghost" id="refreshBranchDetail">
+            <i class="fas fa-sync-alt"></i>
+            <span data-i18n="common.refresh">تحديث</span>
+        </button>
+    </div>
+</header>
+
+<div class="mpr-dash-filters">
+    <div class="mpr-dash-filters-label">
+        <i class="fas fa-sliders-h"></i>
+        <span data-i18n="dashboard.filtersTitle">فلترة البيانات</span>
+    </div>
+    <div class="mpr-dash-filters-fields">
+        <div class="mpr-field">
+            <label for="branchPeriodFrom" data-i18n="dashboard.periodFrom">من</label>
+            <input type="date" class="form-control form-control-sm" id="branchPeriodFrom">
+        </div>
+        <div class="mpr-field">
+            <label for="branchPeriodTo" data-i18n="dashboard.periodTo">إلى</label>
+            <input type="date" class="form-control form-control-sm" id="branchPeriodTo">
+        </div>
+        <button type="button" class="mpr-btn-primary mpr-btn-apply" id="applyBranchPeriod">
+            <i class="fas fa-check"></i>
+            <span data-i18n="dashboard.applyPeriod">تطبيق</span>
+        </button>
+    </div>
+</div>
+
+<div class="mpr-low-stock-banner d-none" id="branchLowStockBanner">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div>
+        <strong data-i18n="branchDetail.lowStockTitle">تنبيه مخزون</strong>
+        <p class="mb-0" id="branchLowStockText">—</p>
+    </div>
+</div>
+
+<section class="mpr-panel mpr-panel-metrics mpr-skeleton-host" id="branchMetricsPanel">
+    <div class="mpr-metrics-grid mpr-metrics-grid--4">
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-coins"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiRevenuePeriod">مبيعات الفترة</span>
+                <strong class="mpr-metric-value" id="branchRevenue">—</strong>
+                <small class="mpr-metric-meta" id="branchInvoices">—</small>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-hand-holding-usd"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiProfitPeriod">أرباح الفترة</span>
+                <strong class="mpr-metric-value mpr-metric-value--profit" id="branchProfit">—</strong>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-cash-register"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="branches.cashiersCol">الكاشيرز</span>
+                <strong class="mpr-metric-value" id="branchCashiers">—</strong>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-boxes"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="branchDetail.productsInStock">منتجات بالمخزون</span>
+                <strong class="mpr-metric-value" id="branchProductCount">—</strong>
+                <small class="mpr-metric-meta" id="branchLowStockCount">—</small>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="mpr-panel">
+    <ul class="mpr-tabs" role="tablist">
+        <li><button type="button" class="mpr-tab active" data-tab="stock" data-i18n="branchDetail.tabStock">المخزون</button></li>
+        <li><button type="button" class="mpr-tab" data-tab="customers" data-i18n="branchDetail.tabCustomers">العملاء</button></li>
+        <li><button type="button" class="mpr-tab" data-tab="suppliers" data-i18n="branchDetail.tabSuppliers">الموردين</button></li>
+        <li><button type="button" class="mpr-tab" data-tab="topProducts" data-i18n="branchDetail.tabTopProducts">أفضل المنتجات</button></li>
+    </ul>
+
+    <div class="mpr-tab-panel active mpr-skeleton-host" id="tab-stock">
+        <div class="mpr-table-wrap">
+            <table class="mpr-table" id="branchStockTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="common.name">الاسم</th>
+                        <th data-i18n="branchDetail.colBarcode">الباركود</th>
+                        <th data-i18n="branchDetail.colQuantity">الكمية</th>
+                        <th data-i18n="branchDetail.colReorder">حد إعادة الطلب</th>
+                        <th data-i18n="common.status">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mpr-tab-panel" id="tab-customers">
+        <div class="mpr-table-wrap">
+            <table class="mpr-table" id="branchCustomersTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="branchDetail.colCode">الكود</th>
+                        <th data-i18n="common.name">الاسم</th>
+                        <th data-i18n="common.phone">الهاتف</th>
+                        <th data-i18n="common.address">العنوان</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mpr-tab-panel" id="tab-suppliers">
+        <div class="mpr-table-wrap">
+            <table class="mpr-table" id="branchSuppliersTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="branchDetail.colCode">الكود</th>
+                        <th data-i18n="common.name">الاسم</th>
+                        <th data-i18n="common.phone">الهاتف</th>
+                        <th data-i18n="common.address">العنوان</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mpr-tab-panel" id="tab-topProducts">
+        <div class="mpr-table-wrap">
+            <table class="mpr-table" id="branchTopProductsTable">
+                <thead>
+                    <tr>
+                        <th data-i18n="common.name">المنتج</th>
+                        <th data-i18n="branchDetail.colQtySold">الكمية المباعة</th>
+                        <th data-i18n="dashboard.colRevenue">المبيعات</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<script src="/merchant/js/branch-detail.js"></script>

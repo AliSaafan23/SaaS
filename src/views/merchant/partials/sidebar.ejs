@@ -1,0 +1,76 @@
+<%
+const mainPages = ['home'];
+const managePages = ['branches', 'cashiers', 'sale-returns'];
+const accountPages = ['subscription', 'profile'];
+const onboardingOnlyPages = ['plans', 'payment-pending'];
+
+const isActive = (pages) => pages.includes(page);
+const companyName = company?.name || '—';
+const merchantInitial = (merchant?.name || 'M').charAt(0).toUpperCase();
+%>
+<aside class="pos-sidebar pos-sidebar--merchant" id="posSidebar">
+    <div class="mpr-sidebar-brand">
+        <div class="mpr-sidebar-brand-mark">GP</div>
+        <div class="mpr-sidebar-brand-text">
+            <strong><%= companyName %></strong>
+            <small data-i18n="common.merchantTagShort">Gold Pos — التاجر</small>
+        </div>
+    </div>
+
+    <nav class="mpr-sidebar-nav">
+        <% if (isActive(onboardingOnlyPages)) { %>
+        <p class="mpr-sidebar-group-label" data-i18n="nav.onboarding">الاشتراك</p>
+        <a href="/merchant/plans" class="mpr-sidebar-link <%= page === 'plans' ? 'active' : '' %>">
+            <i class="fas fa-crown"></i><span data-i18n="nav.plans">خطط الاشتراك</span>
+        </a>
+        <a href="/merchant/payment-pending" class="mpr-sidebar-link <%= page === 'payment-pending' ? 'active' : '' %>">
+            <i class="fas fa-hourglass-half"></i><span data-i18n="nav.paymentPending">انتظار الدفع</span>
+        </a>
+        <% } else { %>
+        <p class="mpr-sidebar-group-label" data-i18n="nav.main">الرئيسية</p>
+        <a href="/merchant/home" class="mpr-sidebar-link <%= page === 'home' ? 'active' : '' %>">
+            <i class="fas fa-chart-pie"></i><span data-i18n="nav.home">لوحة التحكم</span>
+        </a>
+
+        <p class="mpr-sidebar-group-label" data-i18n="nav.manage">إدارة المتجر</p>
+        <a href="/merchant/ui/branches" class="mpr-sidebar-link <%= page === 'branches' ? 'active' : '' %>">
+            <i class="fas fa-store"></i><span data-i18n="nav.branches">الفروع</span>
+        </a>
+        <a href="/merchant/ui/cashiers" class="mpr-sidebar-link <%= page === 'cashiers' ? 'active' : '' %>">
+            <i class="fas fa-cash-register"></i><span data-i18n="nav.cashiers">الكاشيرز</span>
+        </a>
+        <a href="/merchant/ui/sale-returns" class="mpr-sidebar-link <%= page === 'sale-returns' ? 'active' : '' %>">
+            <i class="fas fa-undo"></i><span data-i18n="nav.saleReturns">مرتجعات البيع</span>
+        </a>
+
+        <p class="mpr-sidebar-group-label" data-i18n="nav.account">الحساب</p>
+        <a href="/merchant/ui/subscription" class="mpr-sidebar-link <%= page === 'subscription' ? 'active' : '' %>">
+            <i class="fas fa-id-card"></i><span data-i18n="nav.subscription">الاشتراك</span>
+        </a>
+        <a href="/merchant/ui/profile" class="mpr-sidebar-link <%= page === 'profile' ? 'active' : '' %>">
+            <i class="fas fa-user"></i><span data-i18n="nav.profile">الملف الشخصي</span>
+        </a>
+        <% } %>
+    </nav>
+
+    <div class="mpr-sidebar-footer">
+        <div class="mpr-sidebar-user">
+            <span class="mpr-sidebar-user-avatar"><%= merchantInitial %></span>
+            <div>
+                <strong><%= merchant?.name || '—' %></strong>
+                <small><%= merchant?.email || '' %></small>
+            </div>
+        </div>
+        <button type="button" class="mpr-sidebar-logout" id="sidebarLogoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span data-i18n="common.logout">تسجيل الخروج</span>
+        </button>
+        <small class="mpr-sidebar-version"><span data-i18n="common.brand">Gold Pos</span> v1.0</small>
+    </div>
+</aside>
+
+<script>
+document.getElementById('sidebarLogoutBtn')?.addEventListener('click', () => {
+    document.getElementById('logoutBtn')?.click();
+});
+</script>

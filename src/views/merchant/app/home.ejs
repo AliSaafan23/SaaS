@@ -1,0 +1,401 @@
+<%
+const branchList = typeof branches !== 'undefined' && Array.isArray(branches) ? branches : [];
+const companyName = company?.name || '';
+%>
+<div class="mpr-dash-page">
+
+<div class="mpr-sub-banner d-none" id="subscriptionGraceBanner">
+    <div class="mpr-sub-banner-body">
+        <i class="fas fa-clock"></i>
+        <div>
+            <strong data-i18n="dashboard.graceTitle">فترة سماح بعد انتهاء الاشتراك</strong>
+            <p class="mb-0" id="subscriptionGraceText">—</p>
+        </div>
+    </div>
+    <a href="/merchant/ui/subscription" class="btn btn-sm btn-light" data-i18n="dashboard.renewNow">تجديد الآن</a>
+</div>
+
+<div class="mpr-low-stock-banner d-none" id="lowStockBanner">
+    <i class="fas fa-box-open"></i>
+    <div>
+        <strong data-i18n="dashboard.lowStockTitle">تنبيه نقص مخزون</strong>
+        <p class="mb-0" id="lowStockBannerText">—</p>
+    </div>
+    <a href="/merchant/ui/branches" class="mpr-btn-ghost mpr-btn-ghost--sm" data-i18n="dashboard.viewBranches">عرض الفروع</a>
+</div>
+
+<div class="mpr-sub-banner d-none" id="subscriptionBanner">
+    <div class="mpr-sub-banner-body">
+        <i class="fas fa-exclamation-circle"></i>
+        <div>
+            <strong id="subscriptionBannerTitle" data-i18n="dashboard.subExpiringTitle">اشتراكك على وشك الانتهاء</strong>
+            <p class="mb-0" id="subscriptionBannerText" data-i18n="dashboard.subExpiringText">جدّد اشتراكك للاستمرار في استخدام كل الميزات.</p>
+        </div>
+    </div>
+    <a href="/merchant/ui/subscription" class="btn btn-sm btn-light" data-i18n="dashboard.renewNow">تجديد الآن</a>
+</div>
+
+<header class="mpr-dash-top">
+    <div class="mpr-dash-top-main">
+        <span class="mpr-dash-top-badge"><i class="fas fa-building"></i> <%= companyName || '—' %></span>
+        <h1 class="mpr-dash-top-title" id="dashboardWelcome" data-i18n-welcome data-welcome-name="<%= merchant?.name || 'Merchant' %>">مرحباً <%= merchant?.name || 'Merchant' %></h1>
+        <p class="mpr-dash-top-sub" id="dashboardSubtitle" data-i18n="dashboard.subtitle">تابع مبيعاتك وأرباحك وفروعك في مكان واحد</p>
+    </div>
+    <div class="mpr-dash-top-actions">
+        <button type="button" class="mpr-btn-ghost" id="exportBranchesSummary">
+            <i class="fas fa-file-excel"></i>
+            <span data-i18n="dashboard.exportExcel">تصدير Excel</span>
+        </button>
+        <a href="/merchant/ui/branches" class="mpr-btn-ghost">
+            <i class="fas fa-store"></i>
+            <span data-i18n="nav.branches">الفروع</span>
+        </a>
+        <button type="button" class="mpr-btn-primary" id="refreshDashboard">
+            <i class="fas fa-sync-alt"></i>
+            <span data-i18n="common.refresh">تحديث</span>
+        </button>
+    </div>
+</header>
+
+<div class="mpr-dash-filters">
+    <div class="mpr-dash-filters-label">
+        <i class="fas fa-sliders-h"></i>
+        <span data-i18n="dashboard.filtersTitle">فلترة البيانات</span>
+    </div>
+    <div class="mpr-dash-filters-fields">
+        <div class="mpr-field">
+            <label for="globalBranchFilter" data-i18n="dashboard.filterBranch">الفرع</label>
+            <select class="form-select form-select-sm" id="globalBranchFilter">
+                <option value="" data-i18n="dashboard.allBranches">كل الفروع</option>
+                <% branchList.forEach((b) => { %>
+                <option value="<%= b.id %>"><%= b.name %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="mpr-field">
+            <label for="globalPeriodFrom" data-i18n="dashboard.periodFrom">من</label>
+            <input type="date" class="form-control form-control-sm" id="globalPeriodFrom">
+        </div>
+        <div class="mpr-field">
+            <label for="globalPeriodTo" data-i18n="dashboard.periodTo">إلى</label>
+            <input type="date" class="form-control form-control-sm" id="globalPeriodTo">
+        </div>
+        <button type="button" class="mpr-btn-primary mpr-btn-apply" id="applyGlobalPeriod">
+            <i class="fas fa-check"></i>
+            <span data-i18n="dashboard.applyPeriod">تطبيق</span>
+        </button>
+    </div>
+</div>
+
+<section class="mpr-panel mpr-panel-metrics mpr-skeleton-host" id="metricsPanel">
+    <div class="mpr-panel-head">
+        <h2 class="mpr-panel-title" data-i18n="dashboard.sectionMetrics">ملخص الأداء</h2>
+        <p class="mpr-panel-desc" data-i18n="dashboard.sectionMetricsHint">أرقام محدّثة حسب الفترة والفرع المختار</p>
+    </div>
+
+    <div class="mpr-metrics-grid" id="dashboardKpis">
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-coins"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiRevenueToday">مبيعات اليوم</span>
+                <strong class="mpr-metric-value" id="kpiRevenueToday">—</strong>
+                <small class="mpr-metric-meta" id="kpiInvoicesToday">—</small>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiRevenuePeriod">مبيعات الفترة</span>
+                <strong class="mpr-metric-value" id="kpiRevenuePeriod">—</strong>
+                <small class="mpr-metric-meta" id="kpiInvoicesPeriod">—</small>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-hand-holding-usd"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiProfitPeriod">أرباح الفترة</span>
+                <strong class="mpr-metric-value mpr-metric-value--profit" id="kpiProfitPeriod">—</strong>
+                <small class="mpr-metric-meta" id="kpiProfitHint" data-i18n="dashboard.profitHint">إيراد − تكلفة المنتجات</small>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--featured">
+            <div class="mpr-metric-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiRevenueMonth">مبيعات الشهر</span>
+                <strong class="mpr-metric-value" id="statRevenueMonth">—</strong>
+                <small class="mpr-metric-meta" data-i18n="dashboard.monthToDate">من بداية الشهر</small>
+            </div>
+        </article>
+    </div>
+
+    <div class="mpr-metrics-sub" id="accountStats">
+        <article class="mpr-metric mpr-metric--compact">
+            <div class="mpr-metric-icon mpr-metric-icon--sm"><i class="fas fa-store"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.kpiBranches">الفروع / الكاشيرز</span>
+                <strong class="mpr-metric-value mpr-metric-value--sm" id="kpiBranchesCashiers">—</strong>
+                <small class="mpr-metric-meta" id="kpiProducts">—</small>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--compact">
+            <div class="mpr-metric-icon mpr-metric-icon--sm"><i class="fas fa-crown"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="home.plan">الخطة</span>
+                <strong class="mpr-metric-value mpr-metric-value--sm mpr-metric-value--text" id="statPlan">—</strong>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--compact">
+            <div class="mpr-metric-icon mpr-metric-icon--sm"><i class="fas fa-calendar-check"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="home.expires">ينتهي في</span>
+                <strong class="mpr-metric-value mpr-metric-value--sm mpr-metric-value--text" id="statExpires">—</strong>
+            </div>
+        </article>
+        <article class="mpr-metric mpr-metric--compact">
+            <div class="mpr-metric-icon mpr-metric-icon--sm"><i class="fas fa-code-branch"></i></div>
+            <div class="mpr-metric-body">
+                <span class="mpr-metric-label" data-i18n="dashboard.branchLimit">حد الفروع</span>
+                <strong class="mpr-metric-value mpr-metric-value--sm" id="statBranchLimit">—</strong>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="mpr-panel mpr-panel-branches" id="branchesSection">
+    <div class="mpr-panel-head mpr-panel-head--row">
+        <div>
+            <h2 class="mpr-panel-title" data-i18n="dashboard.branchesOverview">نظرة على الفروع</h2>
+            <p class="mpr-panel-desc" data-i18n="dashboard.branchesOverviewHint">أداء كل فرع خلال الفترة المحددة</p>
+        </div>
+        <span class="mpr-pill" id="branchCountBadge"><%= branchList.length %> <span data-i18n="dashboard.branchUnit">فرع</span></span>
+    </div>
+    <div class="mpr-branches-grid" id="branchesGrid">
+        <% if (!branchList.length) { %>
+        <div class="mpr-branches-empty" id="branchesEmptyState">
+            <div class="mpr-branches-empty-icon"><i class="fas fa-store-slash"></i></div>
+            <p data-i18n="dashboard.noBranchesYet">لا توجد فروع بعد</p>
+            <a href="/merchant/ui/branches" class="mpr-btn-primary" data-i18n="branches.new">فرع جديد</a>
+        </div>
+        <% } else { %>
+        <% branchList.forEach((b) => { %>
+        <article class="mpr-branch-card mpr-branch-card--link" data-branch-id="<%= b.id %>" onclick="window.location.href='/merchant/ui/branches/<%= b.id %>'" role="link" tabindex="0">
+            <div class="mpr-branch-card-top">
+                <div class="mpr-branch-card-icon"><i class="fas fa-store"></i></div>
+                <div class="mpr-branch-card-info">
+                    <h3 class="mpr-branch-card-name"><%= b.name %></h3>
+                    <% if (b.address) { %><p class="mpr-branch-card-address"><%= b.address %></p><% } %>
+                </div>
+            </div>
+            <div class="mpr-branch-card-metrics">
+                <div class="mpr-branch-metric">
+                    <span data-i18n="dashboard.colRevenue">المبيعات</span>
+                    <strong data-stat="revenue">—</strong>
+                </div>
+                <div class="mpr-branch-metric">
+                    <span data-i18n="dashboard.colProfit">الربح</span>
+                    <strong data-stat="profit">—</strong>
+                </div>
+                <div class="mpr-branch-metric">
+                    <span data-i18n="dashboard.colInvoices">الفواتير</span>
+                    <strong data-stat="invoices">—</strong>
+                </div>
+            </div>
+        </article>
+        <% }); %>
+        <% } %>
+    </div>
+</section>
+
+<section class="mpr-panel mpr-panel-charts">
+    <div class="mpr-panel-head">
+        <h2 class="mpr-panel-title" data-i18n="dashboard.sectionCharts">التحليلات</h2>
+        <p class="mpr-panel-desc" data-i18n="dashboard.sectionChartsHint">كل رسم له فلتر تاريخ مستقل</p>
+    </div>
+
+    <div class="mpr-charts-grid">
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-chart-area"></i> <span data-i18n="dashboard.chartDailySales">المبيعات اليومية</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintDailySales">فواتير POS + قيمة المبيعات</p>
+                    </div>
+                    <div class="pos-chart-summary" id="dailySalesSummary"></div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="daily-sales" data-granularity="day">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="14" data-i18n="dashboard.filter14d">14 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap">
+                    <canvas id="chartDailySales"></canvas>
+                    <div class="pos-chart-empty d-none" id="dailySalesEmpty" data-i18n="dashboard.chartEmpty">لا توجد بيانات</div>
+                </div>
+            </div>
+        </div>
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-chart-line"></i> <span data-i18n="dashboard.chartProfit">الأرباح اليومية</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintProfit">الربح التقديري = مبيعات − تكلفة الشراء</p>
+                    </div>
+                    <div class="pos-chart-summary" id="profitSummary"></div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="profit" data-granularity="day">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap">
+                    <canvas id="chartProfit"></canvas>
+                    <div class="pos-chart-empty d-none" id="profitEmpty" data-i18n="dashboard.chartEmpty">لا توجد بيانات</div>
+                </div>
+            </div>
+        </div>
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-chart-pie"></i> <span data-i18n="dashboard.chartSalesByBranch">المبيعات حسب الفرع</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintSalesByBranch">توزيع إيرادات الفروع في الفترة</p>
+                    </div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="sales-by-branch" data-granularity="day" data-ignore-branch="1">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap pos-chart-wrap--donut"><canvas id="chartSalesByBranch"></canvas></div>
+            </div>
+        </div>
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-receipt"></i> <span data-i18n="dashboard.chartInvoicesByBranch">الفواتير حسب الفرع</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintInvoicesByBranch">عدد فواتير POS لكل فرع</p>
+                    </div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="invoices-by-branch" data-granularity="day" data-ignore-branch="1">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap"><canvas id="chartInvoicesByBranch"></canvas></div>
+            </div>
+        </div>
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-star"></i> <span data-i18n="dashboard.chartTopProducts">أفضل المنتجات</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintTopProducts">الأكثر مبيعاً في الفترة</p>
+                    </div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="top-products" data-granularity="day">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap"><canvas id="chartTopProducts"></canvas></div>
+            </div>
+        </div>
+        <div class="mpr-chart-box">
+            <div class="pos-card pos-chart-card pos-chart-card--pro mpr-chart-card">
+                <div class="pos-chart-card-head">
+                    <div>
+                        <h4><i class="fas fa-user-friends"></i> <span data-i18n="dashboard.chartTopCustomers">أفضل العملاء</span></h4>
+                        <p class="pos-chart-hint" data-i18n="dashboard.hintTopCustomers">الأكثر شراءً في الفترة</p>
+                    </div>
+                </div>
+                <div class="pos-chart-filter" data-chart-type="top-customers" data-granularity="day">
+                    <div class="pos-chart-filter-presets">
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
+                        <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
+                    </div>
+                    <div class="pos-chart-filter-dates">
+                        <input type="date" class="form-control form-control-sm pos-chart-from">
+                        <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
+                        <input type="date" class="form-control form-control-sm pos-chart-to">
+                        <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
+                    </div>
+                </div>
+                <div class="pos-chart-wrap"><canvas id="chartTopCustomers"></canvas></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mpr-panel mpr-panel-table">
+    <div class="mpr-panel-head mpr-panel-head--row">
+        <div>
+            <h2 class="mpr-panel-title" data-i18n="dashboard.branchesTableTitle">ملخص الفروع</h2>
+            <p class="mpr-panel-desc" data-i18n="dashboard.branchesTableHint">تفاصيل الأداء لكل فرع</p>
+        </div>
+        <a href="/merchant/ui/branches" class="mpr-btn-ghost">
+            <span data-i18n="nav.branches">الفروع</span>
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    <div class="mpr-table-wrap">
+        <table class="mpr-table" id="branchesSummaryTable">
+            <thead>
+                <tr>
+                    <th data-i18n="common.branch">الفرع</th>
+                    <th data-i18n="dashboard.colRevenue">المبيعات</th>
+                    <th data-i18n="dashboard.colProfit">الربح</th>
+                    <th data-i18n="dashboard.colInvoices">الفواتير</th>
+                    <th data-i18n="branches.cashiersCol">الكاشيرز</th>
+                    <th data-i18n="common.status">الحالة</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+
+</div>
+
+<script src="/merchant/js/merchant-dashboard.js"></script>

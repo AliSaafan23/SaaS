@@ -1,0 +1,160 @@
+<%
+const overviewPages = ['home'];
+const subscriptionPages = ['subscribers', 'subscriptions', 'countries'];
+const usersPages = ['admins', 'roles'];
+const monitoringPages = ['sales', 'inventory', 'app-installs'];
+const supportPages = ['support', 'notifications', 'audit'];
+const financePages = ['reports'];
+const systemPages = ['settings'];
+
+const isActive = (pages) => pages.includes(page);
+const groupOpen = (pages) => isActive(pages) ? 'open' : '';
+%>
+<aside class="pos-sidebar pos-sidebar--ar" id="posSidebar">
+    <div class="pos-brand-ar">
+        <div class="pos-brand-ar-mark">
+            <img src="/assets/img/logo.svg" alt="Gold Pos" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="pos-brand-fallback">GP</span>
+        </div>
+        <div class="pos-brand-ar-text">
+            <strong data-i18n="common.brand">Gold Pos</strong>
+            <small data-i18n="common.adminPanel">لوحة الإدارة</small>
+        </div>
+    </div>
+
+    <nav class="pos-nav-ar">
+        <div class="pos-nav-group open <%= groupOpen(overviewPages) %>" data-group="overview">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(overviewPages) %>">
+                <span data-i18n="nav.mainMenu">القائمة الرئيسية</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/home" class="pos-nav-item <%= page === 'home' ? 'active' : '' %>">
+                    <i class="fas fa-chart-pie" aria-hidden="true"></i>
+                    <span data-i18n="nav.overview">نظرة عامة</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(subscriptionPages) %>" data-group="subscriptions">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(subscriptionPages) %>">
+                <span data-i18n="nav.subscriptions">الاشتراكات</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/subscribers" class="pos-nav-item <%= page === 'subscribers' ? 'active' : '' %>">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                    <span data-i18n="nav.subscribers">المشتركون</span>
+                </a>
+                <a href="/dashboard/ui/subscriptions" class="pos-nav-item <%= page === 'subscriptions' ? 'active' : '' %>">
+                    <i class="fas fa-layer-group" aria-hidden="true"></i>
+                    <span data-i18n="nav.plans">خطط الأسعار</span>
+                </a>
+                <a href="/dashboard/ui/countries" class="pos-nav-item <%= page === 'countries' ? 'active' : '' %>">
+                    <i class="fas fa-globe" aria-hidden="true"></i>
+                    <span data-i18n="nav.countries">الدول</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(usersPages) %>" data-group="users">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(usersPages) %>">
+                <span data-i18n="nav.system">النظام</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/admins" class="pos-nav-item <%= page === 'admins' ? 'active' : '' %>">
+                    <i class="fas fa-user-shield" aria-hidden="true"></i>
+                    <span data-i18n="nav.admins">المشرفين</span>
+                </a>
+                <a href="/dashboard/ui/roles" class="pos-nav-item <%= page === 'roles' ? 'active' : '' %>">
+                    <i class="fas fa-key" aria-hidden="true"></i>
+                    <span data-i18n="nav.roles">الأدوار</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(monitoringPages) %>" data-group="monitoring">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(monitoringPages) %>">
+                <span data-i18n="nav.monitoring">المراقبة</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/sales" class="pos-nav-item <%= page === 'sales' ? 'active' : '' %>">
+                    <i class="fas fa-chart-line" aria-hidden="true"></i>
+                    <span data-i18n="nav.sales">المبيعات</span>
+                </a>
+                <a href="/dashboard/ui/inventory" class="pos-nav-item <%= page === 'inventory' ? 'active' : '' %>">
+                    <i class="fas fa-boxes" aria-hidden="true"></i>
+                    <span data-i18n="nav.inventory">المخزون</span>
+                </a>
+                <a href="/dashboard/ui/app-installs" class="pos-nav-item <%= page === 'app-installs' ? 'active' : '' %>">
+                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
+                    <span data-i18n="nav.appInstalls">تنزيلات التطبيق</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(financePages) %>" data-group="finance">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(financePages) %>">
+                <span data-i18n="nav.finance">المالية</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/reports" class="pos-nav-item <%= page === 'reports' ? 'active' : '' %>">
+                    <i class="fas fa-file-invoice" aria-hidden="true"></i>
+                    <span data-i18n="nav.reports">التقارير المالية</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(supportPages) %>" data-group="support">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(supportPages) %>">
+                <span data-i18n="nav.tools">الأدوات الفنية</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/support" class="pos-nav-item <%= page === 'support' ? 'active' : '' %>">
+                    <i class="fas fa-headset" aria-hidden="true"></i>
+                    <span data-i18n="nav.supportTickets">تذاكر الدعم</span>
+                    <span class="pos-nav-badge">4</span>
+                </a>
+                <a href="/dashboard/ui/audit" class="pos-nav-item <%= page === 'audit' ? 'active' : '' %>">
+                    <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+                    <span data-i18n="nav.auditLogs">سجلات النظام</span>
+                </a>
+                <a href="/dashboard/ui/notifications" class="pos-nav-item <%= page === 'notifications' ? 'active' : '' %>">
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    <span data-i18n="nav.notifications">الإشعارات</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="pos-nav-group open <%= groupOpen(systemPages) %>" data-group="system">
+            <button type="button" class="pos-nav-group-toggle" aria-expanded="<%= isActive(systemPages) %>">
+                <span data-i18n="nav.settings">الإعدادات</span>
+                <i class="fas fa-chevron-down pos-nav-chevron"></i>
+            </button>
+            <div class="pos-nav-group-items">
+                <a href="/dashboard/ui/settings" class="pos-nav-item <%= page === 'settings' ? 'active' : '' %>">
+                    <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                    <span data-i18n="nav.platformSettings">إعدادات المنصة</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pos-sidebar-footer-ar">
+        <button type="button" class="pos-sidebar-logout-ar" id="sidebarLogoutBtn">
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+            <span data-i18n="common.logout">الخروج من النظام</span>
+        </button>
+        <small class="pos-sidebar-version" data-i18n="common.version">Gold Pos v1.0</small>
+    </div>
+</aside>
+
+<script>
+document.getElementById('sidebarLogoutBtn')?.addEventListener('click', () => {
+    document.getElementById('logoutBtn')?.click();
+});
+</script>

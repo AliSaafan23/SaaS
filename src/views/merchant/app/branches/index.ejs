@@ -1,0 +1,57 @@
+<div class="pos-card">
+    <div class="pos-card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h4 class="mb-0"><i class="fas fa-store text-pos-primary"></i> <span data-i18n="branches.title">الفروع</span></h4>
+        <button class="btn btn-pos-primary btn-sm" id="addBranchBtn">
+            <i class="fas fa-plus"></i> <span data-i18n="branches.new">فرع جديد</span>
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table pos-table" id="branchesTable">
+            <thead>
+                <tr>
+                    <th data-i18n="common.name">الاسم</th>
+                    <th data-i18n="common.address">العنوان</th>
+                    <th data-i18n="common.phone">الهاتف</th>
+                    <th data-i18n="branches.cashiersCol">الكاشيرز</th>
+                    <th data-i18n="common.status">الحالة</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="branchModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="branchModalTitle" data-i18n="branches.new">فرع جديد</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="branchForm">
+                <div class="modal-body">
+                    <div id="branchAlert" class="alert d-none"></div>
+                    <input type="hidden" name="id" id="branchId">
+                    <div class="mb-3">
+                        <label class="form-label" data-i18n="branches.branchName">اسم الفرع</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" data-i18n="common.address">العنوان</label>
+                        <input type="text" name="address" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" data-i18n="common.phone">الهاتف</label>
+                        <input type="tel" name="phone" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">إلغاء</button>
+                    <button type="submit" class="btn btn-pos-primary" data-i18n="common.save">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/merchant/js/branches.js"></script>

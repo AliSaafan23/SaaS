@@ -1,0 +1,19 @@
+<footer class="pos-footer">
+    <span id="footerText" data-i18n="layout.footer" data-year="<%= new Date().getFullYear() %>">© <%= new Date().getFullYear() %> Gold Pos — لوحة التحكم</span>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('footerText');
+    if (el && window.AdminI18n) {
+        const year = el.dataset.year || new Date().getFullYear();
+        el.textContent = AdminI18n.tpl('layout.footer', { year });
+    }
+});
+document.addEventListener('admin:langchange', () => {
+    const el = document.getElementById('footerText');
+    if (el && window.AdminI18n) {
+        const year = el.dataset.year || new Date().getFullYear();
+        el.textContent = AdminI18n.tpl('layout.footer', { year });
+    }
+});
+</script>

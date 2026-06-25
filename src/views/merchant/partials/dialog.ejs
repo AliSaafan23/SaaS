@@ -1,0 +1,15 @@
+<div id="posDialogRoot" class="pos-dialog-root" hidden aria-hidden="true">
+    <div class="pos-dialog-backdrop" data-pos-dialog-close></div>
+    <div class="pos-dialog" role="dialog" aria-modal="true" aria-labelledby="posDialogTitle">
+        <div class="pos-dialog-icon" id="posDialogIcon" aria-hidden="true">
+            <i class="fas fa-question-circle"></i>
+        </div>
+        <h5 class="pos-dialog-title" id="posDialogTitle"></h5>
+        <p class="pos-dialog-message" id="posDialogMessage"></p>
+        <div class="pos-dialog-actions">
+            <button type="button" class="btn btn-pos-outline pos-dialog-cancel" id="posDialogCancel" data-i18n="common.cancel">إلغاء</button>
+            <button type="button" class="btn btn-pos-primary pos-dialog-confirm" id="posDialogConfirm" data-i18n="dialog.confirm">تأكيد</button>
+        </div>
+    </div>
+</div>
+<div id="posToastHost" class="pos-toast-host" aria-live="polite"></div>

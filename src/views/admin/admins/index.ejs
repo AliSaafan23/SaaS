@@ -1,0 +1,60 @@
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="pos-card">
+            <div class="pos-card-header">
+                <h4><i class="fas fa-user-plus text-pos-primary"></i> <span data-i18n="admins.formTitle">إضافة مشرف</span></h4>
+            </div>
+            <div id="adminFormAlert" class="alert d-none pos-alert"></div>
+            <form id="adminForm">
+                <div class="mb-3">
+                    <label class="form-label" data-i18n="admins.name">الاسم</label>
+                    <input type="text" name="name" class="form-control pos-input" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" data-i18n="admins.email">الإيميل</label>
+                    <input type="email" name="email" class="form-control pos-input" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" data-i18n="admins.phone">الهاتف</label>
+                    <input type="text" name="phone" class="form-control pos-input">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" data-i18n="admins.password">كلمة السر</label>
+                    <input type="password" name="password" class="form-control pos-input" minlength="8" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" data-i18n="admins.role">الدور</label>
+                    <select name="role_id" id="adminRoleSelect" class="form-select pos-input" required>
+                        <option value="" data-i18n="admins.selectRole">اختر الدور...</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-pos-primary w-100" data-i18n="admins.save">حفظ المشرف</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="pos-card">
+            <div class="pos-card-header d-flex justify-content-between align-items-center">
+                <h4><i class="fas fa-users text-pos-primary"></i> <span data-i18n="admins.listTitle">قائمة المشرفين</span></h4>
+                <button class="btn btn-pos-outline btn-sm" id="refreshAdmins"><i class="fas fa-sync"></i></button>
+            </div>
+            <div class="table-responsive">
+                <table class="table pos-table" id="adminsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-i18n="admins.name">الاسم</th>
+                            <th data-i18n="admins.colEmail">الإيميل</th>
+                            <th data-i18n="admins.colRole">الدور</th>
+                            <th data-i18n="admins.colStatus">الحالة</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/admin/js/admins.js"></script>

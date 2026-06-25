@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Pos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/vendor/css/core.css">
+    <link rel="stylesheet" href="/admin/vendor/libs/node-waves/node-waves.css">
+    <link rel="stylesheet" href="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <script src="/admin/js/admin-i18n.js"></script>
+    <%- typeof style !== 'undefined' ? style : '' %>
+</head>
+<body class="pos-body" data-page-title-key="<%= typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'pages.home' %>">
+    <div class="pos-app">
+        <%- include('../partials/sidebar', { page: typeof page !== 'undefined' ? page : '', user: typeof user !== 'undefined' ? user : null }) %>
+        <div class="pos-main">
+            <%- include('../partials/navbar', { user: typeof user !== 'undefined' ? user : null, pageTitleKey: typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'pages.home' }) %>
+            <main class="pos-content">
+                <%- body %>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <script src="/admin/vendor/libs/jquery/jquery.js"></script>
+    <script src="/admin/vendor/js/bootstrap.js"></script>
+    <script src="/admin/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <%- include('../partials/pos-dialog') %>
+    <script src="/admin/js/pos-api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => AdminI18n.init());
+    </script>
+    <button type="button" id="logoutBtn" class="d-none" aria-hidden="true" tabindex="-1"></button>
+    <%- typeof script !== 'undefined' ? script : '' %>
+</body>
+</html>

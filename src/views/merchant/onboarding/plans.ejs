@@ -1,0 +1,20 @@
+<div class="pos-card mb-4">
+    <div class="pos-card-header">
+        <h4 class="mb-0"><i class="fas fa-crown text-pos-primary"></i> <span data-i18n="plans.title">اختر خطة الاشتراك</span></h4>
+    </div>
+    <p class="text-muted small px-3 mb-3" data-i18n="plans.subtitle">اختر المنصة والخطة المناسبة لشركتك. بعد الاشتراك ستنتقل لرفع إيصال الدفع وبانتظار تأكيد الإدارة.</p>
+    <div class="px-3 pb-2">
+        <div class="btn-group mb-3" role="group" id="platformFilter">
+            <button type="button" class="btn btn-outline-secondary btn-sm active" data-platform="" data-i18n="common.all">الكل</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-platform="desktop" data-i18n="plans.desktop">Desktop</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-platform="mobile" data-i18n="plans.mobile">Mobile</button>
+        </div>
+    </div>
+    <div class="px-3 pb-4">
+        <div class="row g-4" id="plansGrid">
+            <div class="col-12 text-center text-muted py-5"><span class="spinner-border spinner-border-sm"></span> <span data-i18n="common.loading">جاري التحميل...</span></div>
+        </div>
+    </div>
+</div>
+<div id="plansAlert" class="alert d-none pos-alert"></div>
+<script src="/merchant/js/plans.js"></script>

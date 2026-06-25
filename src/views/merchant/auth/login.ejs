@@ -1,0 +1,67 @@
+<div class="pos-login-shell">
+    <div class="pos-auth-wrap mpr-auth-split mpr-auth--login">
+        <%- include('../partials/lang-switcher') %>
+
+        <div class="pos-auth-visual">
+            <div class="pos-auth-visual-inner">
+                <div class="pos-auth-visual-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h3 class="pos-auth-hero-title">
+                    <span class="pos-auth-hero-line" data-i18n="auth.login.heroLine1">بوابة التاجر</span>
+                    <span class="pos-auth-hero-line mpr-auth-hero-accent" data-i18n="common.brand">Gold Pos</span>
+                </h3>
+                <p data-i18n="auth.login.heroDesc">أنشئ حساب شركتك، اشترك في الخطة المناسبة، وأدر فروعك وكاشيرزك من مكان واحد.</p>
+                <ul class="pos-auth-features">
+                    <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.login.feat1">تسجيل شركة وفروع متعددة</span></li>
+                    <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.login.feat2">إدارة الكاشيرز والأجهزة</span></li>
+                    <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.login.feat3">اشتراك مرن حسب المنصة</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="pos-auth-card">
+            <div class="pos-auth-card-inner">
+                <div class="pos-auth-header">
+                    <h2 data-i18n="auth.login.title">تسجيل الدخول</h2>
+                    <p data-i18n="auth.login.subtitle">مرحباً بك، أدخل بيانات حساب التاجر</p>
+                </div>
+
+                <% if (error) { %>
+                    <div class="alert alert-danger pos-alert"><%= error %></div>
+                <% } %>
+                <div id="loginAlert" class="alert d-none pos-alert"></div>
+
+                <form id="loginForm" class="pos-auth-form">
+                    <div class="mb-3">
+                        <label class="form-label pos-auth-label" data-i18n="auth.login.email">البريد الإلكتروني</label>
+                        <div class="pos-auth-field">
+                            <i class="fas fa-at pos-auth-field-icon"></i>
+                            <input type="email" name="email" class="form-control pos-auth-input" required autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label pos-auth-label mb-0" data-i18n="auth.login.password">كلمة المرور</label>
+                            <a href="/merchant/forgot-password" class="pos-auth-forgot" data-i18n="auth.login.forgotPassword">نسيت كلمة المرور؟</a>
+                        </div>
+                        <div class="pos-auth-field">
+                            <i class="fas fa-lock pos-auth-field-icon"></i>
+                            <input type="password" name="password" id="password" class="form-control pos-auth-input" required minlength="8" autocomplete="current-password">
+                            <button type="button" class="pos-auth-eye" id="togglePassword" aria-label="toggle password"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-pos-login w-100" id="loginBtn">
+                        <span data-i18n="auth.login.submit">تسجيل الدخول</span>
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </form>
+
+                <p class="text-center mt-4 mb-0">
+                    <span data-i18n="auth.login.noAccount">ليس لديك حساب؟</span>
+                    <a href="/merchant/register" data-i18n="auth.login.createAccount">إنشاء حساب جديد</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<!-- قسم الترحيب المحسّن -->
+<!-- ضع هذا الكود في src/views/admin/index/index.ejs بدلاً من قسم Welcome Header الحالي -->
+
+<!-- استيراد CSS المخصص -->
+<link rel="stylesheet" href="../../admin/css/dashboard-custom.css" />
+
+<!-- Welcome Header المحسّن -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card welcome-seda border-0">
+      <div class="card-body p-4 p-md-5">
+        <div class="row align-items-center">
+          <div class="col-lg-7">
+            <div class="d-flex align-items-center mb-4">
+              <div class="avatar avatar-xl me-3" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(12px); border: 2px solid rgba(255,255,255,0.3);">
+                <img src="/assets/uploads/logo/seda.png" alt="SEDA" style="width: 54px; height: 54px; object-fit: contain; filter: brightness(0) invert(1);">
+              </div>
+              <div>
+                <h2 class="text-white mb-1 fw-bold" style="text-shadow: 0 2px 12px rgba(0,0,0,0.2); font-size: 2rem;">
+                  مرحباً بك في SEDA 👋
+                </h2>
+                <p class="text-white mb-0" style="opacity: 0.95; font-size: 1.05rem; text-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                  لوحة التحكم الشاملة - إدارة ذكية لكل العمليات
+                </p>
+              </div>
+            </div>
+            
+            <!-- Quick Stat Pills -->
+            <div class="d-flex flex-wrap gap-2">
+              <div class="stat-pill">
+                <i class="ti tabler-car"></i>
+                <div>
+                  <small>رحلات اليوم</small>
+                  <strong>245</strong>
+                </div>
+              </div>
+              <div class="stat-pill stat-pill-success">
+                <i class="ti tabler-point-filled pulse-icon"></i>
+                <div>
+                  <small>جارية الآن</small>
+                  <strong>32</strong>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <i class="ti tabler-steering-wheel"></i>
+                <div>
+                  <small>سائقون</small>
+                  <strong>87</strong>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <i class="ti tabler-cash"></i>
+                <div>
+                  <small>إيرادات</small>
+                  <strong>18.5k ج.م</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-5 text-lg-end mt-4 mt-lg-0">
+            <div class="d-flex flex-column gap-3">
+              <div class="d-flex gap-2 justify-content-lg-end flex-wrap">
+                <button class="btn btn-light btn-sm fw-semibold" onclick="location.reload()" style="box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                  <i class="ti tabler-refresh me-1"></i>
+                  تحديث البيانات
+                </button>
+                <button class="btn btn-light btn-sm fw-semibold" onclick="exportDashboard()" style="box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                  <i class="ti tabler-download me-1"></i>
+                  تصدير تقرير
+                </button>
+              </div>
+              <div class="text-white text-lg-end" style="opacity: 0.92;">
+                <div class="d-flex align-items-center justify-content-lg-end gap-2 mb-1">
+                  <i class="ti tabler-clock"></i>
+                  <span>آخر تحديث: <strong id="lastUpdate">الآن</strong></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-lg-end gap-2">
+                  <i class="ti tabler-calendar"></i>
+                  <span id="currentDate"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- في نهاية الصفحة قبل </div> الأخير، أضف: -->
+<script src="../../admin/js/dashboard-enhanced.js"></script>
