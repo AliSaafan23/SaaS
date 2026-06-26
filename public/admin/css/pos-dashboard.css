@@ -67,6 +67,14 @@ body.pos-body,
     box-shadow: -2px 0 12px rgba(15, 23, 42, 0.04);
 }
 
+html[dir="ltr"] .pos-sidebar {
+    right: auto;
+    left: 0;
+    border-left: none;
+    border-right: 1px solid var(--pos-sidebar-border);
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
+}
+
 .pos-brand {
     display: flex;
     align-items: center;

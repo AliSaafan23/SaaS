@@ -15,5 +15,7 @@ router.get("/ui/subscriptions", requireDashboardPage, pageController.subscriptio
 router.get("/ui/invoices", requireDashboardPage, pageController.invoices);
 router.get("/ui/payments", requireDashboardPage, pageController.payments);
 router.get("/ui/reports", requireDashboardPage, pageController.reports);
+router.get("/ui/users", requireDashboardPage, pageController.users);
+router.get("/ui/roles", requireDashboardPage, pageController.roles);
 
 export default router;

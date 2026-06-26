@@ -61,5 +61,33 @@
   "invoiceIdRequired": "Invoice ID is required",
   "amountRequired": "Amount is required",
   "invalidAmount": "Invalid amount",
-  "fromDateRequired": "From date is required"
+  "fromDateRequired": "From date is required",
+  "home": {
+    "welcome": "Welcome",
+    "desc": "Multi-tenant SaaS subscription management system with double-entry accounting.",
+    "tenant": "Company",
+    "accounting": "Accounting",
+    "accountingDesc": "Double-entry + Deferred Revenue",
+    "isolation": "Data Isolation",
+    "isolationDesc": "Secure Multi-Tenant",
+    "quickActions": "Quick Actions",
+    "plansHint": "Create Bronze and Gold plans",
+    "customersHint": "Manage company customers",
+    "subsHint": "Link customer to plan",
+    "invoicesHint": "Run monthly billing",
+    "paymentsHint": "Record payments",
+    "reportsHint": "Income Statement & Balance Sheet",
+    "totalRevenue": "Total Revenue",
+    "tenantInfo": "Company Info"
+  },
+  "status": {
+    "active": "Active",
+    "paid": "Paid",
+    "open": "Open",
+    "cancelled": "Cancelled",
+    "paused": "Paused",
+    "inactive": "Inactive",
+    "monthly": "Monthly",
+    "annual": "Annual"
+  }
 }

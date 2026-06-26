@@ -2,37 +2,77 @@
     <%- include('../../partials/page-header', { titleKey: 'customers.title', descKey: 'customers.desc' }) %>
     <div id="customerAlert" class="alert d-none saas-alert"></div>
 
-    <div class="saas-panel">
-        <div class="saas-panel__head"><h3 data-i18n="customers.add">إضافة عميل</h3></div>
-        <div class="saas-panel__body">
-            <form id="customerForm">
-                <input type="hidden" id="customerId">
-                <div class="saas-form-card">
-                    <div class="saas-form-grid">
-                        <div class="saas-field saas-col-4">
-                            <label data-i18n="customers.name">الاسم</label>
-                            <input class="form-control" name="name" required>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 id="formTitle" data-i18n="customers.add">إضافة عميل</h3>
+                </div>
+                <div class="saas-panel__body">
+                    <form id="customerForm" enctype="multipart/form-data">
+                        <input type="hidden" id="customerId">
+                        <div class="mb-3 text-center">
+                            <div class="position-relative d-inline-block">
+                                <div id="avatarWrapper" class="rounded-circle border bg-light d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; overflow: hidden;">
+                                    <img id="avatarPreview" src="" alt="Avatar" class="d-none" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <i id="avatarIcon" class="fas fa-user text-muted" style="font-size: 40px;"></i>
+                                </div>
+                                <label for="avatarInput" class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle p-0" style="width: 32px; height: 32px; line-height: 32px; cursor: pointer;">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                                <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/*">
+                            </div>
+                            <div class="small text-muted mt-2" data-i18n="customers.avatar">صورة العميل</div>
                         </div>
-                        <div class="saas-field saas-col-4">
-                            <label data-i18n="customers.email">البريد</label>
-                            <input class="form-control" name="email" type="email">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="customers.name">الاسم</label>
+                            <input class="form-control" name="name" required placeholder="John Doe">
                         </div>
-                        <div class="saas-field saas-col-4">
-                            <label data-i18n="customers.avatar">صورة العميل</label>
-                            <input class="form-control" name="avatar" type="file" accept="image/png,image/jpeg,image/webp">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="customers.email">البريد</label>
+                            <input class="form-control" name="email" type="email" placeholder="john@example.com">
                         </div>
-                        <div class="saas-field saas-col-2">
-                            <label>&nbsp;</label>
-                            <button class="btn saas-btn-primary w-100" type="submit" data-i18n="common.save">حفظ</button>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold" data-i18n="common.status">الحالة</label>
+                            <select class="form-select" name="status">
+                                <option value="active" data-i18n="status.active">نشط</option>
+                                <option value="inactive" data-i18n="status.inactive">غير نشط</option>
+                            </select>
                         </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn saas-btn-primary" type="submit" id="submitBtn">
+                                <i class="fas fa-save me-2"></i> <span data-i18n="common.save">حفظ</span>
+                            </button>
+                            <button class="btn btn-light d-none" type="button" id="cancelEdit">
+                                <span data-i18n="common.cancel">إلغاء</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 data-i18n="customers.title">قائمة العملاء</h3>
+                </div>
+                <div class="saas-panel__body p-0">
+                    <div class="saas-table-wrap border-0 rounded-0">
+                        <table class="saas-table" id="customersTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th style="width: 60px;"></th>
+                                    <th data-i18n="customers.name">الاسم</th>
+                                    <th data-i18n="customers.email">البريد</th>
+                                    <th data-i18n="common.status">الحالة</th>
+                                    <th class="text-end" data-i18n="common.actions">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
-            </form>
-            <div class="saas-table-wrap">
-                <table class="saas-table" id="customersTable">
-                    <thead><tr><th>#</th><th></th><th data-i18n="customers.name">الاسم</th><th data-i18n="customers.email">البريد</th><th data-i18n="common.actions">إجراءات</th></tr></thead>
-                    <tbody></tbody>
-                </table>
             </div>
         </div>
     </div>

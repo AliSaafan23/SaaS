@@ -20,6 +20,7 @@ src/
 ```
 
 **نقاط القوة:**
+
 - فصل واضح: الـ Controllers تفوّض لـ `helpers/accounting/*`.
 - `postJournalEntry` و `postJournalByCodes` يمركزان القيد المزدوج — تصميم سليم.
 - `ApiResponse` + `errorHandler` + i18n — نمط API موحّد.
@@ -27,12 +28,12 @@ src/
 
 ### الفجوات
 
-| المشكلة | التأثير |
-|---------|---------|
-| لا يوجد مجلد `services/` صريح — المحاسبة في `helpers/` | مقبول للمقابلة؛ الأفضل إعادة التسمية في الإنتاج |
-| لا يوجد Validation (Joi/Zod) | الـ Controllers تتحقق يدوياً بـ `if (!field)` فقط |
-| `findByPk` بدون `tenantId` بعد إنشاء اشتراك | خطر منخفض؛ لكن غير متسق |
-| بقايا كود POS (`uploadFiles`, `geo/*`) | ضوضاء — يُفضّل حذفها قبل المقابلة |
+| المشكلة                                                | التأثير                                           |
+| ------------------------------------------------------ | ------------------------------------------------- |
+| لا يوجد مجلد `services/` صريح — المحاسبة في `helpers/` | مقبول للمقابلة؛ الأفضل إعادة التسمية في الإنتاج   |
+| لا يوجد Validation (Joi/Zod)                           | الـ Controllers تتحقق يدوياً بـ `if (!field)` فقط |
+| `findByPk` بدون `tenantId` بعد إنشاء اشتراك            | خطر منخفض؛ لكن غير متسق                           |
+| بقايا كود POS (`uploadFiles`, `geo/*`)                 | ضوضاء — يُفضّل حذفها قبل المقابلة                 |
 
 **الحكم:** الهيكل **قوي لمهمة مقابلة**. منطق المجال في المكان الصحيح؛ الـ Validation وتسمية الطبقات تحتاج تحسين.
 
@@ -54,29 +55,30 @@ const tenantWhere = (req, extra = {}) => ({ tenantId: req.tenantId, ...extra });
 
 ### مراجعة عزل البيانات
 
-| المنطقة | `tenantId` مفلتر؟ | الخطر |
-|---------|-------------------|-------|
-| CRUD الخطط / العملاء | نعم | منخفض |
-| إنشاء اشتراك | يتحقق من customer + plan تحت نفس الـ tenant | منخفض |
-| الفوترة / المدفوعات / الإيراد | نعم | منخفض |
-| التقارير | نعم | منخفض |
-| `getAccountBalance` | الحساب بـ `tenantId`؛ القيود عبر `JournalEntry.tenantId` | منخفض |
-| `findByPk` بعد الإنشاء | لا | منخفض |
-| `UserToken` عند Auth | بدون `tenantId` | متوسط |
-| تسجيل الدخول بالإيميل | **بحث عام على كل الـ tenants** | **عالي** |
+| المنطقة                       | `tenantId` مفلتر؟                                        | الخطر    |
+| ----------------------------- | -------------------------------------------------------- | -------- |
+| CRUD الخطط / العملاء          | نعم                                                      | منخفض    |
+| إنشاء اشتراك                  | يتحقق من customer + plan تحت نفس الـ tenant              | منخفض    |
+| الفوترة / المدفوعات / الإيراد | نعم                                                      | منخفض    |
+| التقارير                      | نعم                                                      | منخفض    |
+| `getAccountBalance`           | الحساب بـ `tenantId`؛ القيود عبر `JournalEntry.tenantId` | منخفض    |
+| `findByPk` بعد الإنشاء        | لا                                                       | منخفض    |
+| `UserToken` عند Auth          | بدون `tenantId`                                          | متوسط    |
+| تسجيل الدخول بالإيميل         | **بحث عام على كل الـ tenants**                           | **عالي** |
 
 ### خطر عالي: الإيميل عند Login غير مربوط بالشركة
 
 ```javascript
 // src/helpers/dashboard/tenantAuth.js
 TenantUser.findOne({
-    where: { email: normalizeEmail(email), status: { [Op.ne]: 'delete' } },
+  where: { email: normalizeEmail(email), status: { [Op.ne]: "delete" } },
 });
 ```
 
 الفهرس `(tenantId, email)` يسمح **بنفس الإيميل في شركات مختلفة**. `findOne` يرجع tenant عشوائي → دخول لشركة خاطئة.
 
 **الحلول:**
+
 - إضافة `companySlug` أو `tenantId` في نموذج Login.
 - أو جعل الإيميل **فريداً عالمياً** (`UNIQUE` على `email` فقط).
 
@@ -89,9 +91,10 @@ req.tenantId = tenantId; // من JWT فقط
 لا يوجد تحقق: `user.tenantId === payload.tenantId`.
 
 **الإصلاح المقترح:**
+
 ```javascript
 if (Number(user.tenantId) !== Number(tenantId)) {
-    return errorHandler(res, 'unauthorized', 'invalidToken');
+  return errorHandler(res, "unauthorized", "invalidToken");
 }
 req.tenantId = user.tenantId; // الثقة بقاعدة البيانات وليس JWT وحده
 ```
@@ -152,11 +155,11 @@ CREATE INDEX idx_invoices_tenant_status ON tbl_invoices(tenant_id, status, reven
 
 **مشاكل:**
 
-| المشكلة | الخطورة |
-|---------|---------|
-| Race condition: لا يوجد قفل على الاشتراك؛ فوترتان متوازيتان قد تُنشئ فاتورتين | متوسط |
-| خطط `annual` تُتجاهل؛ دائماً `addMonths(1)` | متوسط |
-| لا يوجد `UNIQUE` على مستوى DB لفترة الفاتورة | متوسط |
+| المشكلة                                                                       | الخطورة |
+| ----------------------------------------------------------------------------- | ------- |
+| Race condition: لا يوجد قفل على الاشتراك؛ فوترتان متوازيتان قد تُنشئ فاتورتين | متوسط   |
+| خطط `annual` تُتجاهل؛ دائماً `addMonths(1)`                                   | متوسط   |
+| لا يوجد `UNIQUE` على مستوى DB لفترة الفاتورة                                  | متوسط   |
 
 ### تسجيل الدفعة (`paymentService.js`) — صحيح
 
@@ -172,11 +175,12 @@ CREATE INDEX idx_invoices_tenant_status ON tbl_invoices(tenant_id, status, reven
 **فجوة:** لا يوجد row lock؛ تشغيلان متوازيان قد يُكرران الاعتراف.
 
 **الإصلاح:**
+
 ```javascript
 const invoice = await Invoice.findOne({
-    where: { id, tenantId, status: 'paid', revenueRecognizedAt: null },
-    transaction,
-    lock: transaction.LOCK.UPDATE,
+  where: { id, tenantId, status: "paid", revenueRecognizedAt: null },
+  transaction,
+  lock: transaction.LOCK.UPDATE,
 });
 ```
 
@@ -193,11 +197,11 @@ const invoice = await Invoice.findOne({
 
 ### حكم المحاسبة
 
-| التدفق | قيد مزدوج | إيراد مؤجل | Transactions |
-|--------|-----------|------------|--------------|
-| الفوترة | نعم | نعم | نعم |
-| الدفع | نعم | — | نعم + قفل |
-| اعتراف الإيراد | نعم | نعم | نعم، بدون قفل |
+| التدفق         | قيد مزدوج | إيراد مؤجل | Transactions  |
+| -------------- | --------- | ---------- | ------------- |
+| الفوترة        | نعم       | نعم        | نعم           |
+| الدفع          | نعم       | —          | نعم + قفل     |
+| اعتراف الإيراد | نعم       | نعم        | نعم، بدون قفل |
 
 **الخلاصة:** المحاسبة **قوية للمقابلة**. الإصلاحات الرئيسية: أقفال التزامن، الفوترة السنوية، فهرس فريد للفواتير.
 
@@ -205,28 +209,28 @@ const invoice = await Invoice.findOne({
 
 ## 5. الأمان وأفضل الممارسات
 
-| المجال | الحالة | ملاحظات |
-|--------|--------|---------|
-| تشفير كلمة المرور | جيد | bcrypt |
-| JWT + Session + UserToken | جيد | إلغاء التوكن من السيرفر |
-| `tenantId` من الـ body | غير مستخدم | جيد |
-| Validation | ضعيف | بدون Joi/Zod |
-| CSRF | غير مفعّل على الداشبورد | وثّق المخاطرة |
-| Rate limiting | كان يحجب الداشبورد | تم إصلاحه |
-| الأسرار | defaults في الكود | يجب secrets قوية في الإنتاج |
-| Session store | MemoryStore | لا يعمل مع عدة instances على Railway |
-| SQL injection | Sequelize | خطر منخفض |
+| المجال                    | الحالة                  | ملاحظات                              |
+| ------------------------- | ----------------------- | ------------------------------------ |
+| تشفير كلمة المرور         | جيد                     | bcrypt                               |
+| JWT + Session + UserToken | جيد                     | إلغاء التوكن من السيرفر              |
+| `tenantId` من الـ body    | غير مستخدم              | جيد                                  |
+| Validation                | ضعيف                    | بدون Joi/Zod                         |
+| CSRF                      | غير مفعّل على الداشبورد | وثّق المخاطرة                        |
+| Rate limiting             | كان يحجب الداشبورد      | تم إصلاحه                            |
+| الأسرار                   | defaults في الكود       | يجب secrets قوية في الإنتاج          |
+| Session store             | MemoryStore             | لا يعمل مع عدة instances على Railway |
+| SQL injection             | Sequelize               | خطر منخفض                            |
 
 ---
 
 ## 6. الأداء وقابلية التوسع
 
-| عنق الزجاجة | التفاصيل |
-|-------------|----------|
-| `getAccountBalance` | يحمّل كل سطور القيد — O(n) |
-| حلقة الفوترة | تسلسلية — مناسبة لمئات الاشتراكات |
-| فهارس ناقصة | انظر القسم 3 |
-| Memory session | ينكسر مع replicas متعددة |
+| عنق الزجاجة         | التفاصيل                          |
+| ------------------- | --------------------------------- |
+| `getAccountBalance` | يحمّل كل سطور القيد — O(n)        |
+| حلقة الفوترة        | تسلسلية — مناسبة لمئات الاشتراكات |
+| فهارس ناقصة         | انظر القسم 3                      |
+| Memory session      | ينكسر مع replicas متعددة          |
 
 ---
 
@@ -272,14 +276,14 @@ const invoice = await Invoice.findOne({
 
 ## 9. التقييم النهائي (سياق المقابلة)
 
-| المجال | الدرجة | تعليق |
-|--------|--------|--------|
-| المعمارية | 8/10 | نظيف وعملي |
-| Multi-Tenancy | 7/10 | أنماط جيدة؛ bug الإيميل |
-| قاعدة البيانات | 8/10 | Schema قوي؛ فهارس ناقصة |
-| المحاسبة | 9/10 | قيد مزدوج وإيراد مؤجل صحيح |
-| الأمان | 6/10 | Auth جيد؛ validation و session ضعيفان |
-| جاهزية الإنتاج | 6/10 | قابل للنشر على Railway بعد إصلاحات |
+| المجال         | الدرجة | تعليق                                 |
+| -------------- | ------ | ------------------------------------- |
+| المعمارية      | 8/10   | نظيف وعملي                            |
+| Multi-Tenancy  | 7/10   | أنماط جيدة؛ bug الإيميل               |
+| قاعدة البيانات | 8/10   | Schema قوي؛ فهارس ناقصة               |
+| المحاسبة       | 9/10   | قيد مزدوج وإيراد مؤجل صحيح            |
+| الأمان         | 6/10   | Auth جيد؛ validation و session ضعيفان |
+| جاهزية الإنتاج | 6/10   | قابل للنشر على Railway بعد إصلاحات    |
 
 ---
 
@@ -289,4 +293,4 @@ const invoice = await Invoice.findOne({
 
 ---
 
-*آخر تحديث: يونيو 2026*
+_آخر تحديث: يونيو 2026_

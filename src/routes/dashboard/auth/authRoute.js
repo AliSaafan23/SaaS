@@ -1,5 +1,8 @@
 import express from "express";
-import { asyncHandler, requireDashboardSession } from "../../../middleware/index.js";
+import {
+  asyncHandler,
+  requireDashboardSession,
+} from "../../../middleware/index.js";
 import tenantAuthController from "../../../controllers/dashboard/tenantAuthController.js";
 import tenantAuthValidation from "../../../utils/validations/dashboard/tenantAuthValidation.js";
 

@@ -1,46 +1,60 @@
 <%
 const isActive = (p) => page === p;
 %>
-<aside class="pos-sidebar pos-sidebar--ar" id="posSidebar">
-    <div class="pos-brand-ar">
-        <div class="pos-brand-ar-mark"><span class="pos-brand-fallback">SB</span></div>
-        <div class="pos-brand-ar-text">
+<aside class="pos-sidebar" id="posSidebar">
+    <div class="pos-brand">
+        <div class="pos-brand-icon">
+            <% if (user?.tenant?.logo) { %>
+                <img src="<%= user.tenant.logo %>" alt="Logo">
+            <% } else { %>
+                <span class="pos-brand-fallback">SB</span>
+            <% } %>
+        </div>
+        <div class="pos-brand-text">
             <strong data-i18n="common.brand">SaaS Billing</strong>
             <small data-i18n="common.adminPanel">لوحة الشركة</small>
         </div>
     </div>
 
-    <nav class="pos-nav-ar">
-        <div class="saas-sidebar-section" data-i18n="nav.sectionMain">الرئيسية</div>
-        <a href="/dashboard/home" class="pos-nav-item <%= isActive('home') ? 'active' : '' %>">
+    <nav class="pos-nav">
+        <div class="pos-nav-section-title" data-i18n="nav.sectionMain">الرئيسية</div>
+        <a href="/dashboard/home" class="pos-nav-link <%= isActive('home') ? 'active' : '' %>">
             <i class="fas fa-chart-pie"></i><span data-i18n="nav.overview">نظرة عامة</span>
         </a>
 
-        <div class="saas-sidebar-section" data-i18n="nav.sectionSubs">الاشتراكات</div>
-        <a href="/dashboard/ui/plans" class="pos-nav-item <%= isActive('plans') ? 'active' : '' %>">
+        <div class="pos-nav-section-title" data-i18n="nav.sectionSubs">الاشتراكات</div>
+        <a href="/dashboard/ui/plans" class="pos-nav-link <%= isActive('plans') ? 'active' : '' %>">
             <i class="fas fa-layer-group"></i><span data-i18n="nav.plans">الخطط</span>
         </a>
-        <a href="/dashboard/ui/customers" class="pos-nav-item <%= isActive('customers') ? 'active' : '' %>">
+        <a href="/dashboard/ui/customers" class="pos-nav-link <%= isActive('customers') ? 'active' : '' %>">
             <i class="fas fa-users"></i><span data-i18n="nav.customers">العملاء</span>
         </a>
-        <a href="/dashboard/ui/subscriptions" class="pos-nav-item <%= isActive('subscriptions') ? 'active' : '' %>">
+        <a href="/dashboard/ui/subscriptions" class="pos-nav-link <%= isActive('subscriptions') ? 'active' : '' %>">
             <i class="fas fa-sync-alt"></i><span data-i18n="nav.subscriptions">الاشتراكات</span>
         </a>
 
-        <div class="saas-sidebar-section" data-i18n="nav.sectionBilling">الفوترة</div>
-        <a href="/dashboard/ui/invoices" class="pos-nav-item <%= isActive('invoices') ? 'active' : '' %>">
+        <div class="pos-nav-section-title" data-i18n="nav.sectionBilling">الفوترة</div>
+        <a href="/dashboard/ui/invoices" class="pos-nav-link <%= isActive('invoices') ? 'active' : '' %>">
             <i class="fas fa-file-invoice-dollar"></i><span data-i18n="nav.invoices">الفواتير</span>
         </a>
-        <a href="/dashboard/ui/payments" class="pos-nav-item <%= isActive('payments') ? 'active' : '' %>">
+        <a href="/dashboard/ui/payments" class="pos-nav-link <%= isActive('payments') ? 'active' : '' %>">
             <i class="fas fa-wallet"></i><span data-i18n="nav.payments">المدفوعات</span>
         </a>
-        <a href="/dashboard/ui/reports" class="pos-nav-item <%= isActive('reports') ? 'active' : '' %>">
+        <a href="/dashboard/ui/reports" class="pos-nav-link <%= isActive('reports') ? 'active' : '' %>">
             <i class="fas fa-chart-line"></i><span data-i18n="nav.reports">التقارير</span>
+        </a>
+
+        <div class="pos-nav-section-title" data-i18n="nav.sectionTeam">فريق العمل</div>
+        <a href="/dashboard/ui/users" class="pos-nav-link <%= isActive('users') ? 'active' : '' %>">
+            <i class="fas fa-user-shield"></i><span data-i18n="nav.users">المستخدمين</span>
+        </a>
+        <a href="/dashboard/ui/roles" class="pos-nav-link <%= isActive('roles') ? 'active' : '' %>">
+            <i class="fas fa-shield-alt"></i><span data-i18n="nav.roles">الأدوار</span>
         </a>
     </nav>
 
-    <div class="pos-sidebar-footer-ar">
-        <button type="button" class="pos-sidebar-logout-ar" id="sidebarLogoutBtn">
+    <div class="pos-sidebar-footer">
+        <button type="button" class="pos-sidebar-logout" id="sidebarLogoutBtn">
             <i class="fas fa-sign-out-alt"></i><span data-i18n="common.logout">تسجيل الخروج</span>
         </button>
     </div>
@@ -50,7 +64,7 @@ document.getElementById('sidebarLogoutBtn')?.addEventListener('click', async () 
     await PosApi.request('/auth/signout', { method: 'POST' });
     window.location.href = '/dashboard/login';
 });
-document.querySelectorAll('#posSidebar .pos-nav-item').forEach((link) => {
+document.querySelectorAll('#posSidebar .pos-nav-link').forEach((link) => {
     link.addEventListener('click', () => {
         if (window.innerWidth < 993) document.querySelector('.pos-app')?.classList.remove('sidebar-open');
     });

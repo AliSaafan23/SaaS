@@ -61,5 +61,33 @@
   "invoiceIdRequired": "معرّف الفاتورة مطلوب",
   "amountRequired": "المبلغ مطلوب",
   "invalidAmount": "مبلغ غير صالح",
-  "fromDateRequired": "تاريخ البداية مطلوب"
+  "fromDateRequired": "تاريخ البداية مطلوب",
+  "home": {
+    "welcome": "مرحباً",
+    "desc": "نظام إدارة اشتراكات SaaS متعدد الشركات مع محاسبة القيد المزدوج.",
+    "tenant": "الشركة",
+    "accounting": "المحاسبة",
+    "accountingDesc": "قيد مزدوج + إيرادات مؤجلة",
+    "isolation": "عزل البيانات",
+    "isolationDesc": "Multi-Tenant آمن",
+    "quickActions": "إجراءات سريعة",
+    "plansHint": "إنشاء خطط Bronze و Gold",
+    "customersHint": "إدارة عملاء الشركة",
+    "subsHint": "ربط العميل بالخطة",
+    "invoicesHint": "تشغيل الفوترة الشهرية",
+    "paymentsHint": "تسجيل الدفعات",
+    "reportsHint": "قائمة الدخل والميزانية",
+    "totalRevenue": "إجمالي الإيرادات",
+    "tenantInfo": "معلومات الشركة"
+  },
+  "status": {
+    "active": "نشط",
+    "paid": "مدفوع",
+    "open": "مفتوح",
+    "cancelled": "ملغي",
+    "paused": "متوقف مؤقتاً",
+    "inactive": "غير نشط",
+    "monthly": "شهري",
+    "annual": "سنوي"
+  }
 }

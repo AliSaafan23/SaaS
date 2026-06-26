@@ -1,0 +1,60 @@
+<div class="saas-page saas-animate-in">
+    <%- include('../../partials/page-header', { titleKey: 'roles.title', descKey: 'roles.desc' }) %>
+    <div id="roleAlert" class="alert d-none saas-alert"></div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 id="formTitle" data-i18n="roles.add">إضافة دور</h3>
+                </div>
+                <div class="saas-panel__body">
+                    <form id="roleForm">
+                        <input type="hidden" id="roleId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="roles.name">اسم الدور</label>
+                            <input class="form-control" name="name" required placeholder="Accountant">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold mb-2" data-i18n="roles.permissions">الصلاحيات</label>
+                            <div id="permissionsGrid" class="pos-permissions-grid">
+                                <!-- Loaded via JS -->
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn saas-btn-primary" type="submit" id="submitBtn">
+                                <i class="fas fa-save me-2"></i> <span data-i18n="common.save">حفظ</span>
+                            </button>
+                            <button class="btn btn-light d-none" type="button" id="cancelEdit">
+                                <span data-i18n="common.cancel">إلغاء</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 data-i18n="roles.title">قائمة الأدوار</h3>
+                </div>
+                <div class="saas-panel__body p-0">
+                    <div class="saas-table-wrap border-0 rounded-0">
+                        <table class="saas-table" id="rolesTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th data-i18n="roles.name">اسم الدور</th>
+                                    <th data-i18n="roles.permissions">الصلاحيات</th>
+                                    <th class="text-end" data-i18n="common.actions">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/admin/js/roles.js"></script>

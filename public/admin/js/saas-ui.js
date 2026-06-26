@@ -48,7 +48,7 @@ const SaasUI = {
         document.querySelectorAll('.saas-stagger-item').forEach((el, i) => {
             el.style.animationDelay = `${i * 0.06}s`;
         });
-        document.querySelectorAll('.pos-nav-item.active').forEach((el) => {
+        document.querySelectorAll('.pos-nav-link.active').forEach((el) => {
             el.style.animation = 'saasNavPulse 0.5s ease';
         });
     },

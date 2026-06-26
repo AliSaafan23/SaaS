@@ -1,0 +1,78 @@
+<div class="saas-page saas-animate-in">
+    <%- include('../../partials/page-header', { titleKey: 'users.title', descKey: 'users.desc' }) %>
+    <div id="userAlert" class="alert d-none saas-alert"></div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 id="formTitle" data-i18n="users.add">إضافة مستخدم</h3>
+                </div>
+                <div class="saas-panel__body">
+                    <form id="userForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="users.name">الاسم</label>
+                            <input class="form-control" name="name" required placeholder="Ali Saafan">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="users.email">البريد</label>
+                            <input class="form-control" name="email" type="email" required placeholder="ali@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="auth.passwordLabel">كلمة المرور</label>
+                            <input class="form-control" name="password" type="password" placeholder="••••••••">
+                            <small class="text-muted d-none" id="pwHint">اتركه فارغاً للاحتفاظ بكلمة المرور الحالية</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold" data-i18n="users.role">الدور</label>
+                            <select class="form-select" name="roleId" id="roleSelect" required>
+                                <option value="" disabled selected data-i18n="common.select">اختر الدور</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold" data-i18n="common.status">الحالة</label>
+                            <select class="form-select" name="status">
+                                <option value="active" data-i18n="status.active">نشط</option>
+                                <option value="block" data-i18n="status.paused">موقوف</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn saas-btn-primary" type="submit" id="submitBtn">
+                                <i class="fas fa-save me-2"></i> <span data-i18n="common.save">حفظ</span>
+                            </button>
+                            <button class="btn btn-light d-none" type="button" id="cancelEdit">
+                                <span data-i18n="common.cancel">إلغاء</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="saas-panel">
+                <div class="saas-panel__head">
+                    <h3 data-i18n="users.title">قائمة المستخدمين</h3>
+                </div>
+                <div class="saas-panel__body p-0">
+                    <div class="saas-table-wrap border-0 rounded-0">
+                        <table class="saas-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th data-i18n="users.name">الاسم</th>
+                                    <th data-i18n="users.email">البريد</th>
+                                    <th data-i18n="users.role">الدور</th>
+                                    <th data-i18n="common.status">الحالة</th>
+                                    <th class="text-end" data-i18n="common.actions">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/admin/js/users.js"></script>

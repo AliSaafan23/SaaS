@@ -13,7 +13,7 @@ import returnObject from "./returnobject.js";
 import { ApiResponse } from "../../utils/index.js";
 import { seedChartOfAccounts } from "../accounting/seedChartOfAccounts.js";
 import { generateCode } from "../../utils/common/generateCode.js";
-import { sendActivationEmail } from "../common/mailService.js";
+import { sendActivationEmail } from "../../service/mailService.js";
 import {
   DEFAULT_ROLE_SLUGS,
   OWNER_PERMISSIONS,
@@ -89,13 +89,7 @@ export const createDashboardSessionToken = async (user) => {
 };
 
 export const registerTenant = async (req) => {
-  const {
-    companyName,
-    companyEmail,
-    adminName,
-    email,
-    password,
-  } = req.body;
+  const { companyName, companyEmail, adminName, email, password } = req.body;
 
   const normalizedEmail = normalizeEmail(email);
   const normalizedCompanyEmail = companyEmail

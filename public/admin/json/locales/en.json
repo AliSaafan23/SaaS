@@ -14,7 +14,11 @@
     "error": "Error",
     "footer": "SaaS Subscription Management · Double-entry accounting",
     "langAr": "العربية",
-    "langEn": "English"
+    "langEn": "English",
+    "edit": "Edit",
+    "saveChanges": "Save Changes",
+    "confirmDelete": "Are you sure you want to delete?",
+    "status": "Status"
   },
   "pages": {
     "login": "Sign in",
@@ -26,12 +30,15 @@
     "subscriptions": "Subscriptions",
     "invoices": "Invoices",
     "payments": "Payments",
-    "reports": "Financial reports"
+    "reports": "Financial reports",
+    "users": "User management",
+    "roles": "Roles & permissions"
   },
   "nav": {
     "sectionMain": "Main",
     "sectionSubs": "Subscriptions",
     "sectionBilling": "Billing & accounting",
+    "sectionTeam": "Team",
     "overview": "Overview",
     "plans": "Plans",
     "customers": "Customers",
@@ -39,7 +46,25 @@
     "billing": "Billing",
     "invoices": "Invoices",
     "payments": "Payments",
-    "reports": "Reports"
+    "reports": "Reports",
+    "users": "Users",
+    "roles": "Roles"
+  },
+  "users": {
+    "title": "Users",
+    "desc": "Manage team members and their roles.",
+    "add": "Add user",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status"
+  },
+  "roles": {
+    "title": "Roles",
+    "desc": "Define permissions for each role (Admin, Accountant, etc).",
+    "add": "Add role",
+    "name": "Role name",
+    "permissions": "Permissions"
   },
   "auth": {
     "title": "Sign in",

@@ -1,23 +1,29 @@
 <%
 const initials = (user?.name || 'U').trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('');
 %>
-<header class="saas-topbar">
-    <div class="saas-topbar__start">
-        <button type="button" class="pos-toggle" id="sidebarToggle" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div>
-            <h1 class="saas-topbar__title" data-i18n="<%= pageTitleKey %>">Dashboard</h1>
-            <div class="saas-topbar__crumb"><%= user?.tenant?.name || '' %></div>
-        </div>
+<header class="pos-navbar">
+    <button type="button" class="pos-toggle" id="sidebarToggle" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div class="me-auto">
+        <h1 class="pos-page-title" data-i18n="<%= pageTitleKey %>">Dashboard</h1>
     </div>
-    <div class="d-flex align-items-center gap-3">
+
+    <div class="pos-navbar-actions">
         <%- include('lang-switcher', { navbar: true }) %>
-        <div class="saas-user-chip">
-            <div class="saas-user-chip__avatar"><%= initials %></div>
-            <div class="saas-user-chip__meta">
+        
+        <div class="pos-user-profile">
+            <div class="pos-user-avatar">
+                <% if (user?.avatar) { %>
+                    <img src="<%= user.avatar %>" alt="" class="rounded-circle" width="36" height="36">
+                <% } else { %>
+                    <%= initials %>
+                <% } %>
+            </div>
+            <div class="pos-user-info">
                 <strong><%= user?.name || '' %></strong>
-                <small><%= user?.email || '' %></small>
+                <small><%= user?.role?.name || 'Admin' %></small>
             </div>
         </div>
     </div>
