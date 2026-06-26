@@ -33,18 +33,18 @@ Open: http://127.0.0.1:3000/dashboard/register
 
 ## API (tenant-scoped, session cookie)
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/dashboard/auth/register` | Register tenant + admin |
-| POST | `/dashboard/auth/signin` | Login |
-| CRUD | `/dashboard/plans` | Subscription plans |
-| CRUD | `/dashboard/customers` | Customers |
-| CRUD | `/dashboard/subscriptions` | Subscriptions |
-| POST | `/dashboard/billing/run` | Monthly billing (cron simulation) |
-| POST | `/dashboard/payments` | Record payment |
-| POST | `/dashboard/revenue-recognition/run` | Recognize revenue |
-| GET | `/dashboard/reports/income-statement?from&to` | Income statement |
-| GET | `/dashboard/reports/balance-sheet?asOf` | Balance sheet |
+| Method | Path                                          | Description                       |
+| ------ | --------------------------------------------- | --------------------------------- |
+| POST   | `/dashboard/auth/register`                    | Register tenant + admin           |
+| POST   | `/dashboard/auth/signin`                      | Login                             |
+| CRUD   | `/dashboard/plans`                            | Subscription plans                |
+| CRUD   | `/dashboard/customers`                        | Customers                         |
+| CRUD   | `/dashboard/subscriptions`                    | Subscriptions                     |
+| POST   | `/dashboard/billing/run`                      | Monthly billing (cron simulation) |
+| POST   | `/dashboard/payments`                         | Record payment                    |
+| POST   | `/dashboard/revenue-recognition/run`          | Recognize revenue                 |
+| GET    | `/dashboard/reports/income-statement?from&to` | Income statement                  |
+| GET    | `/dashboard/reports/balance-sheet?asOf`       | Balance sheet                     |
 
 All protected routes require session (`credentials: include`). `tenantId` is taken from JWT only — never from client body.
 
@@ -52,11 +52,11 @@ All protected routes require session (`credentials: include`). `tenantId` is tak
 
 Every financial event goes through `postJournalEntry()` with **debit = credit** validation inside a transaction.
 
-| Event | Debit | Credit |
-|-------|-------|--------|
-| Invoice | Accounts Receivable | Deferred Revenue |
-| Payment | Cash | Accounts Receivable |
-| Revenue recognition | Deferred Revenue | Subscription Revenue |
+| Event               | Debit               | Credit               |
+| ------------------- | ------------------- | -------------------- |
+| Invoice             | Accounts Receivable | Deferred Revenue     |
+| Payment             | Cash                | Accounts Receivable  |
+| Revenue recognition | Deferred Revenue    | Subscription Revenue |
 
 ## Deploy (Railway)
 
