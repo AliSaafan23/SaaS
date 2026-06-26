@@ -11,6 +11,7 @@
     "actions": "Actions",
     "responseError": "Response error",
     "noData": "No data yet",
+    "error": "Error",
     "footer": "SaaS Subscription Management · Double-entry accounting",
     "langAr": "العربية",
     "langEn": "English"
@@ -122,7 +123,17 @@
     "subscriptionRevenue": "Subscription revenue",
     "cash": "Cash",
     "ar": "Accounts receivable",
-    "deferred": "Deferred revenue"
+    "deferred": "Deferred revenue",
+    "account": "Account",
+    "amount": "Amount",
+    "balance": "Balance",
+    "total": "Total",
+    "totalAssets": "Total assets",
+    "incomeHint": "Select a period and run to view subscription revenue",
+    "balanceHint": "Select a date to view cash, AR, and deferred revenue balances",
+    "revenueHint": "Run revenue recognition for paid invoices",
+    "revenueDone": "Revenue recognized successfully",
+    "revenueCount": "Invoices recognized"
   },
   "home": {
     "welcome": "Welcome",
@@ -130,6 +141,8 @@
     "tenant": "Company",
     "accounting": "Accounting",
     "accountingDesc": "Double-entry + deferred revenue",
+    "isolation": "Data isolation",
+    "isolationDesc": "Secure multi-tenant",
     "quickActions": "Quick actions",
     "plansHint": "Create Bronze & Gold plans",
     "customersHint": "Manage company customers",

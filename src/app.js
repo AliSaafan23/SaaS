@@ -87,7 +87,9 @@ function createApp() {
   // 5. RATE LIMITING (After CORS, before other processing)
   const rateLimitWindowMs =
     parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000;
-  const rateLimitMax = parseInt(process.env.RATE_LIMIT_MAX) || 100;
+  const rateLimitMax =
+    parseInt(process.env.RATE_LIMIT_MAX) ||
+    (process.env.NODE_ENV === "production" ? 1000 : 100);
 
   const limiter = rateLimit({
     windowMs: rateLimitWindowMs,
@@ -101,17 +103,27 @@ function createApp() {
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => {
-      // Skip rate limiting for static assets and certain paths
       const skipPaths = [
         "/favicon.ico",
         "/robots.txt",
         "/firebase-messaging-sw.js",
         "/manifest.json",
+        "/health",
         "/admin/",
         "/merchant/",
-        "/assets/", // Skip all uploaded assets (images, files, etc.)
+        "/assets/",
       ];
-      return skipPaths.some((path) => req.path.startsWith(path));
+      if (skipPaths.some((path) => req.path.startsWith(path))) {
+        return true;
+      }
+      // Dashboard pages/API are session-protected; don't throttle normal UI traffic
+      if (
+        req.path.startsWith("/dashboard") &&
+        !req.path.startsWith("/dashboard/auth")
+      ) {
+        return true;
+      }
+      return false;
     },
   });
   app.use(limiter);

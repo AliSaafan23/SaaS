@@ -35,7 +35,10 @@
     <script src="/admin/js/pos-api.js"></script>
     <script src="/admin/js/saas-ui.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => AdminI18n.init());
+        document.addEventListener('DOMContentLoaded', () => {
+            AdminI18n.init();
+            SaasUI.initPage();
+        });
     </script>
     <button type="button" id="logoutBtn" class="d-none" aria-hidden="true" tabindex="-1"></button>
     <%- typeof script !== 'undefined' ? script : '' %>

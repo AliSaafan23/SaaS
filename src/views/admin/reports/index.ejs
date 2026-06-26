@@ -1,9 +1,14 @@
-<div class="saas-page">
+<div class="saas-page saas-animate-in">
     <%- include('../../partials/page-header', { titleKey: 'reports.title', descKey: 'reports.desc' }) %>
 
     <div class="saas-report-grid">
-        <div class="saas-panel">
-            <div class="saas-panel__head"><h3 data-i18n="reports.incomeStatement">قائمة الدخل</h3></div>
+        <div class="saas-panel saas-panel--accent saas-stagger-item">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-green"><i class="fas fa-chart-bar"></i></span>
+                    <h3 data-i18n="reports.incomeStatement">قائمة الدخل</h3>
+                </div>
+            </div>
             <div class="saas-panel__body">
                 <form id="incomeForm" class="saas-form-grid mb-3">
                     <div class="saas-field saas-col-6">
@@ -15,15 +20,27 @@
                         <input class="form-control" name="to" type="date" required>
                     </div>
                     <div class="saas-field saas-col-12">
-                        <button class="btn saas-btn-primary" type="submit" data-i18n="reports.run">تشغيل</button>
+                        <button class="btn saas-btn-primary saas-btn-with-icon" type="submit">
+                            <i class="fas fa-play"></i><span data-i18n="reports.run">تشغيل</span>
+                        </button>
                     </div>
                 </form>
-                <pre id="incomeResult" class="saas-report-result">—</pre>
+                <div id="incomeResult" class="saas-report-output">
+                    <div class="saas-report-placeholder">
+                        <i class="fas fa-chart-line"></i>
+                        <p data-i18n="reports.incomeHint">اختر الفترة واضغط تشغيل لعرض إيرادات الاشتراكات</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="saas-panel">
-            <div class="saas-panel__head"><h3 data-i18n="reports.balanceSheet">الميزانية</h3></div>
+        <div class="saas-panel saas-panel--accent saas-stagger-item">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-blue"><i class="fas fa-balance-scale"></i></span>
+                    <h3 data-i18n="reports.balanceSheet">الميزانية العمومية</h3>
+                </div>
+            </div>
             <div class="saas-panel__body">
                 <form id="balanceForm" class="saas-form-grid mb-3">
                     <div class="saas-field saas-col-8">
@@ -32,16 +49,28 @@
                     </div>
                     <div class="saas-field saas-col-4">
                         <label>&nbsp;</label>
-                        <button class="btn saas-btn-primary w-100" type="submit" data-i18n="reports.run">تشغيل</button>
+                        <button class="btn saas-btn-primary saas-btn-with-icon w-100" type="submit">
+                            <i class="fas fa-play"></i><span data-i18n="reports.run">تشغيل</span>
+                        </button>
                     </div>
                 </form>
-                <pre id="balanceResult" class="saas-report-result">—</pre>
+                <div id="balanceResult" class="saas-report-output">
+                    <div class="saas-report-placeholder">
+                        <i class="fas fa-landmark"></i>
+                        <p data-i18n="reports.balanceHint">اختر التاريخ لعرض أرصدة النقدية والذمم والإيرادات المؤجلة</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="saas-panel mt-2">
-        <div class="saas-panel__head"><h3 data-i18n="reports.runRevenue">اعتراف بالإيراد</h3></div>
+    <div class="saas-panel saas-panel--accent saas-stagger-item">
+        <div class="saas-panel__head">
+            <div class="saas-panel__title-wrap">
+                <span class="saas-panel__icon pos-icon-amber"><i class="fas fa-coins"></i></span>
+                <h3 data-i18n="reports.runRevenue">اعتراف بالإيراد</h3>
+            </div>
+        </div>
         <div class="saas-panel__body">
             <form id="revenueForm" class="saas-form-grid">
                 <div class="saas-field saas-col-3">
@@ -50,10 +79,17 @@
                 </div>
                 <div class="saas-field saas-col-2">
                     <label>&nbsp;</label>
-                    <button class="btn saas-btn-soft w-100" type="submit" data-i18n="reports.run">تشغيل</button>
+                    <button class="btn saas-btn-soft saas-btn-with-icon w-100" type="submit">
+                        <i class="fas fa-check-circle"></i><span data-i18n="reports.run">تشغيل</span>
+                    </button>
                 </div>
             </form>
-            <pre id="revenueResult" class="saas-report-result mt-3">—</pre>
+            <div id="revenueResult" class="saas-report-output mt-3">
+                <div class="saas-report-placeholder saas-report-placeholder--compact">
+                    <i class="fas fa-receipt"></i>
+                    <p data-i18n="reports.revenueHint">شغّل اعتراف الإيراد للفواتير المدفوعة</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

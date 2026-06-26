@@ -11,6 +11,7 @@
     "actions": "إجراءات",
     "responseError": "خطأ في الاستجابة",
     "noData": "لا توجد بيانات بعد",
+    "error": "خطأ",
     "footer": "إدارة اشتراكات SaaS · محاسبة القيد المزدوج",
     "langAr": "العربية",
     "langEn": "English"
@@ -122,7 +123,17 @@
     "subscriptionRevenue": "إيرادات الاشتراكات",
     "cash": "النقدية",
     "ar": "الذمم المدينة",
-    "deferred": "الإيرادات المؤجلة"
+    "deferred": "الإيرادات المؤجلة",
+    "account": "الحساب",
+    "amount": "المبلغ",
+    "balance": "الرصيد",
+    "total": "الإجمالي",
+    "totalAssets": "إجمالي الأصول",
+    "incomeHint": "اختر الفترة واضغط تشغيل لعرض إيرادات الاشتراكات",
+    "balanceHint": "اختر التاريخ لعرض أرصدة النقدية والذمم والإيرادات المؤجلة",
+    "revenueHint": "شغّل اعتراف الإيراد للفواتير المدفوعة",
+    "revenueDone": "تم اعتراف الإيراد بنجاح",
+    "revenueCount": "عدد الفواتير المعترف بها"
   },
   "home": {
     "welcome": "مرحباً",
@@ -130,6 +141,8 @@
     "tenant": "الشركة",
     "accounting": "المحاسبة",
     "accountingDesc": "قيد مزدوج + إيرادات مؤجلة",
+    "isolation": "عزل البيانات",
+    "isolationDesc": "Multi-Tenant آمن",
     "quickActions": "إجراءات سريعة",
     "plansHint": "إنشاء خطط Bronze و Gold",
     "customersHint": "إدارة عملاء الشركة",
