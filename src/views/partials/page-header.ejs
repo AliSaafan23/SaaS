@@ -1,0 +1,11 @@
+<div class="saas-page-header">
+    <div>
+        <h2 data-i18n="<%= titleKey %>"><%= typeof titleFallback !== 'undefined' ? titleFallback : '' %></h2>
+        <% if (typeof descKey !== 'undefined') { %>
+            <p data-i18n="<%= descKey %>"></p>
+        <% } %>
+    </div>
+    <% if (typeof actionHtml !== 'undefined' && actionHtml) { %>
+        <div><%- actionHtml %></div>
+    <% } %>
+</div>

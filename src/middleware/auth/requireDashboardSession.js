@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { Admin, Role, UserToken } from '../../models/index.js';
+import { TenantUser, Tenant, UserToken } from '../../models/index.js';
 import { errorHandler } from '../../helpers/index.js';
 
-/**
- * Session-based dashboard auth — validates JWT in session without URL permission checks.
- * Use requirePermission (dot keys) on individual routes after this middleware.
- */
 const requireDashboardSession = async (req, res, next) => {
     try {
         const token = req.session?.token;
@@ -15,38 +11,43 @@ const requireDashboardSession = async (req, res, next) => {
 
         let payload;
         try {
-            payload = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
+            payload = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
         } catch {
             req.session.destroy(() => {});
             return errorHandler(res, 'unauthorized', 'invalidToken');
         }
 
-        const adminId = payload.sub ?? payload.subject?.id ?? payload.subject?._id;
-        if (!adminId) {
+        const userId = payload.sub;
+        const tenantId = payload.tenantId;
+        if (!userId || !tenantId) {
             return errorHandler(res, 'unauthorized', 'invalidToken');
         }
 
         const stored = await UserToken.findOne({
-            where: { userId: adminId, token, expired: false, userRef: 'Admin' },
+            where: { userId, token, expired: false, userRef: 'TenantUser' },
         });
         if (!stored) {
             return errorHandler(res, 'unauthorized', 'tokenExpired');
         }
 
-        const admin = await Admin.findByPk(adminId, {
-            include: [{ model: Role, as: 'role' }],
+        const user = await TenantUser.findByPk(userId, {
+            include: [{ model: Tenant, as: 'tenant' }],
         });
 
-        if (!admin || admin.status === 'delete') {
-            return errorHandler(res, 'unauthorized', 'adminNotFound');
+        if (!user || user.status === 'delete') {
+            return errorHandler(res, 'unauthorized', 'userNotFound');
         }
-
-        if (admin.status === 'block') {
+        if (user.status === 'block') {
             return errorHandler(res, 'blocked', 'accountStop');
         }
+        if (user.tenant?.status === 'suspended') {
+            return errorHandler(res, 'blocked', 'tenantSuspended');
+        }
 
-        req.admin = admin;
-        req.user = admin;
+        req.tenantId = tenantId;
+        req.tenantUser = user;
+        req.admin = user;
+        req.user = user;
         return next();
     } catch (err) {
         console.error('requireDashboardSession error:', err);

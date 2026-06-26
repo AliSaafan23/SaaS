@@ -1,385 +1,57 @@
-<div class="pos-dashboard-welcome mb-4">
-    <div>
-        <h2 class="mb-1" id="dashboardWelcome" data-i18n-welcome data-welcome-name="<%= user?.name || 'Admin' %>">مرحباً <%= user?.name || 'Admin' %></h2>
-        <p class="text-muted mb-0" data-i18n="dashboard.subtitle">نظرة شاملة على المشتركين والاشتراكات وأداء المنصة</p>
+<div class="saas-page">
+    <div class="saas-hero-welcome">
+        <h2><span data-i18n="home.welcome">مرحباً</span>, <%= user?.name || '' %></h2>
+        <p data-i18n="home.desc">نظام إدارة اشتراكات SaaS متعدد الشركات مع محاسبة القيد المزدوج.</p>
     </div>
-    <button type="button" class="btn btn-pos-outline btn-sm" id="refreshDashboard">
-        <i class="fas fa-sync-alt"></i> <span data-i18n="dashboard.refresh">تحديث</span>
-    </button>
-</div>
 
-<div class="pos-kpi-grid mb-4" id="statsGridTop">
-    <div class="pos-kpi-card">
-        <div class="pos-kpi-head">
-            <span class="pos-kpi-label" data-i18n="dashboard.kpiMrr">إيرادات الاشتراكات (MRR)</span>
-            <div class="pos-kpi-icon pos-icon-blue"><i class="fas fa-crown"></i></div>
+    <div class="pos-kpi-grid mb-2">
+        <div class="pos-kpi-card">
+            <div class="pos-kpi-head">
+                <span class="pos-kpi-label" data-i18n="home.tenant">الشركة</span>
+                <div class="pos-kpi-icon pos-icon-blue"><i class="fas fa-building"></i></div>
+            </div>
+            <p class="pos-kpi-value" style="font-size:1.1rem"><%= user?.tenant?.name || '—' %></p>
         </div>
-        <p class="pos-kpi-value" id="statSubscriptionMrr">—</p>
-        <span class="pos-kpi-trend neutral" id="statMrrBreakdown">Desktop — · Android —</span>
-    </div>
-    <div class="pos-kpi-card">
-        <div class="pos-kpi-head">
-            <span class="pos-kpi-label" data-i18n="dashboard.kpiSubRevenueMonth">إيرادات اشتراكات الشهر</span>
-            <div class="pos-kpi-icon pos-icon-green"><i class="fas fa-coins"></i></div>
+        <div class="pos-kpi-card">
+            <div class="pos-kpi-head">
+                <span class="pos-kpi-label" data-i18n="home.accounting">المحاسبة</span>
+                <div class="pos-kpi-icon pos-icon-green"><i class="fas fa-balance-scale"></i></div>
+            </div>
+            <p class="pos-kpi-value" style="font-size:1rem" data-i18n="home.accountingDesc">قيد مزدوج + إيرادات مؤجلة</p>
         </div>
-        <p class="pos-kpi-value" id="statSubRevenueMonth">—</p>
-        <span class="pos-kpi-trend up" id="statSubRevenueToday"><i class="fas fa-arrow-up"></i> اليوم: —</span>
     </div>
-    <div class="pos-kpi-card">
-        <div class="pos-kpi-head">
-            <span class="pos-kpi-label" data-i18n="dashboard.kpiActiveSubs">اشتراكات نشطة</span>
-            <div class="pos-kpi-icon pos-icon-cyan"><i class="fas fa-check-circle"></i></div>
-        </div>
-        <p class="pos-kpi-value" id="statActiveSubs">—</p>
-        <span class="pos-kpi-live" data-i18n="common.live">LIVE</span>
-    </div>
-    <div class="pos-kpi-card">
-        <div class="pos-kpi-head">
-            <span class="pos-kpi-label" data-i18n="dashboard.kpiTenantSalesToday">مبيعات المشتركين اليوم</span>
-            <div class="pos-kpi-icon pos-icon-amber"><i class="fas fa-shopping-bag"></i></div>
-        </div>
-        <p class="pos-kpi-value" id="statSalesToday">—</p>
-        <span class="pos-kpi-trend neutral" id="statSalesMonth">—</span>
-        <span class="pos-kpi-trend neutral d-block" id="statSalesRevenueToday"></span>
-    </div>
-</div>
 
-<div class="pos-dash-section mb-4">
-    <div class="pos-dash-section-head">
-        <div>
-            <h5 class="pos-dash-section-title" data-i18n="dashboard.sectionPlatformUsage">استخدام المنصة الحي</h5>
-            <p class="pos-dash-section-hint" data-i18n="dashboard.sectionPlatformUsageHint">فروع الشركات المشتركة، حسابات الكاشير، والأجهزة المتصلة حالياً</p>
+    <div class="saas-panel">
+        <div class="saas-panel__head">
+            <h3 data-i18n="home.quickActions">إجراءات سريعة</h3>
         </div>
-        <span class="pos-dash-live-pill"><span class="pos-kpi-live-dot"></span> <span data-i18n="common.live">LIVE</span></span>
-    </div>
-    <div class="pos-usage-panel" id="platformUsagePanel">
-        <div class="pos-usage-metric">
-            <div class="pos-usage-metric-icon pos-icon-cyan"><i class="fas fa-store"></i></div>
-            <div class="pos-usage-metric-body">
-                <span class="pos-usage-metric-value" id="usageBranches">—</span>
-                <span class="pos-usage-metric-label" data-i18n="dashboard.usageBranches">فروع</span>
-                <small class="pos-usage-metric-hint" data-i18n="dashboard.usageBranchesHint">فروع مسجّلة لدى الشركات المشتركة</small>
-            </div>
-        </div>
-        <div class="pos-usage-metric">
-            <div class="pos-usage-metric-icon pos-icon-indigo"><i class="fas fa-user-tie"></i></div>
-            <div class="pos-usage-metric-body">
-                <span class="pos-usage-metric-value" id="usageCashiers">—</span>
-                <span class="pos-usage-metric-label" data-i18n="dashboard.usageCashiers">كاشيرز</span>
-                <small class="pos-usage-metric-hint" data-i18n="dashboard.usageCashiersHint">حسابات كاشير منشأة</small>
-            </div>
-        </div>
-        <div class="pos-usage-metric">
-            <div class="pos-usage-metric-icon pos-icon-violet"><i class="fas fa-tablet-alt"></i></div>
-            <div class="pos-usage-metric-body">
-                <span class="pos-usage-metric-value" id="usageDevices">—</span>
-                <span class="pos-usage-metric-label" data-i18n="dashboard.usageDevices">أجهزة نشطة</span>
-                <small class="pos-usage-metric-hint" data-i18n="dashboard.usageDevicesHint">جلسات تسجيل دخول نشطة</small>
-            </div>
-        </div>
-        <div class="pos-usage-metric pos-usage-metric--devices">
-            <div class="pos-usage-device-split">
-                <div class="pos-usage-device-item">
-                    <i class="fas fa-desktop"></i>
-                    <span id="usageDesktopDevices">0</span>
-                    <small data-i18n="dashboard.usageDeviceDesktop">Desktop</small>
-                </div>
-                <div class="pos-usage-device-item">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span id="usageMobileDevices">0</span>
-                    <small data-i18n="dashboard.usageDeviceMobile">Mobile</small>
-                </div>
-            </div>
-            <div class="pos-usage-meta-row">
-                <span><span data-i18n="dashboard.usageActiveCashiers">كاشيرز مفعّلون</span>: <strong id="usageActiveCashiers">0</strong></span>
-                <span><span data-i18n="dashboard.usageAvgDevices">متوسط أجهزة/كاشير</span>: <strong id="usageAvgDevices">0</strong></span>
+        <div class="saas-panel__body">
+            <div class="saas-quick-grid">
+                <a href="/dashboard/ui/plans" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-violet"><i class="fas fa-layer-group"></i></div>
+                    <div><h4 data-i18n="nav.plans">الخطط</h4><p data-i18n="home.plansHint">إنشاء خطط Bronze و Gold</p></div>
+                </a>
+                <a href="/dashboard/ui/customers" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-cyan"><i class="fas fa-users"></i></div>
+                    <div><h4 data-i18n="nav.customers">العملاء</h4><p data-i18n="home.customersHint">إدارة عملاء الشركة</p></div>
+                </a>
+                <a href="/dashboard/ui/subscriptions" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-indigo"><i class="fas fa-sync-alt"></i></div>
+                    <div><h4 data-i18n="nav.subscriptions">الاشتراكات</h4><p data-i18n="home.subsHint">ربط العميل بالخطة</p></div>
+                </a>
+                <a href="/dashboard/ui/invoices" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-amber"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <div><h4 data-i18n="nav.invoices">الفواتير</h4><p data-i18n="home.invoicesHint">تشغيل الفوترة الشهرية</p></div>
+                </a>
+                <a href="/dashboard/ui/payments" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-green"><i class="fas fa-wallet"></i></div>
+                    <div><h4 data-i18n="nav.payments">المدفوعات</h4><p data-i18n="home.paymentsHint">تسجيل الدفعات</p></div>
+                </a>
+                <a href="/dashboard/ui/reports" class="saas-quick-card">
+                    <div class="saas-quick-card__icon pos-icon-rose"><i class="fas fa-chart-line"></i></div>
+                    <div><h4 data-i18n="nav.reports">التقارير</h4><p data-i18n="home.reportsHint">قائمة الدخل والميزانية</p></div>
+                </a>
             </div>
         </div>
     </div>
 </div>
-
-<div class="pos-stat-grid mb-4" id="statsGrid">
-    <div class="pos-stat-card">
-        <div class="pos-kpi-head">
-            <span class="pos-stat-label" data-i18n="dashboard.statTotalSubscribers">إجمالي المشتركين</span>
-            <div class="pos-stat-icon pos-icon-blue"><i class="fas fa-users"></i></div>
-        </div>
-        <h3 id="statTotalSubscribers">—</h3>
-    </div>
-    <div class="pos-stat-card">
-        <div class="pos-kpi-head">
-            <span class="pos-stat-label" data-i18n="dashboard.statAwaitingPayment">بانتظار الدفع</span>
-            <div class="pos-stat-icon pos-icon-amber"><i class="fas fa-hourglass-half"></i></div>
-        </div>
-        <h3 id="statAwaitingPayment">—</h3>
-    </div>
-    <div class="pos-stat-card">
-        <div class="pos-kpi-head">
-            <span class="pos-stat-label" data-i18n="dashboard.statPendingPayments">مدفوعات معلقة</span>
-            <div class="pos-stat-icon pos-icon-violet"><i class="fas fa-receipt"></i></div>
-        </div>
-        <h3 id="statPendingPayments">—</h3>
-    </div>
-    <div class="pos-stat-card">
-        <div class="pos-kpi-head">
-            <span class="pos-stat-label" data-i18n="dashboard.statSubRevenueAllTime">إيرادات اشتراكات (كل الوقت)</span>
-            <div class="pos-stat-icon pos-icon-green"><i class="fas fa-hand-holding-usd"></i></div>
-        </div>
-        <h3 id="statSubRevenueAllTime">—</h3>
-    </div>
-    <div class="pos-stat-card">
-        <div class="pos-kpi-head">
-            <span class="pos-stat-label" data-i18n="dashboard.kpiExpiredSubs">اشتراكات منتهية</span>
-            <div class="pos-stat-icon pos-icon-rose"><i class="fas fa-exclamation-triangle"></i></div>
-        </div>
-        <h3 id="statExpiredSubs">—</h3>
-    </div>
-</div>
-
-<div class="pos-dash-section mb-3">
-    <div class="pos-dash-section-head">
-        <div>
-            <h5 class="pos-dash-section-title" data-i18n="dashboard.sectionCharts">التحليلات والرسوم البيانية</h5>
-            <p class="pos-dash-section-hint" data-i18n="dashboard.sectionChartsHint">كل رسم يوضّح مصدر بياناته</p>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-chart-area text-pos-primary"></i> <span data-i18n="dashboard.chartDailySales">المبيعات اليومية</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintDailySales">عدد فواتير POS + إجمالي المبالغ — حسب الفترة المحددة</p>
-                </div>
-                <div class="pos-chart-summary" id="dailySalesSummary"></div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="daily-sales" data-granularity="day">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-days="14" data-i18n="dashboard.filter14d">14 يوم</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply" title="Apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-wrap">
-                <canvas id="chartDailySales"></canvas>
-                <div class="pos-chart-empty d-none" id="dailySalesEmpty" data-i18n="dashboard.chartEmpty">لا توجد بيانات</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-chart-line text-pos-primary"></i> <span data-i18n="dashboard.chartSubRevenue">إيرادات الاشتراكات الشهرية</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintSubRevenue">مدفوعات الاشتراك المؤكدة شهرياً</p>
-                </div>
-                <div class="pos-chart-summary" id="subRevenueSummary"></div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="subscription-revenue" data-granularity="month">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="3" data-i18n="dashboard.filter3m">3 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-months="6" data-i18n="dashboard.filter6m">6 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="12" data-i18n="dashboard.filter12m">12 شهر</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-wrap"><canvas id="chartSubscriptionRevenue"></canvas></div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-network-wired text-pos-primary"></i> <span data-i18n="dashboard.chartPlatformUsage">استخدام المنصة</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintPlatformUsageFiltered">فروع وكاشيرز وأجهزة مُضافة خلال الفترة</p>
-                </div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="platform-usage" data-granularity="day">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-days="7" data-i18n="dashboard.filter7d">7 أيام</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-days="30" data-i18n="dashboard.filter30d">30 يوم</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-days="90" data-i18n="dashboard.filter90d">90 يوم</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-usage-layout">
-                <div class="pos-chart-usage-legend" id="usageChartLegend"></div>
-                <div class="pos-chart-wrap pos-chart-wrap--donut"><canvas id="chartPlatformUsage"></canvas></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-chart-bar text-pos-primary"></i> <span data-i18n="dashboard.chartTenantSales">مبيعات المشتركين (POS)</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintTenantSales">إجمالي مبيعات نقاط البيع لكل الشركات</p>
-                </div>
-                <div class="pos-chart-summary" id="tenantSalesSummary"></div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="tenant-sales" data-granularity="month">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="3" data-i18n="dashboard.filter3m">3 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-months="6" data-i18n="dashboard.filter6m">6 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="12" data-i18n="dashboard.filter12m">12 شهر</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-wrap">
-                <canvas id="chartMonthlyRevenue"></canvas>
-                <div class="pos-chart-empty d-none" id="tenantSalesEmpty" data-i18n="dashboard.chartEmpty">لا توجد بيانات</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-chart-pie text-pos-primary"></i> <span data-i18n="dashboard.chartSubsByPlan">الاشتراكات حسب الخطة</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintSubsByPlanFiltered">اشتراكات نشطة جديدة خلال الفترة</p>
-                </div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="subscriptions-by-plan" data-granularity="month">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="3" data-i18n="dashboard.filter3m">3 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-months="6" data-i18n="dashboard.filter6m">6 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="12" data-i18n="dashboard.filter12m">12 شهر</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-wrap pos-chart-wrap--donut"><canvas id="chartSubscriptionGrowth"></canvas></div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="pos-card pos-chart-card pos-chart-card--pro">
-            <div class="pos-chart-card-head">
-                <div>
-                    <h4><i class="fas fa-layer-group text-pos-primary"></i> <span data-i18n="dashboard.chartSubsByPlatform">الاشتراكات حسب المنصة</span></h4>
-                    <p class="pos-chart-hint" data-i18n="dashboard.hintSubsByPlatformFiltered">اشتراكات وشركات جديدة خلال الفترة</p>
-                </div>
-            </div>
-            <div class="pos-chart-filter" data-chart-type="subscriptions-by-platform" data-granularity="month">
-                <div class="pos-chart-filter-presets">
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="3" data-i18n="dashboard.filter3m">3 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset active" data-months="6" data-i18n="dashboard.filter6m">6 أشهر</button>
-                    <button type="button" class="btn btn-sm pos-chart-preset" data-months="12" data-i18n="dashboard.filter12m">12 شهر</button>
-                </div>
-                <div class="pos-chart-filter-dates">
-                    <input type="date" class="form-control form-control-sm pos-chart-from" aria-label="from">
-                    <span class="pos-chart-filter-sep" data-i18n="dashboard.filterTo">إلى</span>
-                    <input type="date" class="form-control form-control-sm pos-chart-to" aria-label="to">
-                    <button type="button" class="btn btn-sm btn-pos-outline pos-chart-apply"><i class="fas fa-filter"></i></button>
-                </div>
-            </div>
-            <div class="pos-chart-wrap"><canvas id="chartSubscriptionsByPlatform"></canvas></div>
-        </div>
-    </div>
-</div>
-
-<div class="pos-card mb-4">
-    <div class="pos-card-header d-flex justify-content-between align-items-center">
-        <h4><i class="fas fa-building text-pos-primary"></i> <span data-i18n="dashboard.topCompaniesTitle">أبرز الشركات المشتركة</span></h4>
-        <a href="/dashboard/ui/subscribers" class="btn btn-pos-outline btn-sm"><span data-i18n="nav.subscribers">المشتركون</span> <i class="fas fa-arrow-left ms-1"></i></a>
-    </div>
-    <div class="table-responsive">
-        <table class="table pos-table" id="topCompaniesTable">
-            <thead>
-                <tr>
-                    <th data-i18n="subscribers.colCompany">الشركة</th>
-                    <th data-i18n="dashboard.colBranches">فروع</th>
-                    <th data-i18n="dashboard.colCashiers">كاشيرز</th>
-                    <th data-i18n="dashboard.colDevices">أجهزة</th>
-                    <th data-i18n="dashboard.colMrr">MRR</th>
-                    <th data-i18n="dashboard.colSalesMonth">مبيعات الشهر</th>
-                    <th data-i18n="dashboard.colStatus">الحالة</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-</div>
-
-<div class="pos-card">
-    <div class="pos-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h4><i class="fas fa-history text-pos-primary"></i> <span data-i18n="dashboard.activityTitle">النشاط الأخير</span></h4>
-        <ul class="nav nav-pills pos-activity-tabs" id="activityTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tabSubscribers" type="button" data-i18n="dashboard.tabNewSubs">مشتركون جدد</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabPayments" type="button" data-i18n="dashboard.tabPayments">مدفوعات</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabSales" type="button" data-i18n="dashboard.tabSales">مبيعات</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabAudit" type="button" data-i18n="dashboard.tabAudit">سجل النظام</button>
-            </li>
-        </ul>
-    </div>
-    <div class="tab-content" id="activityTabContent">
-        <div class="tab-pane fade show active" id="tabSubscribers" role="tabpanel">
-            <div class="table-responsive">
-                <table class="table pos-table" id="activitySubscribersTable">
-                    <thead><tr><th>#</th><th data-i18n="dashboard.colSubscriber">المشترك</th><th data-i18n="dashboard.colStatus">الحالة</th><th data-i18n="dashboard.colDate">التاريخ</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="tabPayments" role="tabpanel">
-            <div class="table-responsive">
-                <table class="table pos-table" id="activityPaymentsTable">
-                    <thead><tr><th>#</th><th data-i18n="dashboard.colAmount">المبلغ</th><th data-i18n="dashboard.colPlatform">المنصة</th><th data-i18n="dashboard.colDate">التاريخ</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="tabSales" role="tabpanel">
-            <div class="table-responsive">
-                <table class="table pos-table" id="activitySalesTable">
-                    <thead><tr><th>#</th><th data-i18n="dashboard.colAmount">المبلغ</th><th data-i18n="dashboard.colDate">التاريخ</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="tabAudit" role="tabpanel">
-            <div class="table-responsive">
-                <table class="table pos-table" id="activityAuditTable">
-                    <thead><tr><th data-i18n="dashboard.colUser">المستخدم</th><th data-i18n="dashboard.colAction">الإجراء</th><th data-i18n="dashboard.colModule">الوحدة</th><th data-i18n="dashboard.colDate">التاريخ</th></tr></thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="/admin/vendor/libs/chartjs/chartjs.js"></script>
-<script src="/admin/js/super-dashboard.js"></script>

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Admin, Role } from '../../models/index.js';
+import { TenantUser, Tenant, UserToken } from '../../models/index.js';
 
 const requireDashboardPage = async (req, res, next) => {
     try {
@@ -10,28 +10,37 @@ const requireDashboardPage = async (req, res, next) => {
 
         let payload;
         try {
-            payload = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key");
+            payload = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
         } catch {
             req.session.destroy(() => {});
             return res.redirect('/dashboard/login');
         }
 
-        const adminId = payload.sub ?? payload.subject?.id ?? payload.subject?._id;
-        if (!adminId) return res.redirect('/dashboard/login');
-
-        const admin = await Admin.findByPk(adminId, {
-            include: [{ model: Role, as: 'role' }],
-        });
-
-        if (!admin || admin.status === 'delete' || admin.status === 'block') {
-            req.session.destroy(() => {});
+        const userId = payload.sub;
+        const tenantId = payload.tenantId;
+        if (!userId || !tenantId) {
             return res.redirect('/dashboard/login');
         }
 
-        req.admin = admin;
-        req.user = admin;
-        res.locals.user = admin;
-        res.locals.permissions = admin.isAdmin ? ['all'] : admin.role?.permissions || [];
+        const stored = await UserToken.findOne({
+            where: { userId, token, expired: false, userRef: 'TenantUser' },
+        });
+        if (!stored) {
+            return res.redirect('/dashboard/login');
+        }
+
+        const user = await TenantUser.findByPk(userId, {
+            include: [{ model: Tenant, as: 'tenant' }],
+        });
+
+        if (!user || user.status !== 'active' || user.tenant?.status !== 'active') {
+            return res.redirect('/dashboard/login');
+        }
+
+        req.tenantId = tenantId;
+        req.tenantUser = user;
+        req.admin = user;
+        req.user = user;
         return next();
     } catch (err) {
         console.error('requireDashboardPage error:', err);

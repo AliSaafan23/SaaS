@@ -1,127 +1,42 @@
-<div class="row g-4">
-    <div class="col-lg-5">
-        <div class="pos-card">
-            <div class="pos-card-header">
-                <h4><i class="fas fa-crown text-pos-primary"></i> <span id="planFormTitle" data-i18n="plans.formAddTitle">إضافة خطة</span></h4>
-            </div>
-            <div id="planFormAlert" class="alert d-none pos-alert"></div>
-            <form id="planForm">
-                <input type="hidden" name="id" id="planId">
-                <div class="mb-3">
-                    <label class="form-label" data-i18n="plans.nameAr">الاسم (عربي)</label>
-                    <input type="text" name="nameAr" class="form-control pos-input" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" data-i18n="plans.nameEn">الاسم (إنجليزي)</label>
-                    <input type="text" name="nameEn" class="form-control pos-input">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" data-i18n="plans.descAr">الوصف (عربي)</label>
-                    <textarea name="descriptionAr" class="form-control pos-input" rows="2" data-i18n-placeholder="plans.descPlaceholder" placeholder="يظهر للمشترك عند اختيار الخطة"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" data-i18n="plans.descEn">الوصف (إنجليزي)</label>
-                    <textarea name="descriptionEn" class="form-control pos-input" rows="2"></textarea>
-                </div>
-                <div class="row g-2">
-                    <div class="col-6 mb-3">
-                        <label class="form-label" data-i18n="plans.platform">المنصة</label>
-                        <select name="platform" class="form-select pos-input" required>
-                            <option value="desktop" data-i18n="platform.desktopFull">Desktop — كمبيوتر</option>
-                            <option value="mobile" data-i18n="platform.mobileFull">Mobile — موبايل</option>
-                        </select>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <label class="form-label" data-i18n="plans.billingCycle">دورة الفوترة</label>
-                        <select name="billingCycle" class="form-select pos-input" required>
-                            <option value="monthly" data-i18n="billing.monthly">شهري</option>
-                            <option value="annual" data-i18n="billing.annual">سنوي</option>
-                            <option value="lifetime" data-i18n="billing.lifetime">مدى الحياة</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col-6 mb-3">
-                        <label class="form-label" data-i18n="plans.price">السعر (ج.م)</label>
-                        <input type="number" name="price" class="form-control pos-input" min="0" step="0.01" required>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <label class="form-label" data-i18n="plans.duration">المدة (يوم)</label>
-                        <input type="number" name="durationDays" class="form-control pos-input" min="1" value="30">
-                        <small class="text-muted" data-i18n="plans.durationLifetimeHint">للمدى الحياة اترك 36500</small>
-                    </div>
-                </div>
-                <div class="row g-2">
-                    <div class="col-6 col-md-3 mb-3">
-                        <label class="form-label" data-i18n="plans.maxBranches">أقصى فروع</label>
-                        <input type="number" name="maxBranches" class="form-control pos-input" min="1" value="1">
-                    </div>
-                    <div class="col-6 col-md-3 mb-3">
-                        <label class="form-label" data-i18n="plans.maxCashiers">أقصى كاشيرات</label>
-                        <input type="number" name="maxDevices" class="form-control pos-input" min="1" value="1" data-i18n-title="plans.maxCashiersTitle" title="عدد أجهزة الكاشير المسموح بها">
-                    </div>
-                    <div class="col-6 col-md-3 mb-3">
-                        <label class="form-label" data-i18n="plans.maxProducts">أقصى منتجات</label>
-                        <input type="number" name="maxProducts" class="form-control pos-input" min="1" value="500">
-                    </div>
-                    <div class="col-6 col-md-3 mb-3">
-                        <label class="form-label" data-i18n="plans.storageMb">تخزين MB</label>
-                        <input type="number" name="storageLimitMb" class="form-control pos-input" min="1" value="1024">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label d-block mb-2" data-i18n="plans.featuresTitle">ميزات الخطة</label>
-                    <div class="plan-features-section">
-                        <p class="text-muted small mb-2 mb-md-3" data-i18n="plans.featuresHint">اختر قالباً جاهزاً أو حدّد الميزات المدفوعة — الميزات الأساسية متاحة للجميع تلقائياً.</p>
-                        <div class="plan-features-toolbar">
-                            <span class="plan-features-count" id="planFeaturesCount">0 ميزة محددة</span>
-                            <div class="d-flex gap-1">
-                                <button type="button" class="btn btn-sm btn-pos-outline" id="selectAllPaidFeatures" data-i18n="plans.selectAll">تحديد الكل</button>
-                                <button type="button" class="btn btn-sm btn-pos-outline" id="clearPaidFeatures" data-i18n="plans.clearAll">إلغاء الكل</button>
-                            </div>
+<div class="saas-page">
+    <%- include('../../partials/page-header', { titleKey: 'subscriptions.title', descKey: 'subscriptions.desc' }) %>
+    <div id="subAlert" class="alert d-none saas-alert"></div>
+
+    <div class="saas-panel">
+        <div class="saas-panel__head"><h3 data-i18n="subscriptions.add">اشتراك جديد</h3></div>
+        <div class="saas-panel__body">
+            <form id="subForm">
+                <div class="saas-form-card">
+                    <div class="saas-form-grid">
+                        <div class="saas-field saas-col-3">
+                            <label data-i18n="subscriptions.customer">العميل</label>
+                            <select class="form-select" name="customerId" id="subCustomer" required></select>
                         </div>
-                        <div class="plan-preset-grid" id="planPresetGrid"></div>
-                        <div class="plan-free-compact" id="planFreeFeaturesStrip"></div>
-                        <div class="plan-feat-tabs" id="planFeatureTabs" role="tablist"></div>
-                        <div class="plan-feat-panel" id="planFeatureGroups"></div>
+                        <div class="saas-field saas-col-3">
+                            <label data-i18n="subscriptions.plan">الخطة</label>
+                            <select class="form-select" name="planId" id="subPlan" required></select>
+                        </div>
+                        <div class="saas-field saas-col-2">
+                            <label data-i18n="subscriptions.startDate">تاريخ البدء</label>
+                            <input class="form-control" name="startDate" type="date" required>
+                        </div>
+                        <div class="saas-field saas-col-2">
+                            <label>&nbsp;</label>
+                            <button class="btn saas-btn-primary w-100" type="submit" data-i18n="subscriptions.add">إضافة</button>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" name="isActive" class="form-check-input" id="planIsActive" checked>
-                    <label class="form-check-label" for="planIsActive" data-i18n="plans.isActive">نشط</label>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-pos-primary flex-fill" data-i18n="plans.save">حفظ الخطة</button>
-                    <button type="button" class="btn btn-pos-outline d-none" id="cancelPlanEdit" data-i18n="common.cancel">إلغاء</button>
                 </div>
             </form>
-        </div>
-    </div>
-    <div class="col-lg-7">
-        <div class="pos-card">
-            <div class="pos-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h4><i class="fas fa-list text-pos-primary"></i> <span data-i18n="plans.listTitle">خطط الاشتراك</span></h4>
-                <div class="d-flex gap-2">
-                    <select id="planPlatformFilter" class="form-select form-select-sm pos-input" style="width:auto">
-                        <option value="" data-i18n="plans.filterAllPlatforms">كل المنصات</option>
-                        <option value="desktop" data-i18n="platform.desktop">Desktop</option>
-                        <option value="mobile" data-i18n="platform.mobile">Mobile</option>
-                    </select>
-                    <button class="btn btn-pos-outline btn-sm" id="refreshPlans"><i class="fas fa-sync"></i></button>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table pos-table" id="plansTable">
+            <div class="saas-table-wrap">
+                <table class="saas-table" id="subsTable">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th data-i18n="plans.colPlan">الخطة</th>
-                            <th data-i18n="plans.platform">المنصة</th>
-                            <th data-i18n="plans.colBilling">الفوترة</th>
-                            <th data-i18n="plans.colPrice">السعر</th>
-                            <th data-i18n="plans.colLimits">فروع / كاشير</th>
-                            <th data-i18n="dashboard.colStatus">الحالة</th>
-                            <th></th>
+                            <th data-i18n="subscriptions.customer">العميل</th>
+                            <th data-i18n="subscriptions.plan">الخطة</th>
+                            <th data-i18n="subscriptions.startDate">البدء</th>
+                            <th>Next billing</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -130,5 +45,4 @@
         </div>
     </div>
 </div>
-
 <script src="/admin/js/subscriptions.js"></script>

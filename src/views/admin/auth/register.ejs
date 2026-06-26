@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Billing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/vendor/css/core.css">
+    <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <link rel="stylesheet" href="/admin/css/saas-ui.css">
+    <script src="/admin/js/admin-i18n.js"></script>
+</head>
+<body class="pos-auth-body" data-page-title-key="pages.register">
+    <div class="pos-login-shell">
+        <div class="pos-auth-wrap">
+            <div class="pos-auth-visual">
+                <div class="pos-auth-visual-inner">
+                    <div class="pos-auth-lang-wrap"><%- include('../../partials/lang-switcher') %></div>
+                    <div class="pos-auth-visual-icon"><i class="fas fa-building"></i></div>
+                    <h3 class="pos-auth-hero-title">
+                        <span class="pos-auth-hero-line" data-i18n="auth.registerHero1">ابدأ شركتك</span>
+                        <span class="pos-auth-hero-line pos-auth-hero-accent" data-i18n="auth.registerHero2">في دقائق</span>
+                    </h3>
+                    <p data-i18n="auth.registerSubtitle">أنشئ حساب Tenant جديد مع مستخدم مسؤول ودليل حسابات محاسبي جاهز.</p>
+                </div>
+            </div>
+            <div class="pos-auth-card">
+                <div class="pos-auth-card-inner">
+                    <div class="pos-auth-header">
+                        <h2 data-i18n="auth.registerTitle">تسجيل شركة جديدة</h2>
+                        <p data-i18n="auth.registerSubtitle">بيانات الشركة والمسؤول</p>
+                    </div>
+                    <div id="registerAlert" class="alert d-none saas-alert"></div>
+                    <form id="registerForm" class="pos-auth-form">
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.companyName">اسم الشركة</label>
+                            <input type="text" name="companyName" class="form-control pos-auth-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.adminName">اسم المسؤول</label>
+                            <input type="text" name="adminName" class="form-control pos-auth-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.emailLabel">البريد الإلكتروني</label>
+                            <input type="email" name="email" class="form-control pos-auth-input" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="pos-auth-label" data-i18n="auth.passwordLabel">كلمة المرور</label>
+                            <input type="password" name="password" class="form-control pos-auth-input" required minlength="8">
+                        </div>
+                        <button type="submit" class="btn btn-pos-login w-100" id="registerBtn" data-i18n="auth.registerSubmit">إنشاء الحساب</button>
+                    </form>
+                    <p class="mt-4 text-center mb-0">
+                        <span data-i18n="auth.hasAccount">لديك حساب؟</span>
+                        <a href="/dashboard/login" data-i18n="auth.goLogin">تسجيل الدخول</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/admin/js/pos-api.js"></script>
+    <script src="/admin/js/register.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => AdminI18n.init());</script>
+</body>
+</html>

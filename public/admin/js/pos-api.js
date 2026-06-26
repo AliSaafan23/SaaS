@@ -321,6 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.pos-app')?.classList.toggle('sidebar-open');
     });
 
+    document.getElementById('sidebarBackdrop')?.addEventListener('click', () => {
+        document.querySelector('.pos-app')?.classList.remove('sidebar-open');
+    });
+
     document.getElementById('themeToggle')?.addEventListener('click', () => PosApi.toggleTheme());
 
     PosApi.initNavGroups();

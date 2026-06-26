@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Pos</title>
+    <title>SaaS Billing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/admin/vendor/css/core.css">
@@ -11,11 +11,13 @@
     <link rel="stylesheet" href="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
     <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <link rel="stylesheet" href="/admin/css/saas-ui.css">
     <script src="/admin/js/admin-i18n.js"></script>
     <%- typeof style !== 'undefined' ? style : '' %>
 </head>
 <body class="pos-body" data-page-title-key="<%= typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'pages.home' %>">
     <div class="pos-app">
+        <div class="saas-sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
         <%- include('../partials/sidebar', { page: typeof page !== 'undefined' ? page : '', user: typeof user !== 'undefined' ? user : null }) %>
         <div class="pos-main">
             <%- include('../partials/navbar', { user: typeof user !== 'undefined' ? user : null, pageTitleKey: typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'pages.home' }) %>
@@ -31,6 +33,7 @@
     <script src="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <%- include('../partials/pos-dialog') %>
     <script src="/admin/js/pos-api.js"></script>
+    <script src="/admin/js/saas-ui.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => AdminI18n.init());
     </script>

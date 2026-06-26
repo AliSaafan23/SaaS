@@ -1,6 +1,60 @@
-<div class="pos-card text-center py-5">
-    <div class="pos-coming-soon-icon mb-3"><i class="fas fa-file-invoice-dollar"></i></div>
-    <h4 data-i18n="reports.title">التقارير المالية</h4>
-    <p class="text-muted mb-4" data-i18n="reports.desc">تقارير الإيرادات والاشتراكات والضرائب</p>
-    <span class="badge rounded-pill pos-badge-soon" data-i18n="common.comingSoon">قريباً</span>
+<div class="saas-page">
+    <%- include('../../partials/page-header', { titleKey: 'reports.title', descKey: 'reports.desc' }) %>
+
+    <div class="saas-report-grid">
+        <div class="saas-panel">
+            <div class="saas-panel__head"><h3 data-i18n="reports.incomeStatement">قائمة الدخل</h3></div>
+            <div class="saas-panel__body">
+                <form id="incomeForm" class="saas-form-grid mb-3">
+                    <div class="saas-field saas-col-6">
+                        <label data-i18n="reports.from">من</label>
+                        <input class="form-control" name="from" type="date" required>
+                    </div>
+                    <div class="saas-field saas-col-6">
+                        <label data-i18n="reports.to">إلى</label>
+                        <input class="form-control" name="to" type="date" required>
+                    </div>
+                    <div class="saas-field saas-col-12">
+                        <button class="btn saas-btn-primary" type="submit" data-i18n="reports.run">تشغيل</button>
+                    </div>
+                </form>
+                <pre id="incomeResult" class="saas-report-result">—</pre>
+            </div>
+        </div>
+
+        <div class="saas-panel">
+            <div class="saas-panel__head"><h3 data-i18n="reports.balanceSheet">الميزانية</h3></div>
+            <div class="saas-panel__body">
+                <form id="balanceForm" class="saas-form-grid mb-3">
+                    <div class="saas-field saas-col-8">
+                        <label data-i18n="reports.asOf">حتى تاريخ</label>
+                        <input class="form-control" name="asOf" type="date" required>
+                    </div>
+                    <div class="saas-field saas-col-4">
+                        <label>&nbsp;</label>
+                        <button class="btn saas-btn-primary w-100" type="submit" data-i18n="reports.run">تشغيل</button>
+                    </div>
+                </form>
+                <pre id="balanceResult" class="saas-report-result">—</pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="saas-panel mt-2">
+        <div class="saas-panel__head"><h3 data-i18n="reports.runRevenue">اعتراف بالإيراد</h3></div>
+        <div class="saas-panel__body">
+            <form id="revenueForm" class="saas-form-grid">
+                <div class="saas-field saas-col-3">
+                    <label data-i18n="reports.periodEnd">نهاية الفترة</label>
+                    <input class="form-control" name="periodEnd" type="date" required>
+                </div>
+                <div class="saas-field saas-col-2">
+                    <label>&nbsp;</label>
+                    <button class="btn saas-btn-soft w-100" type="submit" data-i18n="reports.run">تشغيل</button>
+                </div>
+            </form>
+            <pre id="revenueResult" class="saas-report-result mt-3">—</pre>
+        </div>
+    </div>
 </div>
+<script src="/admin/js/reports.js"></script>

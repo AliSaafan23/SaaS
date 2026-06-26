@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Pos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>SaaS Billing</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/admin/vendor/css/core.css">
     <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
     <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <link rel="stylesheet" href="/admin/css/saas-ui.css">
     <script src="/admin/js/admin-i18n.js"></script>
 </head>
 <body class="pos-auth-body" data-page-title-key="pages.login">
@@ -16,102 +16,54 @@
         <div class="pos-auth-wrap">
             <div class="pos-auth-visual">
                 <div class="pos-auth-visual-inner">
-                    <div class="pos-auth-lang-wrap">
-                        <%- include('../../partials/lang-switcher') %>
-                    </div>
-                    <div class="pos-auth-visual-icon">
-                        <i class="fas fa-cash-register"></i>
-                    </div>
+                    <div class="pos-auth-lang-wrap"><%- include('../../partials/lang-switcher') %></div>
+                    <div class="pos-auth-visual-icon"><i class="fas fa-chart-line"></i></div>
                     <h3 class="pos-auth-hero-title">
-                        <span class="pos-auth-hero-line" data-i18n="auth.heroLine1">لوحة تحكم</span>
-                        <span class="pos-auth-hero-line pos-auth-hero-accent" data-i18n="common.brand">Gold Pos</span>
+                        <span class="pos-auth-hero-line" data-i18n="auth.heroLine1">إدارة اشتراكات</span>
+                        <span class="pos-auth-hero-line pos-auth-hero-accent" data-i18n="common.brand">SaaS Billing</span>
                     </h3>
-                    <p data-i18n="auth.heroDesc">حلول ذكية لإدارة المبيعات، المخزون، والمحاسبة في منصة واحدة سهلة الاستخدام ومصممة خصيصاً لتلبية احتياجات أعمالك المتنامية.</p>
+                    <p data-i18n="auth.heroDesc">منصة متعددة الشركات لإدارة الاشتراكات والفوترة والمحاسبة بالقيد المزدوج.</p>
                     <ul class="pos-auth-features">
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.feat1">إدارة المشرفين والأدوار من مكان واحد</span></li>
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.feat2">تقارير وتحليلات لحظية للمبيعات</span></li>
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span> <span data-i18n="auth.feat3">دعم كامل لضريبة القيمة المضافة</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat1">عزل بيانات كل شركة (Multi-Tenant)</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat2">فوترة آلية وإيرادات مؤجلة</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat3">تقارير مالية احترافية</span></li>
                     </ul>
                 </div>
             </div>
-
             <div class="pos-auth-card">
                 <div class="pos-auth-card-inner">
                     <div class="pos-auth-header">
-                        <h2 data-i18n="auth.title">تسجيل الدخول للنظام</h2>
-                        <p data-i18n="auth.subtitle">مرحباً بك مجدداً، يرجى إدخال بياناتك للمتابعة</p>
+                        <h2 data-i18n="auth.title">تسجيل الدخول</h2>
+                        <p data-i18n="auth.subtitle">مرحباً بعودتك — أدخل بياناتك للمتابعة</p>
                     </div>
-
-                    <% if (error) { %>
-                        <div class="alert alert-danger pos-alert"><%= error %></div>
-                    <% } %>
-                    <div id="loginAlert" class="alert d-none pos-alert"></div>
-
+                    <div id="loginAlert" class="alert d-none saas-alert"></div>
                     <form id="loginForm" class="pos-auth-form">
                         <div class="mb-3">
-                            <label class="form-label pos-auth-label" data-i18n="auth.emailLabel">البريد الإلكتروني / اسم المستخدم</label>
+                            <label class="pos-auth-label" data-i18n="auth.emailLabel">البريد الإلكتروني</label>
                             <div class="pos-auth-field">
                                 <i class="fas fa-at pos-auth-field-icon"></i>
-                                <input type="email" name="email" class="form-control pos-auth-input" data-i18n-placeholder="auth.emailPlaceholder" placeholder="mohamed@company.com" required autocomplete="username">
+                                <input type="email" name="email" class="form-control pos-auth-input" required autocomplete="username">
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label pos-auth-label mb-0" data-i18n="auth.passwordLabel">كلمة المرور</label>
-                                <a href="#" class="pos-auth-forgot" tabindex="-1" data-i18n="auth.forgotPassword">نسيت كلمة المرور؟</a>
-                            </div>
+                        <div class="mb-4">
+                            <label class="pos-auth-label" data-i18n="auth.passwordLabel">كلمة المرور</label>
                             <div class="pos-auth-field">
                                 <i class="fas fa-lock pos-auth-field-icon"></i>
-                                <input type="password" name="password" id="password" class="form-control pos-auth-input" placeholder="••••••••" required minlength="8" autocomplete="current-password">
-                                <button type="button" class="pos-auth-eye" id="togglePassword" data-i18n-aria="auth.showPassword" aria-label="إظهار كلمة المرور">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                                <input type="password" name="password" id="password" class="form-control pos-auth-input" required minlength="8" autocomplete="current-password">
                             </div>
                         </div>
-
-                        <div class="form-check pos-auth-remember mb-4">
-                            <input class="form-check-input" type="checkbox" id="rememberMe" name="remember">
-                            <label class="form-check-label" for="rememberMe" data-i18n="auth.rememberMe">تذكرني على هذا الجهاز</label>
-                        </div>
-
-                        <button type="submit" class="btn btn-pos-login w-100" id="loginBtn">
-                            <span data-i18n="auth.submit">تسجيل الدخول</span>
-                            <i class="fas fa-sign-in-alt"></i>
-                        </button>
+                        <button type="submit" class="btn btn-pos-login w-100" id="loginBtn" data-i18n="auth.submit">تسجيل الدخول</button>
                     </form>
-
-                    <div class="pos-auth-divider">
-                        <span data-i18n="auth.orContinueWith">أو المتابعة باستخدام</span>
-                    </div>
-
-                    <footer class="pos-auth-footer">
-                        <p class="pos-auth-copy" id="authCopyright" data-year="<%= new Date().getFullYear() %>">جميع الحقوق محفوظة © <%= new Date().getFullYear() %> Gold Pos</p>
-                        <div class="pos-auth-footer-links">
-                            <a href="/contact"><i class="fas fa-headset"></i> <span data-i18n="auth.contactSupport">تواصل مع الدعم الفني</span></a>
-                            <a href="/privacy"><i class="fas fa-shield-alt"></i> <span data-i18n="auth.privacyPolicy">سياسة الخصوصية</span></a>
-                        </div>
-                    </footer>
+                    <p class="mt-4 text-center mb-0">
+                        <span data-i18n="auth.noAccount">ليس لديك حساب؟</span>
+                        <a href="/dashboard/register" data-i18n="auth.goRegister">سجّل شركة جديدة</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-
-    <%- include('../../partials/pos-dialog') %>
-    <script src="/admin/vendor/libs/jquery/jquery.js"></script>
     <script src="/admin/js/pos-api.js"></script>
     <script src="/admin/js/login.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            AdminI18n.init().then(() => {
-                const el = document.getElementById('authCopyright');
-                if (el) el.textContent = AdminI18n.tpl('auth.copyright', { year: el.dataset.year });
-            });
-        });
-        document.addEventListener('admin:langchange', () => {
-            const el = document.getElementById('authCopyright');
-            if (el) el.textContent = AdminI18n.tpl('auth.copyright', { year: el.dataset.year });
-        });
-    </script>
+    <script>document.addEventListener('DOMContentLoaded', () => AdminI18n.init());</script>
 </body>
 </html>

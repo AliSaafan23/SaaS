@@ -1,0 +1,29 @@
+<div class="saas-page">
+    <%- include('../../partials/page-header', {
+        titleKey: 'invoices.title',
+        descKey: 'invoices.desc',
+        actionHtml: '<button class="btn saas-btn-soft" id="runBillingBtn"><i class="fas fa-play me-1"></i><span data-i18n="invoices.runBilling">تشغيل الفوترة</span></button>'
+    }) %>
+    <div id="invoiceAlert" class="alert d-none saas-alert"></div>
+
+    <div class="saas-panel">
+        <div class="saas-panel__head"><h3 data-i18n="invoices.list">قائمة الفواتير</h3></div>
+        <div class="saas-panel__body">
+            <div class="saas-table-wrap">
+                <table class="saas-table" id="invoicesTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-i18n="invoices.amount">المبلغ</th>
+                            <th data-i18n="invoices.status">الحالة</th>
+                            <th data-i18n="invoices.period">الفترة</th>
+                            <th data-i18n="invoices.issueDate">تاريخ الإصدار</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/admin/js/invoices.js"></script>

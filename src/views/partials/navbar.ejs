@@ -1,66 +1,24 @@
 <%
-const userInitial = (user?.name || 'A').trim().charAt(0).toUpperCase();
-const nowIso = new Date().toISOString();
+const initials = (user?.name || 'U').trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('');
 %>
-<header class="pos-navbar">
-    <button type="button" class="pos-toggle" id="sidebarToggle" data-i18n-aria="navbar.openMenu" aria-label="فتح القائمة">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <h1 class="pos-page-title d-none d-md-block" data-i18n="<%= typeof pageTitleKey !== 'undefined' ? pageTitleKey : 'pages.home' %>"></h1>
-
-    <div class="pos-navbar-search">
-        <i class="fas fa-search pos-search-icon"></i>
-        <input
-            type="search"
-            id="globalSearch"
-            class="form-control pos-search-input"
-            data-i18n-placeholder="navbar.searchPlaceholder"
-            placeholder="بحث شامل في النظام..."
-            autocomplete="off"
-            data-i18n-aria="navbar.searchAria"
-            aria-label="بحث شامل"
-        >
+<header class="saas-topbar">
+    <div class="saas-topbar__start">
+        <button type="button" class="pos-toggle" id="sidebarToggle" aria-label="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div>
+            <h1 class="saas-topbar__title" data-i18n="<%= pageTitleKey %>">Dashboard</h1>
+            <div class="saas-topbar__crumb"><%= user?.tenant?.name || '' %></div>
+        </div>
     </div>
-
-    <div class="pos-navbar-actions">
-        <span class="pos-navbar-meta d-none d-lg-inline" id="navbarLastUpdate" data-timestamp="<%= nowIso %>"></span>
-
-        <%- include('./lang-switcher', { navbar: true }) %>
-
-        <a href="/dashboard/ui/subscribers" class="btn btn-pos-primary btn-sm d-none d-md-inline-flex align-items-center gap-1">
-            <i class="fas fa-users"></i> <span data-i18n="navbar.subscribers">المشتركون</span>
-        </a>
-
-        <button type="button" class="pos-icon-btn" data-i18n-title="navbar.notifications" title="الإشعارات" onclick="location.href='/dashboard/ui/notifications'">
-            <i class="fas fa-bell"></i>
-            <span class="pos-dot"></span>
-        </button>
-
-        <button type="button" class="pos-icon-btn d-none d-sm-inline-flex" data-i18n-title="navbar.messages" title="الرسائل" onclick="location.href='/dashboard/ui/support'">
-            <i class="fas fa-envelope"></i>
-        </button>
-
-        <button type="button" class="pos-theme-toggle" id="themeToggle" data-i18n-aria="navbar.toggleDark" data-i18n-title="navbar.toggleDark" aria-label="تبديل الوضع الداكن" title="تبديل الوضع الداكن">
-            <i class="fas fa-moon" id="themeToggleIcon"></i>
-        </button>
-
-        <div class="pos-user-profile">
-            <div class="pos-user-avatar"><%= userInitial %></div>
-            <div class="pos-user-info d-none d-sm-block">
-                <strong><%= user?.name || 'Admin' %></strong>
-                <small data-i18n="navbar.systemAdmin">مسؤول النظام</small>
+    <div class="d-flex align-items-center gap-3">
+        <%- include('lang-switcher', { navbar: true }) %>
+        <div class="saas-user-chip">
+            <div class="saas-user-chip__avatar"><%= initials %></div>
+            <div class="saas-user-chip__meta">
+                <strong><%= user?.name || '' %></strong>
+                <small><%= user?.email || '' %></small>
             </div>
         </div>
-
-        <button type="button" class="btn btn-pos-outline btn-sm d-md-none" id="logoutBtnMobile">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
     </div>
 </header>
-
-<script>
-document.getElementById('logoutBtnMobile')?.addEventListener('click', () => {
-    document.getElementById('logoutBtn')?.click();
-});
-</script>

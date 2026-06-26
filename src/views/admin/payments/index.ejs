@@ -1,0 +1,46 @@
+<div class="saas-page">
+    <%- include('../../partials/page-header', { titleKey: 'payments.title', descKey: 'payments.desc' }) %>
+    <div id="payAlert" class="alert d-none saas-alert"></div>
+
+    <div class="saas-panel">
+        <div class="saas-panel__head"><h3 data-i18n="payments.record">تسجيل دفعة</h3></div>
+        <div class="saas-panel__body">
+            <form id="payForm">
+                <div class="saas-form-card">
+                    <div class="saas-form-grid">
+                        <div class="saas-field saas-col-2">
+                            <label data-i18n="payments.invoiceId">رقم الفاتورة</label>
+                            <input class="form-control" name="invoiceId" required>
+                        </div>
+                        <div class="saas-field saas-col-2">
+                            <label data-i18n="payments.amount">المبلغ</label>
+                            <input class="form-control" name="amount" type="number" step="0.01" required>
+                        </div>
+                        <div class="saas-field saas-col-2">
+                            <label data-i18n="payments.date">التاريخ</label>
+                            <input class="form-control" name="paymentDate" type="date">
+                        </div>
+                        <div class="saas-field saas-col-2">
+                            <label>&nbsp;</label>
+                            <button class="btn saas-btn-primary w-100" type="submit" data-i18n="payments.record">تسجيل</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="saas-table-wrap">
+                <table class="saas-table" id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th data-i18n="payments.invoiceId">فاتورة</th>
+                            <th data-i18n="payments.amount">المبلغ</th>
+                            <th data-i18n="payments.date">التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/admin/js/payments.js"></script>
