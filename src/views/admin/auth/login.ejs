@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
     <link rel="stylesheet" href="/admin/css/saas-ui.css">
     <script src="/admin/js/admin-i18n.js"></script>
 </head>
+
 <body class="pos-auth-body" data-page-title-key="pages.login">
     <div class="pos-login-shell">
         <div class="pos-auth-wrap">
@@ -20,13 +22,18 @@
                     <div class="pos-auth-visual-icon"><i class="fas fa-chart-line"></i></div>
                     <h3 class="pos-auth-hero-title">
                         <span class="pos-auth-hero-line" data-i18n="auth.heroLine1">إدارة اشتراكات</span>
-                        <span class="pos-auth-hero-line pos-auth-hero-accent" data-i18n="common.brand">SaaS Billing</span>
+                        <span class="pos-auth-hero-line pos-auth-hero-accent" data-i18n="common.brand">SaaS
+                            Billing</span>
                     </h3>
-                    <p data-i18n="auth.heroDesc">منصة متعددة الشركات لإدارة الاشتراكات والفوترة والمحاسبة بالقيد المزدوج.</p>
+                    <p data-i18n="auth.heroDesc">منصة متعددة الشركات لإدارة الاشتراكات والفوترة والمحاسبة بالقيد
+                        المزدوج.</p>
                     <ul class="pos-auth-features">
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat1">عزل بيانات كل شركة (Multi-Tenant)</span></li>
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat2">فوترة آلية وإيرادات مؤجلة</span></li>
-                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span data-i18n="auth.feat3">تقارير مالية احترافية</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span
+                                data-i18n="auth.feat1">عزل بيانات كل شركة (Multi-Tenant)</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span
+                                data-i18n="auth.feat2">فوترة آلية وإيرادات مؤجلة</span></li>
+                        <li><span class="pos-auth-check"><i class="fas fa-check"></i></span><span
+                                data-i18n="auth.feat3">تقارير مالية احترافية</span></li>
                     </ul>
                 </div>
             </div>
@@ -42,17 +49,20 @@
                             <label class="pos-auth-label" data-i18n="auth.emailLabel">البريد الإلكتروني</label>
                             <div class="pos-auth-field">
                                 <i class="fas fa-at pos-auth-field-icon"></i>
-                                <input type="email" name="email" class="form-control pos-auth-input" required autocomplete="username">
+                                <input type="email" name="email" class="form-control pos-auth-input" required
+                                    autocomplete="username">
                             </div>
                         </div>
                         <div class="mb-4">
                             <label class="pos-auth-label" data-i18n="auth.passwordLabel">كلمة المرور</label>
                             <div class="pos-auth-field">
                                 <i class="fas fa-lock pos-auth-field-icon"></i>
-                                <input type="password" name="password" id="password" class="form-control pos-auth-input" required minlength="8" autocomplete="current-password">
+                                <input type="password" name="password" id="password" class="form-control pos-auth-input"
+                                    required minlength="8" autocomplete="current-password">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-pos-login w-100" id="loginBtn" data-i18n="auth.submit">تسجيل الدخول</button>
+                        <button type="submit" class="btn btn-pos-login w-100" id="loginBtn"
+                            data-i18n="auth.submit">تسجيل الدخول</button>
                     </form>
                     <p class="mt-4 text-center mb-0">
                         <span data-i18n="auth.noAccount">ليس لديك حساب؟</span>
@@ -66,4 +76,5 @@
     <script src="/admin/js/login.js"></script>
     <script>document.addEventListener('DOMContentLoaded', () => AdminI18n.init());</script>
 </body>
+
 </html>

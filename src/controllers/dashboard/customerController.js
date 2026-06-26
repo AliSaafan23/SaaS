@@ -3,6 +3,8 @@ import { ApiResponse } from '../../utils/index.js';
 import { errorHandler } from '../../helpers/index.js';
 import returnObject from '../../helpers/dashboard/returnobject.js';
 import { Customer } from '../../models/index.js';
+import uploadFiles from '../../utils/common/uploadFiles.js';
+import deleteFiles from '../../utils/common/deleteFiles.js';
 
 const tenantWhere = (req, extra = {}) => ({ tenantId: req.tenantId, ...extra });
 
@@ -27,13 +29,21 @@ export default {
 
     create: async (req, res) => {
         const { name, email, phone, status } = req.body;
-        if (!name) return errorHandler(res, 'fail', 'validationFailed');
+
+        let avatar = null;
+        if (req.files?.avatar) {
+            const uploads = await uploadFiles.handleMultipleUploads(req, [
+                { name: 'avatar', type: 'image', dir: 'customers' },
+            ]);
+            avatar = uploads.avatar;
+        }
 
         const customer = await Customer.create({
             tenantId: req.tenantId,
             name,
             email,
             phone,
+            avatar,
             status: status || 'active',
         });
 
@@ -45,12 +55,24 @@ export default {
         if (!customer) return errorHandler(res, 'notFound', 'customerNotFound');
 
         const { name, email, phone, status } = req.body;
-        await customer.update({
+        const updates = {
             ...(name !== undefined && { name }),
             ...(email !== undefined && { email }),
             ...(phone !== undefined && { phone }),
             ...(status !== undefined && { status }),
-        });
+        };
+
+        if (req.files?.avatar) {
+            if (customer.avatar) {
+                deleteFiles.removeFile(customer.avatar, 'customers', 'image');
+            }
+            const uploads = await uploadFiles.handleMultipleUploads(req, [
+                { name: 'avatar', type: 'image', dir: 'customers' },
+            ]);
+            updates.avatar = uploads.avatar;
+        }
+
+        await customer.update(updates);
 
         res.send(new ApiResponse('success', i18n.__('customerUpdated'), 200, returnObject.customer(customer)));
     },
@@ -58,6 +80,9 @@ export default {
     remove: async (req, res) => {
         const customer = await Customer.findOne({ where: tenantWhere(req, { id: req.params.id }) });
         if (!customer) return errorHandler(res, 'notFound', 'customerNotFound');
+        if (customer.avatar) {
+            deleteFiles.removeFile(customer.avatar, 'customers', 'image');
+        }
         await customer.destroy();
         res.send(new ApiResponse('success', i18n.__('customerDeleted'), 200, {}));
     },

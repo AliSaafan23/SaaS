@@ -42,10 +42,11 @@ const PosApi = {
     },
 
     async request(path, options = {}) {
+        const isFormData = options.body instanceof FormData;
         const res = await fetch(`${this.base}${path}`, {
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
+                ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
                 Accept: 'application/json',
                 lang: this.getLang(),
                 ...(options.headers || {}),

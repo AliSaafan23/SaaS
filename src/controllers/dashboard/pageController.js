@@ -9,6 +9,15 @@ export default {
         res.render('admin/auth/register', { layout: false, pageTitleKey: 'pages.register' });
     },
 
+    verifyEmail: (req, res) => {
+        if (req.session?.token) return res.redirect('/dashboard/home');
+        res.render('admin/auth/verify-email', {
+            layout: false,
+            pageTitleKey: 'pages.verifyEmail',
+            email: req.query.email || '',
+        });
+    },
+
     home: (req, res) =>
         res.render('admin/index/index', { pageTitleKey: 'pages.home', page: 'home', user: req.tenantUser }),
 

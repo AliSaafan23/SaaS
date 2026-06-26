@@ -1,5 +1,6 @@
 import Tenant from './tenant/tenantModel.js';
 import TenantUser from './tenant/tenantUserModel.js';
+import TenantRole from './tenant/tenantRoleModel.js';
 import UserToken from './system/userTokenModel.js';
 import Plan from './subscription/planModel.js';
 import Customer from './subscription/customerModel.js';
@@ -13,6 +14,11 @@ import { sequelize } from '../config/dbConfig.js';
 
 Tenant.hasMany(TenantUser, { foreignKey: 'tenantId', as: 'users' });
 TenantUser.belongsTo(Tenant, { foreignKey: 'tenantId', as: 'tenant' });
+
+Tenant.hasMany(TenantRole, { foreignKey: 'tenantId', as: 'roles' });
+TenantRole.belongsTo(Tenant, { foreignKey: 'tenantId', as: 'tenant' });
+TenantUser.belongsTo(TenantRole, { foreignKey: 'roleId', as: 'role' });
+TenantRole.hasMany(TenantUser, { foreignKey: 'roleId', as: 'users' });
 
 Tenant.hasMany(Plan, { foreignKey: 'tenantId', as: 'plans' });
 Plan.belongsTo(Tenant, { foreignKey: 'tenantId', as: 'tenant' });
@@ -49,6 +55,7 @@ Account.hasMany(JournalLine, { foreignKey: 'accountId', as: 'lines' });
 export {
     Tenant,
     TenantUser,
+    TenantRole,
     UserToken,
     Plan,
     Customer,
@@ -64,6 +71,7 @@ export {
 export default {
     Tenant,
     TenantUser,
+    TenantRole,
     UserToken,
     Plan,
     Customer,

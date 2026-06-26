@@ -10,11 +10,15 @@ const TenantUser = sequelize.define(
         name: { type: DataTypes.STRING(150), allowNull: false },
         email: { type: DataTypes.STRING(200), allowNull: false },
         password: { type: DataTypes.STRING(255), allowNull: false },
+        roleId: { type: DataTypes.INTEGER, allowNull: true },
         status: { type: DataTypes.ENUM('active', 'block', 'delete'), defaultValue: 'active' },
+        emailVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
+        activationCode: { type: DataTypes.STRING(10), allowNull: true },
+        activationCodeExpiresAt: { type: DataTypes.DATE, allowNull: true },
     },
     {
         tableName: 'tbl_tenant_users',
-        defaultScope: { attributes: { exclude: ['password'] } },
+        defaultScope: { attributes: { exclude: ['password', 'activationCode'] } },
         scopes: { withPassword: { attributes: {} } },
     }
 );

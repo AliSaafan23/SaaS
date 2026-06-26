@@ -8,6 +8,8 @@ const Tenant = sequelize.define(
         name: { type: DataTypes.STRING(200), allowNull: false },
         slug: { type: DataTypes.STRING(200), allowNull: false, unique: true },
         status: { type: DataTypes.ENUM('active', 'suspended'), defaultValue: 'active' },
+        logo: { type: DataTypes.STRING(500), allowNull: true },
+        companyEmail: { type: DataTypes.STRING(200), allowNull: true },
     },
     { tableName: 'tbl_tenants' }
 );

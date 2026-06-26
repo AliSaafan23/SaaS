@@ -894,3 +894,9 @@ html[dir='ltr'] .pos-nav-item:hover { transform: translateX(2px); }
     .saas-hero-welcome { padding: 1.25rem 1.35rem; }
 }
 
+.saas-avatar-thumb {
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--saas-border, #e2e8f0);
+}
+

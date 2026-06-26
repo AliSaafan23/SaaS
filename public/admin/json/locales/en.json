@@ -19,6 +19,7 @@
   "pages": {
     "login": "Sign in",
     "register": "Register company",
+    "verifyEmail": "Verify email",
     "home": "Home",
     "plans": "Subscription plans",
     "customers": "Customers",
@@ -63,7 +64,17 @@
     "hasAccount": "Already have an account?",
     "noAccount": "No account yet?",
     "goLogin": "Sign in",
-    "goRegister": "Register company"
+    "goRegister": "Register company",
+    "companyEmail": "Company email",
+    "companyLogo": "Company logo",
+    "logoHint": "PNG or JPG — optional",
+    "verifyTitle": "Activate account",
+    "verifySubtitle": "Enter the code sent to the admin email",
+    "activationCode": "Activation code",
+    "verifySubmit": "Verify & sign in",
+    "resendCode": "Resend code",
+    "registerSuccess": "Account created. Check your email and enter the activation code",
+    "verifyFailed": "Verification failed"
   },
   "plans": {
     "title": "Subscription plans",
@@ -81,7 +92,8 @@
     "desc": "Manage your company's customers in full tenant isolation.",
     "add": "Add customer",
     "name": "Name",
-    "email": "Email"
+    "email": "Email",
+    "avatar": "Customer photo"
   },
   "subscriptions": {
     "title": "Subscriptions",

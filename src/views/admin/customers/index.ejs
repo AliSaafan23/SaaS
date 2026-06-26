@@ -17,6 +17,10 @@
                             <label data-i18n="customers.email">البريد</label>
                             <input class="form-control" name="email" type="email">
                         </div>
+                        <div class="saas-field saas-col-4">
+                            <label data-i18n="customers.avatar">صورة العميل</label>
+                            <input class="form-control" name="avatar" type="file" accept="image/png,image/jpeg,image/webp">
+                        </div>
                         <div class="saas-field saas-col-2">
                             <label>&nbsp;</label>
                             <button class="btn saas-btn-primary w-100" type="submit" data-i18n="common.save">حفظ</button>
@@ -26,7 +30,7 @@
             </form>
             <div class="saas-table-wrap">
                 <table class="saas-table" id="customersTable">
-                    <thead><tr><th>#</th><th data-i18n="customers.name">الاسم</th><th data-i18n="customers.email">البريد</th><th data-i18n="common.actions">إجراءات</th></tr></thead>
+                    <thead><tr><th>#</th><th></th><th data-i18n="customers.name">الاسم</th><th data-i18n="customers.email">البريد</th><th data-i18n="common.actions">إجراءات</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>

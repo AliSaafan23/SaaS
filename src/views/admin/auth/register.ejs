@@ -32,10 +32,19 @@
                         <p data-i18n="auth.registerSubtitle">بيانات الشركة والمسؤول</p>
                     </div>
                     <div id="registerAlert" class="alert d-none saas-alert"></div>
-                    <form id="registerForm" class="pos-auth-form">
+                    <form id="registerForm" class="pos-auth-form" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label class="pos-auth-label" data-i18n="auth.companyName">اسم الشركة</label>
                             <input type="text" name="companyName" class="form-control pos-auth-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.companyEmail">بريد الشركة</label>
+                            <input type="email" name="companyEmail" class="form-control pos-auth-input">
+                        </div>
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.companyLogo">شعار الشركة</label>
+                            <input type="file" name="logo" class="form-control pos-auth-input" accept="image/png,image/jpeg,image/webp">
+                            <small class="text-muted" data-i18n="auth.logoHint">PNG أو JPG — اختياري</small>
                         </div>
                         <div class="mb-3">
                             <label class="pos-auth-label" data-i18n="auth.adminName">اسم المسؤول</label>

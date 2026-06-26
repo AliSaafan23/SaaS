@@ -1,5 +1,11 @@
 const toPlain = (row) => (row?.toJSON ? row.toJSON() : row);
 
+const tenantLogoUrl = (logo) =>
+    logo ? `/assets/uploads/tenants/${logo}` : null;
+
+const customerAvatarUrl = (avatar) =>
+    avatar ? `/assets/uploads/customers/${avatar}` : null;
+
 export default {
     tenantUserProfile(user) {
         const u = toPlain(user);
@@ -9,11 +15,22 @@ export default {
             name: u.name,
             email: u.email,
             status: u.status,
+            emailVerified: u.emailVerified,
+            role: u.role
+                ? {
+                      id: u.role.id,
+                      name: u.role.name,
+                      slug: u.role.slug,
+                      permissions: u.role.permissions,
+                  }
+                : undefined,
             tenant: u.tenant
                 ? {
                       id: u.tenant.id,
                       name: u.tenant.name,
                       slug: u.tenant.slug,
+                      logo: tenantLogoUrl(u.tenant.logo),
+                      companyEmail: u.tenant.companyEmail,
                   }
                 : undefined,
         };
@@ -40,6 +57,7 @@ export default {
             email: c.email,
             phone: c.phone,
             status: c.status,
+            avatar: customerAvatarUrl(c.avatar),
         };
     },
 

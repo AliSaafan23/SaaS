@@ -19,6 +19,7 @@
   "pages": {
     "login": "تسجيل الدخول",
     "register": "تسجيل شركة",
+    "verifyEmail": "تفعيل البريد",
     "home": "الرئيسية",
     "plans": "خطط الاشتراك",
     "customers": "العملاء",
@@ -63,7 +64,17 @@
     "hasAccount": "لديك حساب؟",
     "noAccount": "ليس لديك حساب؟",
     "goLogin": "تسجيل الدخول",
-    "goRegister": "سجّل شركة جديدة"
+    "goRegister": "سجّل شركة جديدة",
+    "companyEmail": "بريد الشركة",
+    "companyLogo": "شعار الشركة",
+    "logoHint": "PNG أو JPG — اختياري",
+    "verifyTitle": "تفعيل الحساب",
+    "verifySubtitle": "أدخل الرمز المرسل إلى بريد المسؤول",
+    "activationCode": "رمز التفعيل",
+    "verifySubmit": "تفعيل والدخول",
+    "resendCode": "إعادة إرسال الرمز",
+    "registerSuccess": "تم إنشاء الحساب. تحقق من بريدك وأدخل رمز التفعيل",
+    "verifyFailed": "فشل التفعيل"
   },
   "plans": {
     "title": "خطط الاشتراك",
@@ -81,7 +92,8 @@
     "desc": "إدارة عملاء شركتك المعزولين عن باقي الـ Tenants.",
     "add": "إضافة عميل",
     "name": "الاسم",
-    "email": "البريد"
+    "email": "البريد",
+    "avatar": "صورة العميل"
   },
   "subscriptions": {
     "title": "الاشتراكات",

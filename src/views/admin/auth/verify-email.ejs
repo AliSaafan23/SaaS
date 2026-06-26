@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Billing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/vendor/css/core.css">
+    <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
+    <link rel="stylesheet" href="/admin/css/saas-ui.css">
+    <script src="/admin/js/admin-i18n.js"></script>
+</head>
+<body class="pos-auth-body" data-page-title-key="pages.verifyEmail">
+    <div class="pos-login-shell">
+        <div class="pos-auth-wrap">
+            <div class="pos-auth-visual">
+                <div class="pos-auth-visual-inner">
+                    <div class="pos-auth-lang-wrap"><%- include('../../partials/lang-switcher') %></div>
+                    <div class="pos-auth-visual-icon"><i class="fas fa-envelope-open-text"></i></div>
+                    <h3 class="pos-auth-hero-title">
+                        <span class="pos-auth-hero-line" data-i18n="auth.verifyTitle">تفعيل الحساب</span>
+                    </h3>
+                    <p data-i18n="auth.verifySubtitle">أدخل الرمز المرسل إلى بريد المسؤول</p>
+                </div>
+            </div>
+            <div class="pos-auth-card">
+                <div class="pos-auth-card-inner">
+                    <div class="pos-auth-header">
+                        <h2 data-i18n="auth.verifyTitle">تفعيل الحساب</h2>
+                        <p data-i18n="auth.verifySubtitle">أدخل الرمز المرسل إلى بريد المسؤول</p>
+                    </div>
+                    <div id="verifyAlert" class="alert d-none saas-alert"></div>
+                    <form id="verifyForm" class="pos-auth-form">
+                        <div class="mb-3">
+                            <label class="pos-auth-label" data-i18n="auth.emailLabel">البريد الإلكتروني</label>
+                            <input type="email" name="email" class="form-control pos-auth-input" required value="<%= email || '' %>">
+                        </div>
+                        <div class="mb-4">
+                            <label class="pos-auth-label" data-i18n="auth.activationCode">رمز التفعيل</label>
+                            <input type="text" name="code" class="form-control pos-auth-input text-center" required maxlength="6" pattern="[0-9]{6}" inputmode="numeric" autocomplete="one-time-code">
+                        </div>
+                        <button type="submit" class="btn btn-pos-login w-100 mb-2" id="verifyBtn" data-i18n="auth.verifySubmit">تفعيل والدخول</button>
+                        <button type="button" class="btn btn-outline-secondary w-100" id="resendBtn" data-i18n="auth.resendCode">إعادة إرسال الرمز</button>
+                    </form>
+                    <p class="mt-4 text-center mb-0">
+                        <a href="/dashboard/login" data-i18n="auth.goLogin">تسجيل الدخول</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/admin/js/pos-api.js"></script>
+    <script src="/admin/js/verify-email.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => AdminI18n.init());</script>
+</body>
+</html>
