@@ -5,7 +5,12 @@ import returnObject from '../../helpers/dashboard/returnobject.js';
 import { runMonthlyBilling } from '../../helpers/accounting/billingService.js';
 import { recordPayment } from '../../helpers/accounting/paymentService.js';
 import { runRevenueRecognition } from '../../helpers/accounting/revenueService.js';
-import { getIncomeStatement, getBalanceSheet } from '../../helpers/accounting/reportsService.js';
+import {
+    getIncomeStatement,
+    getBalanceSheet,
+    getReportsDashboard,
+    getTransactionsLedger,
+} from '../../helpers/accounting/reportsService.js';
 import { getRevenueChartData } from '../../helpers/dashboard/revenueChart.js';
 import { Invoice, Payment, Customer, Subscription, Plan } from '../../models/index.js';
 
@@ -125,5 +130,20 @@ export default {
         const locale = req.getLocale?.() === 'ar' ? 'ar-EG' : 'en-US';
         const chart = await getRevenueChartData(req.tenantId, { granularity, from, to, locale });
         res.send(new ApiResponse('success', i18n.__('dataFetched'), 200, chart));
+    },
+
+    reportsDashboard: async (req, res) => {
+        const locale = req.getLocale?.() === 'ar' ? 'ar-EG' : 'en-US';
+        const months = Math.min(Math.max(parseInt(req.query.months, 10) || 6, 3), 12);
+        const { from = null, to = null } = req.query;
+        const data = await getReportsDashboard({ tenantId: req.tenantId, locale, months, from, to });
+        res.send(new ApiResponse('success', i18n.__('dataFetched'), 200, data));
+    },
+
+    transactionsLedger: async (req, res) => {
+        const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 60, 1), 200);
+        const { from = null, to = null } = req.query;
+        const data = await getTransactionsLedger({ tenantId: req.tenantId, limit, from, to });
+        res.send(new ApiResponse('success', i18n.__('dataFetched'), 200, data));
     },
 };

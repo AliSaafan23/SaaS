@@ -40,6 +40,16 @@ router.post(
   asyncHandler(billingController.runRevenueRecognition),
 );
 router.get(
+  "/reports/dashboard",
+  requirePermission(TENANT_PERMISSIONS.REPORTS_READ),
+  asyncHandler(billingController.reportsDashboard),
+);
+router.get(
+  "/reports/transactions",
+  requirePermission(TENANT_PERMISSIONS.REPORTS_READ),
+  asyncHandler(billingController.transactionsLedger),
+);
+router.get(
   "/reports/income-statement",
   requirePermission(TENANT_PERMISSIONS.REPORTS_READ),
   billingValidation.validateIncomeStatement(),

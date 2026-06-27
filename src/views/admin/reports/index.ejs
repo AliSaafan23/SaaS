@@ -1,95 +1,420 @@
-<div class="saas-page saas-animate-in">
-    <%- include('../../partials/page-header', { titleKey: 'reports.title', descKey: 'reports.desc' }) %>
-    <div class="saas-howto"><span class="saas-howto__icon"><i class="fas fa-circle-info"></i></span><p data-i18n="reports.howto"></p></div>
+<style>
+    .rep-filterbar {
+        display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+        flex-wrap: wrap;
+        background: var(--sp-surface, #fff);
+        border: 1px solid var(--sp-border, #eef2f7);
+        border-radius: 16px;
+        padding: .7rem .9rem;
+        margin-bottom: 1.25rem;
+    }
+    .rep-filterbar__left { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+    .rep-filterbar__left > i { color: var(--sp-muted, #94a3b8); }
+    .rep-filterbar .sp-chart-custom { display: flex; align-items: center; gap: .4rem; }
+    .rep-filterbar .form-control-sm { max-width: 150px; }
 
-    <div class="saas-report-grid">
-        <div class="saas-panel saas-panel--accent saas-stagger-item">
+    .rep-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+    @media (max-width: 1100px) { .rep-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .rep-kpi-grid { grid-template-columns: 1fr; } }
+
+    .rep-kpi {
+        position: relative;
+        background: var(--sp-surface, #fff);
+        border: 1px solid var(--sp-border, #eef2f7);
+        border-radius: 18px;
+        padding: 1.1rem 1.2rem;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .rep-kpi:hover { transform: translateY(-4px); box-shadow: 0 18px 38px -22px rgba(15,23,42,.45); }
+    .rep-kpi::after {
+        content: "";
+        position: absolute;
+        inset-inline-end: -28px; top: -28px;
+        width: 92px; height: 92px; border-radius: 50%;
+        background: var(--rep-accent, #6366f1);
+        opacity: .10;
+    }
+    .rep-kpi__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .85rem; }
+    .rep-kpi__icon {
+        width: 44px; height: 44px; border-radius: 12px;
+        display: grid; place-items: center; font-size: 1.1rem; color: #fff;
+        background: var(--rep-accent, #6366f1);
+        box-shadow: 0 10px 22px -12px var(--rep-accent, #6366f1);
+    }
+    .rep-kpi__chip {
+        font-size: .72rem; font-weight: 800; padding: .2rem .55rem; border-radius: 999px;
+        background: rgba(99,102,241,.12); color: var(--rep-accent, #6366f1);
+    }
+    .rep-kpi__label { font-size: .8rem; color: var(--sp-muted, #94a3b8); font-weight: 700; margin-bottom: .25rem; }
+    .rep-kpi__value { font-size: 1.5rem; font-weight: 900; color: var(--sp-text, #0f172a); font-variant-numeric: tabular-nums; line-height: 1.1; }
+    .rep-kpi__sub { font-size: .74rem; color: var(--sp-muted, #94a3b8); margin-top: .3rem; }
+
+    .rep-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 992px) { .rep-grid { grid-template-columns: 1fr; } }
+
+    .rep-chart-box { position: relative; height: 300px; }
+    .rep-chart-box--sm { height: 270px; }
+    .rep-loading {
+        position: absolute; inset: 0; display: grid; place-items: center;
+        color: var(--sp-muted, #94a3b8); font-size: 1.4rem; z-index: 2;
+    }
+
+    .rep-debtor { display: flex; align-items: center; gap: .8rem; padding: .7rem 0; border-bottom: 1px solid var(--sp-border, #eef2f7); }
+    .rep-debtor:last-child { border-bottom: none; }
+    .rep-debtor__av {
+        width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+        display: grid; place-items: center; overflow: hidden;
+        background: rgba(99,102,241,.12); color: var(--rep-accent, #6366f1); font-size: .85rem;
+    }
+    .rep-debtor__av img { width: 100%; height: 100%; object-fit: cover; }
+    .rep-debtor__body { flex: 1; min-width: 0; }
+    .rep-debtor__name { font-weight: 800; color: var(--sp-text, #0f172a); font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rep-debtor__bar { height: 6px; border-radius: 999px; background: var(--sp-border, #eef2f7); margin-top: .35rem; overflow: hidden; }
+    .rep-debtor__bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #f97316, #ef4444); }
+    .rep-debtor__amt { text-align: end; flex-shrink: 0; }
+    .rep-debtor__amt b { color: #ef4444; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .rep-debtor__amt small { display: block; color: var(--sp-muted, #94a3b8); font-size: .68rem; }
+
+    .rep-tx-type { display: inline-flex; align-items: center; gap: .4rem; font-weight: 800; font-size: .82rem; }
+    .rep-tx-type i { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-size: .72rem; }
+    .rep-tx-type.invoice i { background: rgba(245,158,11,.15); color: #d97706; }
+    .rep-tx-type.payment i { background: rgba(34,197,94,.15); color: #16a34a; }
+    .rep-amt-in { color: #16a34a; font-weight: 800; }
+    .rep-amt-out { color: var(--sp-text, #0f172a); font-weight: 800; }
+
+    .rep-cust { display: inline-flex; align-items: center; gap: .5rem; }
+    .rep-cust__av { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: rgba(99,102,241,.12); color: var(--rep-accent,#6366f1); font-size: .7rem; }
+    .rep-cust__av img { width: 100%; height: 100%; object-fit: cover; }
+
+    .rep-tools-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+
+    /* —— Accounting tools: tabbed panel —— */
+    .acct-panel { margin-top: .5rem; }
+    .acct-tabs {
+        display: flex; gap: .35rem; flex-wrap: wrap;
+        padding: .35rem; margin-bottom: 1rem;
+        background: var(--sp-surface-2); border-radius: 14px;
+        border: 1px solid var(--sp-border);
+    }
+    .acct-tab {
+        flex: 1; min-width: 140px;
+        display: flex; align-items: center; justify-content: center; gap: .45rem;
+        padding: .55rem .85rem; border: none; border-radius: 10px;
+        background: transparent; color: var(--sp-muted);
+        font-weight: 700; font-size: .82rem; cursor: pointer;
+        transition: background .2s, color .2s, box-shadow .2s;
+    }
+    .acct-tab i { font-size: .9rem; }
+    .acct-tab:hover { color: var(--sp-text); background: var(--sp-surface-hover); }
+    .acct-tab.active {
+        background: var(--sp-surface); color: var(--sp-text);
+        box-shadow: 0 4px 14px rgba(15,23,42,.08);
+    }
+    [data-theme="dark"] .acct-tab.active { box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .acct-pane { display: none; }
+    .acct-pane.active { display: block; animation: acctFade .35s ease; }
+    @keyframes acctFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .acct-toolbar {
+        display: flex; align-items: flex-end; gap: .65rem; flex-wrap: wrap;
+        padding: .85rem 1rem; margin-bottom: 1rem;
+        background: var(--sp-surface-2); border: 1px solid var(--sp-border);
+        border-radius: 14px;
+    }
+    .acct-field { display: flex; flex-direction: column; gap: .25rem; min-width: 0; }
+    .acct-field label { font-size: .72rem; font-weight: 700; color: var(--sp-muted); }
+    .acct-field .form-control { max-width: 160px; font-size: .85rem; }
+    .acct-toolbar .btn { white-space: nowrap; }
+
+    .acct-result { min-height: 0; }
+    .acct-result.is-loading { opacity: .55; pointer-events: none; position: relative; }
+    .acct-result.is-loading::after {
+        content: ""; position: absolute; inset: 0;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%2394a3b8' d='M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8'/%3E%3C/svg%3E") center/24px no-repeat;
+        animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Income hero */
+    .acct-income-hero {
+        display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+        padding: 1.25rem 1.4rem; border-radius: 16px;
+        background: linear-gradient(135deg, rgba(16,185,129,.12), rgba(99,102,241,.06));
+        border: 1px solid rgba(16,185,129,.22); margin-bottom: 1rem;
+    }
+    .acct-income-hero__icon {
+        width: 56px; height: 56px; border-radius: 14px;
+        display: grid; place-items: center; font-size: 1.35rem; color: #fff;
+        background: linear-gradient(135deg, #10b981, #059669);
+        box-shadow: 0 10px 24px -10px rgba(16,185,129,.55);
+    }
+    .acct-income-hero__label { font-size: .78rem; font-weight: 700; color: var(--sp-muted); margin-bottom: .2rem; }
+    .acct-income-hero__value { font-size: 2rem; font-weight: 900; color: var(--sp-text); font-variant-numeric: tabular-nums; line-height: 1.1; }
+    .acct-income-hero__meta { font-size: .78rem; color: var(--sp-muted); margin-top: .35rem; display: flex; align-items: center; gap: .35rem; }
+
+    /* Balance accounts — visual rows */
+    .acct-bal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .85rem; }
+    @media (max-width: 768px) { .acct-bal-grid { grid-template-columns: 1fr; } }
+    .acct-bal-card {
+        padding: 1rem 1.1rem; border-radius: 14px;
+        background: var(--sp-surface); border: 1px solid var(--sp-border);
+        position: relative; overflow: hidden;
+    }
+    .acct-bal-card::before {
+        content: ""; position: absolute; inset-inline-start: 0; top: 0; bottom: 0; width: 4px;
+        background: var(--acct-accent, #6366f1); border-radius: 4px 0 0 4px;
+    }
+    .acct-bal-card__head { display: flex; align-items: center; gap: .55rem; margin-bottom: .65rem; }
+    .acct-bal-card__ico {
+        width: 36px; height: 36px; border-radius: 10px;
+        display: grid; place-items: center; font-size: .9rem; color: #fff;
+        background: var(--acct-accent, #6366f1);
+    }
+    .acct-bal-card__name { font-size: .78rem; font-weight: 700; color: var(--sp-muted); }
+    .acct-bal-card__val { font-size: 1.35rem; font-weight: 900; color: var(--sp-text); font-variant-numeric: tabular-nums; }
+    .acct-bal-card__bar { height: 5px; border-radius: 999px; background: var(--sp-border); margin-top: .55rem; overflow: hidden; }
+    .acct-bal-card__bar span { display: block; height: 100%; border-radius: 999px; background: var(--acct-accent, #6366f1); transition: width .6s ease; }
+    .acct-bal-total {
+        display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+        margin-top: 1rem; padding: .85rem 1.1rem; border-radius: 12px;
+        background: var(--sp-surface-2); border: 1px dashed var(--sp-border);
+    }
+    .acct-bal-total span { font-size: .82rem; font-weight: 700; color: var(--sp-muted); }
+    .acct-bal-total strong { font-size: 1.15rem; font-weight: 900; color: var(--sp-text); font-variant-numeric: tabular-nums; }
+
+    /* Revenue recognition action */
+    .acct-revenue-box {
+        padding: 1.25rem; border-radius: 14px;
+        background: var(--sp-surface-2); border: 1px solid var(--sp-border);
+    }
+    .acct-revenue-box p { font-size: .85rem; color: var(--sp-muted); margin: 0 0 1rem; line-height: 1.55; }
+    .acct-result-banner {
+        display: flex; align-items: flex-start; gap: .85rem;
+        padding: 1rem 1.15rem; border-radius: 14px; margin-top: 1rem;
+    }
+    .acct-result-banner--ok { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.25); }
+    .acct-result-banner--ok i { color: #16a34a; font-size: 1.4rem; }
+    .acct-result-banner--err { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); }
+    .acct-result-banner--err i { color: #ef4444; font-size: 1.4rem; }
+    .acct-result-banner strong { display: block; color: var(--sp-text); font-size: .92rem; margin-bottom: .15rem; }
+    .acct-result-banner p { margin: 0; font-size: .82rem; color: var(--sp-muted); }
+</style>
+
+<div class="saas-page saas-animate-in">
+    <%- include('../../partials/page-header', { titleKey: 'reports.overview', descKey: 'reports.overviewDesc' }) %>
+
+    <!-- DATE FILTER -->
+    <div class="rep-filterbar saas-stagger-item">
+        <div class="rep-filterbar__left">
+            <i class="fas fa-filter"></i>
+            <div class="sp-chart-tabs" id="repFilterTabs" role="tablist">
+                <button type="button" class="sp-chart-tab active" data-range="all" data-i18n="reports.filterAll">الكل حتى اليوم</button>
+                <button type="button" class="sp-chart-tab" data-range="month" data-i18n="reports.filterThisMonth">هذا الشهر</button>
+                <button type="button" class="sp-chart-tab" data-range="quarter" data-i18n="reports.filterLast3">آخر 3 أشهر</button>
+                <button type="button" class="sp-chart-tab" data-range="year" data-i18n="reports.filterThisYear">هذه السنة</button>
+                <button type="button" class="sp-chart-tab" data-range="custom" data-i18n="reports.filterCustom">فترة محددة</button>
+            </div>
+            <div class="sp-chart-custom d-none" id="repFilterCustom">
+                <input type="date" class="form-control form-control-sm" id="repFrom">
+                <span class="sp-chart-sep">—</span>
+                <input type="date" class="form-control form-control-sm" id="repTo">
+                <button type="button" class="btn saas-btn-soft saas-btn-sm" id="repApply" data-i18n="reports.apply">تطبيق</button>
+            </div>
+        </div>
+        <span class="saas-badge saas-badge--info" id="repRangeBadge" data-i18n="reports.upToToday">كل البيانات حتى اليوم</span>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="rep-kpi-grid" id="repKpis">
+        <div class="rep-kpi saas-stagger-item" style="--rep-accent:#16a34a">
+            <div class="rep-kpi__top">
+                <span class="rep-kpi__icon"><i class="fas fa-chart-line"></i></span>
+                <span class="rep-kpi__chip" id="repChipRate">—</span>
+            </div>
+            <div class="rep-kpi__label" data-i18n="reports.kpiRecognizedRevenue">الإيراد المعترف به</div>
+            <div class="rep-kpi__value" id="repRevenue">—</div>
+            <div class="rep-kpi__sub"><span data-i18n="reports.kpiInvoiced">إجمالي الفواتير</span>: <span id="repInvoiced">—</span></div>
+        </div>
+        <div class="rep-kpi saas-stagger-item" style="--rep-accent:#0ea5e9">
+            <div class="rep-kpi__top">
+                <span class="rep-kpi__icon"><i class="fas fa-hand-holding-dollar"></i></span>
+            </div>
+            <div class="rep-kpi__label" data-i18n="reports.kpiCollected">إجمالي المُحصّل</div>
+            <div class="rep-kpi__value" id="repCollected">—</div>
+            <div class="rep-kpi__sub"><span data-i18n="reports.kpiCollectionRate">نسبة التحصيل</span>: <span id="repRateText">—</span></div>
+        </div>
+        <div class="rep-kpi saas-stagger-item" style="--rep-accent:#ef4444">
+            <div class="rep-kpi__top">
+                <span class="rep-kpi__icon"><i class="fas fa-file-circle-exclamation"></i></span>
+                <span class="rep-kpi__chip" id="repChipDebtors" style="background:rgba(239,68,68,.12);color:#ef4444">—</span>
+            </div>
+            <div class="rep-kpi__label" data-i18n="reports.kpiOutstanding">مديونيات مستحقة</div>
+            <div class="rep-kpi__value" id="repOutstanding">—</div>
+            <div class="rep-kpi__sub"><span data-i18n="reports.openInvoices">فواتير مفتوحة</span>: <span id="repOpenInv">—</span></div>
+        </div>
+        <div class="rep-kpi saas-stagger-item" style="--rep-accent:#8b5cf6">
+            <div class="rep-kpi__top">
+                <span class="rep-kpi__icon"><i class="fas fa-hourglass-half"></i></span>
+            </div>
+            <div class="rep-kpi__label" data-i18n="reports.kpiDeferred">إيراد مؤجل</div>
+            <div class="rep-kpi__value" id="repDeferred">—</div>
+            <div class="rep-kpi__sub"><span data-i18n="reports.kpiCash">النقدية</span>: <span id="repCash">—</span></div>
+        </div>
+    </div>
+
+    <!-- CHARTS: TREND + DEBTORS -->
+    <div class="rep-grid">
+        <div class="saas-panel saas-stagger-item">
             <div class="saas-panel__head">
                 <div class="saas-panel__title-wrap">
-                    <span class="saas-panel__icon pos-icon-green"><i class="fas fa-chart-bar"></i></span>
-                    <h3 data-i18n="reports.incomeStatement">قائمة الدخل</h3>
+                    <span class="saas-panel__icon pos-icon-violet"><i class="fas fa-chart-column"></i></span>
+                    <h3 data-i18n="reports.trendTitle">الفوترة مقابل التحصيل</h3>
                 </div>
+                <span class="saas-badge saas-badge--info" data-i18n="reports.trendDesc">آخر 6 أشهر</span>
             </div>
             <div class="saas-panel__body">
-                <form id="incomeForm" class="saas-form-grid mb-3">
-                    <div class="saas-field saas-col-6">
-                        <label data-i18n="reports.from">من</label>
-                        <input class="form-control" name="from" type="date" required>
-                    </div>
-                    <div class="saas-field saas-col-6">
-                        <label data-i18n="reports.to">إلى</label>
-                        <input class="form-control" name="to" type="date" required>
-                    </div>
-                    <div class="saas-field saas-col-12">
-                        <button class="btn saas-btn-primary saas-btn-with-icon" type="submit">
-                            <i class="fas fa-play"></i><span data-i18n="reports.run">تشغيل</span>
-                        </button>
-                    </div>
-                </form>
-                <div id="incomeResult" class="saas-report-output">
-                    <div class="saas-report-placeholder">
-                        <i class="fas fa-chart-line"></i>
-                        <p data-i18n="reports.incomeHint">اختر الفترة واضغط تشغيل لعرض إيرادات الاشتراكات</p>
-                    </div>
+                <div class="rep-chart-box">
+                    <div class="rep-loading" id="repTrendLoading"><i class="fas fa-spinner fa-spin"></i></div>
+                    <canvas id="reportTrendChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="saas-panel saas-panel--accent saas-stagger-item">
+        <div class="saas-panel saas-stagger-item">
             <div class="saas-panel__head">
                 <div class="saas-panel__title-wrap">
-                    <span class="saas-panel__icon pos-icon-blue"><i class="fas fa-balance-scale"></i></span>
-                    <h3 data-i18n="reports.balanceSheet">الميزانية العمومية</h3>
+                    <span class="saas-panel__icon pos-icon-rose"><i class="fas fa-chart-pie"></i></span>
+                    <h3 data-i18n="reports.debtorsChartTitle">توزيع المديونيات على العملاء</h3>
                 </div>
             </div>
             <div class="saas-panel__body">
-                <form id="balanceForm" class="saas-form-grid mb-3">
-                    <div class="saas-field saas-col-8">
-                        <label data-i18n="reports.asOf">حتى تاريخ</label>
-                        <input class="form-control" name="asOf" type="date" required>
-                    </div>
-                    <div class="saas-field saas-col-4">
-                        <label>&nbsp;</label>
-                        <button class="btn saas-btn-primary saas-btn-with-icon w-100" type="submit">
-                            <i class="fas fa-play"></i><span data-i18n="reports.run">تشغيل</span>
-                        </button>
-                    </div>
-                </form>
-                <div id="balanceResult" class="saas-report-output">
-                    <div class="saas-report-placeholder">
-                        <i class="fas fa-landmark"></i>
-                        <p data-i18n="reports.balanceHint">اختر التاريخ لعرض أرصدة النقدية والذمم والإيرادات المؤجلة</p>
-                    </div>
+                <div class="rep-chart-box rep-chart-box--sm">
+                    <div class="rep-loading" id="repDebtorsLoading"><i class="fas fa-spinner fa-spin"></i></div>
+                    <canvas id="reportDebtorsChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="saas-panel saas-panel--accent saas-stagger-item">
+    <!-- DEBTORS TABLE + LEDGER -->
+    <div class="rep-grid">
+        <div class="saas-panel saas-stagger-item">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-amber"><i class="fas fa-users-rectangle"></i></span>
+                    <h3 data-i18n="reports.debtorsTitle">أعلى العملاء مديونية</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <p class="text-muted mb-3" style="font-size:.82rem" data-i18n="reports.debtorsHint">العملاء الذين عليهم مبالغ مستحقة غير مدفوعة</p>
+                <div id="repDebtorsList">
+                    <div class="saas-empty"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="saas-panel saas-stagger-item">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-green"><i class="fas fa-receipt"></i></span>
+                    <h3 data-i18n="reports.ledgerTitle">سجل الحركات المالية والتحصيل</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <div class="saas-table-wrap" style="max-height:360px;overflow:auto">
+                    <table class="saas-table" id="repLedgerTable">
+                        <thead>
+                            <tr>
+                                <th data-i18n="reports.txType">النوع</th>
+                                <th data-i18n="reports.customer">العميل</th>
+                                <th data-i18n="reports.amount">المبلغ</th>
+                                <th data-i18n="reports.txDate">التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="4"><div class="saas-empty"><i class="fas fa-spinner fa-spin"></i></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="saas-panel acct-panel saas-stagger-item">
         <div class="saas-panel__head">
             <div class="saas-panel__title-wrap">
-                <span class="saas-panel__icon pos-icon-amber"><i class="fas fa-coins"></i></span>
-                <h3 data-i18n="reports.runRevenue">اعتراف بالإيراد</h3>
+                <span class="saas-panel__icon pos-icon-indigo"><i class="fas fa-toolbox"></i></span>
+                <h3 data-i18n="reports.toolsTitle">أدوات محاسبية</h3>
             </div>
         </div>
         <div class="saas-panel__body">
-            <form id="revenueForm" class="saas-form-grid">
-                <div class="saas-field saas-col-3">
-                    <label data-i18n="reports.periodEnd">نهاية الفترة</label>
-                    <input class="form-control" name="periodEnd" type="date" required>
-                </div>
-                <div class="saas-field saas-col-2">
-                    <label>&nbsp;</label>
-                    <button class="btn saas-btn-soft saas-btn-with-icon w-100" type="submit">
-                        <i class="fas fa-check-circle"></i><span data-i18n="reports.run">تشغيل</span>
+            <div class="saas-howto mb-3"><span class="saas-howto__icon"><i class="fas fa-circle-info"></i></span><p data-i18n="reports.howto"></p></div>
+
+            <div class="acct-tabs" id="acctTabs" role="tablist">
+                <button type="button" class="acct-tab active" data-tab="income" role="tab">
+                    <i class="fas fa-chart-line"></i><span data-i18n="reports.incomeStatement">قائمة الدخل</span>
+                </button>
+                <button type="button" class="acct-tab" data-tab="balance" role="tab">
+                    <i class="fas fa-balance-scale"></i><span data-i18n="reports.balanceSheet">الميزانية العمومية</span>
+                </button>
+                <button type="button" class="acct-tab" data-tab="revenue" role="tab">
+                    <i class="fas fa-coins"></i><span data-i18n="reports.runRevenue">اعتراف بالإيراد</span>
+                </button>
+            </div>
+
+            <!-- INCOME -->
+            <div class="acct-pane active" id="acctPaneIncome" data-pane="income">
+                <form id="incomeForm" class="acct-toolbar">
+                    <div class="acct-field">
+                        <label data-i18n="reports.from">من</label>
+                        <input class="form-control" name="from" type="date" required>
+                    </div>
+                    <div class="acct-field">
+                        <label data-i18n="reports.to">إلى</label>
+                        <input class="form-control" name="to" type="date" required>
+                    </div>
+                    <button class="btn saas-btn-primary saas-btn-with-icon saas-btn-sm" type="submit">
+                        <i class="fas fa-sync-alt"></i><span data-i18n="reports.run">تشغيل</span>
                     </button>
-                </div>
-            </form>
-            <div id="revenueResult" class="saas-report-output mt-3">
-                <div class="saas-report-placeholder saas-report-placeholder--compact">
-                    <i class="fas fa-receipt"></i>
+                </form>
+                <div id="incomeResult" class="acct-result"></div>
+            </div>
+
+            <!-- BALANCE -->
+            <div class="acct-pane" id="acctPaneBalance" data-pane="balance">
+                <form id="balanceForm" class="acct-toolbar">
+                    <div class="acct-field">
+                        <label data-i18n="reports.asOf">حتى تاريخ</label>
+                        <input class="form-control" name="asOf" type="date" required>
+                    </div>
+                    <button class="btn saas-btn-primary saas-btn-with-icon saas-btn-sm" type="submit">
+                        <i class="fas fa-sync-alt"></i><span data-i18n="reports.run">تشغيل</span>
+                    </button>
+                </form>
+                <div id="balanceResult" class="acct-result"></div>
+            </div>
+
+            <!-- REVENUE RECOGNITION -->
+            <div class="acct-pane" id="acctPaneRevenue" data-pane="revenue">
+                <div class="acct-revenue-box">
                     <p data-i18n="reports.revenueHint">شغّل اعتراف الإيراد للفواتير المدفوعة</p>
+                    <form id="revenueForm" class="acct-toolbar" style="margin:0;padding:0;background:none;border:none">
+                        <div class="acct-field">
+                            <label data-i18n="reports.periodEnd">نهاية الفترة</label>
+                            <input class="form-control" name="periodEnd" type="date" required>
+                        </div>
+                        <button class="btn saas-btn-soft saas-btn-with-icon saas-btn-sm" type="submit">
+                            <i class="fas fa-check-circle"></i><span data-i18n="reports.run">تشغيل</span>
+                        </button>
+                    </form>
                 </div>
+                <div id="revenueResult" class="acct-result"></div>
             </div>
         </div>
     </div>
