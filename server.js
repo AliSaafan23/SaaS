@@ -1,5 +1,6 @@
 import { database } from "./src/config/index.js";
 import createApp from "./src/app.js";
+import { ensureUploadDirs } from "./src/utils/common/makeDir.js";
 import http from "http";
 import dotenv from "dotenv";
 
@@ -12,6 +13,7 @@ const host =
     : "127.0.0.1";
 
 async function start() {
+  ensureUploadDirs();
   await database.connect();
   const app = createApp();
   const server = http.createServer(app);

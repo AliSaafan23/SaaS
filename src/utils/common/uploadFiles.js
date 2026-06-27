@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import deleteFiles from "./deleteFiles.js";
 import Resize from "./resizeFiles.js";
+import makeDir from "./makeDir.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,17 +50,7 @@ const uploadAnyFile = async (request, type, dir, name) => {
 };
 
 const handleUploadAnyImage = async (request, dir, imageName) => {
-  // Define upload path
-  let pathUpload = path.join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "public",
-    "assets",
-    "uploads",
-    dir,
-  );
+  const pathUpload = makeDir(dir);
   let fileUpload = new Resize(pathUpload);
 
   // Initialize image processing result
