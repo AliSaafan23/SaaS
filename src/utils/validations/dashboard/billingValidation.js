@@ -68,6 +68,27 @@ const billingValidation = {
                 .withMessage(() => errorRes.responseError('fail', i18n.__('invalidDate'))),
         ]);
     },
+
+    validateRevenueChart() {
+        return withMiddleware([
+            query('granularity')
+                .optional()
+                .isIn(['daily', 'monthly', 'yearly', 'custom'])
+                .withMessage(() => errorRes.responseError('fail', i18n.__('invalidGranularity'))),
+            query('from')
+                .if((value, { req }) => req.query.granularity === 'custom')
+                .notEmpty()
+                .withMessage(() => errorRes.responseError('fail', i18n.__('fromDateRequired')))
+                .isISO8601()
+                .withMessage(() => errorRes.responseError('fail', i18n.__('invalidDate'))),
+            query('to')
+                .if((value, { req }) => req.query.granularity === 'custom')
+                .notEmpty()
+                .withMessage(() => errorRes.responseError('fail', i18n.__('toDateRequired')))
+                .isISO8601()
+                .withMessage(() => errorRes.responseError('fail', i18n.__('invalidDate'))),
+        ]);
+    },
 };
 
 export default billingValidation;

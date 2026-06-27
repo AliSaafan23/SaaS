@@ -30,12 +30,6 @@ const tenantAuthValidation = {
         .withMessage(() =>
           errorRes.responseError("fail", i18n.__("invalidEmail")),
         ),
-      body("companyEmail")
-        .optional({ checkFalsy: true })
-        .isEmail()
-        .withMessage(() =>
-          errorRes.responseError("fail", i18n.__("invalidEmail")),
-        ),
       body("password")
         .notEmpty()
         .withMessage(() =>
@@ -100,6 +94,35 @@ const tenantAuthValidation = {
         .isEmail()
         .withMessage(() =>
           errorRes.responseError("fail", i18n.__("invalidEmail")),
+        ),
+    ]);
+  },
+
+  validateUpdateProfile() {
+    return withMiddleware([
+      body("name")
+        .optional({ checkFalsy: true })
+        .isLength({ min: 2 })
+        .withMessage(() =>
+          errorRes.responseError("fail", i18n.__("adminNameRequired")),
+        ),
+      body("email")
+        .optional({ checkFalsy: true })
+        .isEmail()
+        .withMessage(() =>
+          errorRes.responseError("fail", i18n.__("invalidEmail")),
+        ),
+      body("newPassword")
+        .optional({ checkFalsy: true })
+        .isLength({ min: 8 })
+        .withMessage(() =>
+          errorRes.responseError("fail", i18n.__("passwordTooShort")),
+        ),
+      body("currentPassword")
+        .if(body("newPassword").notEmpty())
+        .notEmpty()
+        .withMessage(() =>
+          errorRes.responseError("fail", i18n.__("currentPasswordRequired")),
         ),
     ]);
   },

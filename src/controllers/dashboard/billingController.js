@@ -6,7 +6,8 @@ import { runMonthlyBilling } from '../../helpers/accounting/billingService.js';
 import { recordPayment } from '../../helpers/accounting/paymentService.js';
 import { runRevenueRecognition } from '../../helpers/accounting/revenueService.js';
 import { getIncomeStatement, getBalanceSheet } from '../../helpers/accounting/reportsService.js';
-import { Invoice, Payment } from '../../models/index.js';
+import { getRevenueChartData } from '../../helpers/dashboard/revenueChart.js';
+import { Invoice, Payment, Customer, Subscription, Plan } from '../../models/index.js';
 
 export default {
     runBilling: async (req, res) => {
@@ -23,6 +24,15 @@ export default {
     listInvoices: async (req, res) => {
         const invoices = await Invoice.findAll({
             where: { tenantId: req.tenantId },
+            include: [
+                { model: Customer, as: 'customer', attributes: ['id', 'name', 'avatar'] },
+                {
+                    model: Subscription,
+                    as: 'subscription',
+                    attributes: ['id'],
+                    include: [{ model: Plan, as: 'plan', attributes: ['id', 'name'] }],
+                },
+            ],
             order: [['id', 'DESC']],
         });
         res.send(
@@ -64,6 +74,14 @@ export default {
     listPayments: async (req, res) => {
         const payments = await Payment.findAll({
             where: { tenantId: req.tenantId },
+            include: [
+                {
+                    model: Invoice,
+                    as: 'invoice',
+                    attributes: ['id'],
+                    include: [{ model: Customer, as: 'customer', attributes: ['id', 'name', 'avatar'] }],
+                },
+            ],
             order: [['id', 'DESC']],
         });
         res.send(
@@ -100,5 +118,12 @@ export default {
         const asOf = req.query.asOf || new Date().toISOString().slice(0, 10);
         const report = await getBalanceSheet({ tenantId: req.tenantId, asOf });
         res.send(new ApiResponse('success', i18n.__('dataFetched'), 200, report));
+    },
+
+    revenueChart: async (req, res) => {
+        const { granularity = 'monthly', from, to } = req.query;
+        const locale = req.getLocale?.() === 'ar' ? 'ar-EG' : 'en-US';
+        const chart = await getRevenueChartData(req.tenantId, { granularity, from, to, locale });
+        res.send(new ApiResponse('success', i18n.__('dataFetched'), 200, chart));
     },
 };

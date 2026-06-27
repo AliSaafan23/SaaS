@@ -62,6 +62,11 @@
   "amountRequired": "Amount is required",
   "invalidAmount": "Invalid amount",
   "fromDateRequired": "From date is required",
+  "toDateRequired": "To date is required",
+  "invalidGranularity": "Invalid filter type",
+  "profileUpdated": "Profile updated successfully",
+  "currentPasswordRequired": "Current password is required",
+  "currentPasswordWrong": "Current password is incorrect",
   "home": {
     "welcome": "Welcome",
     "desc": "Multi-tenant SaaS subscription management system with double-entry accounting.",

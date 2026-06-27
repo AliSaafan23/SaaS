@@ -38,5 +38,11 @@ router.get(
   requireDashboardSession,
   asyncHandler(tenantAuthController.profile),
 );
+router.put(
+  "/profile",
+  requireDashboardSession,
+  tenantAuthValidation.validateUpdateProfile(),
+  asyncHandler(tenantAuthController.updateProfile),
+);
 
 export default router;

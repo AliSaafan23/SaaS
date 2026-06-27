@@ -89,12 +89,9 @@ export const createDashboardSessionToken = async (user) => {
 };
 
 export const registerTenant = async (req) => {
-  const { companyName, companyEmail, adminName, email, password } = req.body;
+  const { companyName, adminName, email, password } = req.body;
 
   const normalizedEmail = normalizeEmail(email);
-  const normalizedCompanyEmail = companyEmail
-    ? normalizeEmail(companyEmail)
-    : normalizedEmail;
 
   const existing = await TenantUser.scope("withPassword").findOne({
     where: { email: normalizedEmail },
@@ -123,7 +120,6 @@ export const registerTenant = async (req) => {
         slug: slugify(companyName),
         status: "active",
         logo,
-        companyEmail: normalizedCompanyEmail,
       },
       { transaction },
     );

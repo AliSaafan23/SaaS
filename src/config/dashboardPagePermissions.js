@@ -1,0 +1,15 @@
+import { TENANT_PERMISSIONS } from './tenantPermissions.js';
+
+/** Minimum permission to open each dashboard UI page */
+export const DASHBOARD_PAGE_PERMISSIONS = {
+    plans: TENANT_PERMISSIONS.PLANS_READ,
+    customers: TENANT_PERMISSIONS.CUSTOMERS_READ,
+    subscriptions: TENANT_PERMISSIONS.SUBSCRIPTIONS_READ,
+    invoices: TENANT_PERMISSIONS.BILLING_READ,
+    payments: TENANT_PERMISSIONS.BILLING_READ,
+    reports: TENANT_PERMISSIONS.REPORTS_READ,
+    users: TENANT_PERMISSIONS.USERS_MANAGE,
+    roles: TENANT_PERMISSIONS.ROLES_MANAGE,
+};
+
+export default DASHBOARD_PAGE_PERMISSIONS;

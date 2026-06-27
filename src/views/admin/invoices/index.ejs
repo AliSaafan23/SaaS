@@ -4,6 +4,7 @@
         descKey: 'invoices.desc',
         actionHtml: '<button class="btn saas-btn-soft" id="runBillingBtn"><i class="fas fa-play me-1"></i><span data-i18n="invoices.runBilling">تشغيل الفوترة</span></button>'
     }) %>
+    <div class="saas-howto"><span class="saas-howto__icon"><i class="fas fa-circle-info"></i></span><p data-i18n="invoices.howto"></p></div>
     <div id="invoiceAlert" class="alert d-none saas-alert"></div>
 
     <div class="saas-panel">
@@ -14,10 +15,13 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th data-i18n="invoices.customer">العميل</th>
+                            <th data-i18n="invoices.plan">الخطة</th>
                             <th data-i18n="invoices.amount">المبلغ</th>
                             <th data-i18n="invoices.status">الحالة</th>
                             <th data-i18n="invoices.period">الفترة</th>
                             <th data-i18n="invoices.issueDate">تاريخ الإصدار</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>

@@ -1,30 +1,85 @@
 <%
 const initials = (user?.name || 'U').trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase()).join('');
+const avatarUrl = user?.avatar ? (/^(https?:|\/)/.test(user.avatar) ? user.avatar : '/assets/uploads/users/' + user.avatar) : null;
 %>
 <header class="pos-navbar">
-    <button type="button" class="pos-toggle" id="sidebarToggle" aria-label="Menu">
+    <button type="button" class="pos-toggle sp-iconbtn d-lg-none" id="sidebarToggle" aria-label="Menu">
         <i class="fas fa-bars"></i>
     </button>
-    
-    <div class="me-auto">
+
+    <div class="d-none d-md-block">
         <h1 class="pos-page-title" data-i18n="<%= pageTitleKey %>">Dashboard</h1>
+        <div class="sp-breadcrumb">
+            <i class="fas fa-home"></i>
+            <span data-i18n="nav.sectionMain">الرئيسية</span>
+            <i class="fas fa-chevron-left"></i>
+            <span data-i18n="<%= pageTitleKey %>">Page</span>
+        </div>
     </div>
 
-    <div class="pos-navbar-actions">
+    <div class="sp-search" id="navSearchTrigger" role="button" tabindex="0">
+        <i class="fas fa-search sp-search-icon"></i>
+        <input type="text" readonly data-i18n-placeholder="common.searchPlaceholder" placeholder="بحث سريع...">
+        <span class="sp-kbd"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+    </div>
+
+    <div class="pos-navbar-actions d-flex align-items-center gap-2 ms-auto">
         <%- include('lang-switcher', { navbar: true }) %>
-        
-        <div class="pos-user-profile">
-            <div class="pos-user-avatar">
-                <% if (user?.avatar) { %>
-                    <img src="<%= user.avatar %>" alt="" class="rounded-circle" width="36" height="36">
-                <% } else { %>
-                    <%= initials %>
+
+        <button type="button" class="sp-iconbtn" id="themeToggle" data-i18n-aria="common.toggleTheme" aria-label="Theme">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <button type="button" class="sp-iconbtn" id="notifBtn" aria-label="Notifications">
+            <i class="far fa-bell"></i>
+            <span class="sp-dot"></span>
+        </button>
+
+        <div class="sp-profile" id="profileMenu">
+            <button type="button" class="sp-profile-btn" id="profileToggle">
+                <span class="sp-avatar">
+                    <% if (avatarUrl) { %>
+                        <img src="<%= avatarUrl %>" alt="">
+                    <% } else { %>
+                        <%= initials %>
+                    <% } %>
+                </span>
+                <span class="sp-profile-meta">
+                    <strong><%= user?.name || '' %></strong>
+                    <small><%= user?.role?.name || 'Owner' %></small>
+                </span>
+                <i class="fas fa-chevron-down sp-profile-caret" style="font-size:.65rem;color:var(--sp-muted);"></i>
+            </button>
+            <div class="sp-dropdown">
+                <div class="sp-dropdown-head">
+                    <strong><%= user?.name || '' %></strong>
+                    <small><%= user?.email || '' %></small>
+                </div>
+                <a href="/dashboard/ui/profile"><i class="fas fa-user-gear"></i><span data-i18n="profile.title">الملف الشخصي</span></a>
+                <a href="/dashboard/home"><i class="fas fa-gauge-high"></i><span data-i18n="nav.overview">نظرة عامة</span></a>
+                <% if ((user?.role?.permissions || []).includes('*') || (user?.role?.permissions || []).includes('users.manage')) { %>
+                <a href="/dashboard/ui/users"><i class="fas fa-user-shield"></i><span data-i18n="nav.users">المستخدمين</span></a>
                 <% } %>
-            </div>
-            <div class="pos-user-info">
-                <strong><%= user?.name || '' %></strong>
-                <small><%= user?.role?.name || 'Admin' %></small>
+                <% if ((user?.role?.permissions || []).includes('*') || (user?.role?.permissions || []).includes('roles.manage')) { %>
+                <a href="/dashboard/ui/roles"><i class="fas fa-shield-halved"></i><span data-i18n="nav.roles">الأدوار</span></a>
+                <% } %>
+                <button type="button" class="sp-dd-danger" id="profileLogout"><i class="fas fa-arrow-right-from-bracket"></i><span data-i18n="common.logout">تسجيل الخروج</span></button>
             </div>
         </div>
     </div>
 </header>
+<script>
+(function () {
+    const menu = document.getElementById('profileMenu');
+    const toggle = document.getElementById('profileToggle');
+    toggle?.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('open'); });
+    document.addEventListener('click', (e) => { if (!menu?.contains(e.target)) menu?.classList.remove('open'); });
+    document.getElementById('profileLogout')?.addEventListener('click', async () => {
+        await PosApi.request('/auth/signout', { method: 'POST' });
+        window.location.href = '/dashboard/login';
+    });
+    document.getElementById('notifBtn')?.addEventListener('click', () => {
+        PosApi.toast?.(PosApi.t('common.noNotifications', 'لا توجد إشعارات جديدة'), 'info');
+    });
+})();
+</script>

@@ -18,7 +18,19 @@
     "edit": "Edit",
     "saveChanges": "Save Changes",
     "confirmDelete": "Are you sure you want to delete?",
-    "status": "Status"
+    "status": "Status",
+    "select": "Select",
+    "searchPlaceholder": "Search pages or actions...",
+    "toggleTheme": "Toggle theme",
+    "noNotifications": "No new notifications",
+    "navigate": "Navigate",
+    "open": "Open",
+    "close": "Close",
+    "forbidden": "You are not allowed to perform this action"
+  },
+  "errors": {
+    "forbiddenTitle": "Access denied",
+    "forbiddenDesc": "You don't have permission to access this page or perform this action."
   },
   "pages": {
     "login": "Sign in",
@@ -32,7 +44,20 @@
     "payments": "Payments",
     "reports": "Financial reports",
     "users": "User management",
-    "roles": "Roles & permissions"
+    "roles": "Roles & permissions",
+    "profile": "Profile"
+  },
+  "profile": {
+    "title": "My Profile",
+    "desc": "Update your personal info, password, and photo.",
+    "accountInfo": "Account info",
+    "name": "Name",
+    "email": "Email",
+    "changePassword": "Change password",
+    "passwordHint": "Leave blank if you don't want to change your password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "avatarHint": "Click the camera to change your photo"
   },
   "nav": {
     "sectionMain": "Main",
@@ -64,7 +89,22 @@
     "desc": "Define permissions for each role (Admin, Accountant, etc).",
     "add": "Add role",
     "name": "Role name",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "allPermissions": "All permissions",
+    "allPermissionsHint": "Same as Owner — full access to everything",
+    "allPermissionsShort": "All permissions",
+    "permCount": "permissions",
+    "permPlansRead": "Plans: Read",
+    "permPlansManage": "Plans: Manage",
+    "permCustomersRead": "Customers: Read",
+    "permCustomersManage": "Customers: Manage",
+    "permSubsRead": "Subscriptions: Read",
+    "permSubsManage": "Subscriptions: Manage",
+    "permBillingRead": "Billing: Read",
+    "permBillingManage": "Billing: Manage",
+    "permReportsRead": "Reports: Read",
+    "permUsersManage": "Users: Manage",
+    "permRolesManage": "Roles: Manage"
   },
   "auth": {
     "title": "Sign in",
@@ -131,24 +171,31 @@
   "invoices": {
     "title": "Invoices",
     "desc": "Run monthly billing and post AR / Deferred Revenue entries.",
+    "howto": "An invoice is a charge to a customer for a subscription period. Click \"Run billing\" and the system automatically creates invoices for every active subscription that is due, posting an accounting entry (Accounts Receivable / Deferred Revenue). The invoice stays \"open\" until the customer pays it on the Payments page.",
     "list": "Invoice list",
     "runBilling": "Run monthly billing",
     "amount": "Amount",
     "status": "Status",
     "period": "Period",
-    "issueDate": "Issue date"
+    "issueDate": "Issue date",
+    "customer": "Customer",
+    "plan": "Plan",
+    "collect": "Collect"
   },
   "payments": {
     "title": "Payments",
     "desc": "Record customer payments against open invoices.",
+    "howto": "This is where you record cash collected from a customer. Enter an open invoice ID and the matching amount; the invoice becomes \"paid\" and an entry is posted (Cash / Accounts Receivable). After payment you can recognize the revenue from the Reports page.",
     "invoiceId": "Invoice ID",
     "amount": "Amount",
     "date": "Date",
-    "record": "Record payment"
+    "record": "Record payment",
+    "customer": "Customer"
   },
   "reports": {
     "title": "Financial reports",
     "desc": "Income statement, balance sheet, and revenue recognition.",
+    "howto": "These reports summarize your company's financials. The income statement shows revenue over a period, the balance sheet shows balances (cash, receivables, deferred revenue) as of a date, and \"Revenue recognition\" converts deferred revenue from paid invoices into actual revenue at period end. Pick the dates and click Run.",
     "incomeStatement": "Income statement",
     "balanceSheet": "Balance sheet",
     "from": "From",
@@ -186,7 +233,20 @@
     "subsHint": "Link customer to plan",
     "invoicesHint": "Run monthly billing",
     "paymentsHint": "Record payments",
-    "reportsHint": "Income statement & balance sheet"
+    "reportsHint": "Income statement & balance sheet",
+    "totalRevenue": "Total Revenue",
+    "openInvoices": "Open Invoices",
+    "tenantInfo": "Company Info",
+    "revenueOverview": "Revenue Overview",
+    "last6Months": "Last 6 months",
+    "recentActivity": "Recent Activity",
+    "filterDaily": "Daily",
+    "filterMonthly": "Monthly",
+    "filterYearly": "Yearly",
+    "filterCustom": "Custom",
+    "applyFilter": "Apply",
+    "chartTotal": "Period total",
+    "pickDateRange": "Select start and end dates"
   },
   "status": {
     "active": "Active",

@@ -12,6 +12,16 @@
     <link rel="stylesheet" href="/admin/vendor/fonts/fontawesome.css">
     <link rel="stylesheet" href="/admin/css/pos-dashboard.css">
     <link rel="stylesheet" href="/admin/css/saas-ui.css">
+    <link rel="stylesheet" href="/admin/css/saas-premium.css">
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('pos-theme')
+                    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {}
+        })();
+    </script>
     <script src="/admin/js/admin-i18n.js"></script>
     <%- typeof style !== 'undefined' ? style : '' %>
 </head>
@@ -32,9 +42,12 @@
     <script src="/admin/vendor/libs/node-waves/node-waves.js"></script>
     <script src="/admin/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <%- include('../partials/pos-dialog') %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="/admin/js/pos-api.js"></script>
     <script src="/admin/js/saas-ui.js"></script>
+    <script src="/admin/js/saas-shell.js"></script>
     <script>
+        window.__USER_PERMS__ = <%- JSON.stringify(user?.role?.permissions || []) %>;
         document.addEventListener('DOMContentLoaded', () => {
             AdminI18n.init();
             SaasUI.initPage();

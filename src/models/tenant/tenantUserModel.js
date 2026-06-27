@@ -10,6 +10,7 @@ const TenantUser = sequelize.define(
         name: { type: DataTypes.STRING(150), allowNull: false },
         email: { type: DataTypes.STRING(200), allowNull: false },
         password: { type: DataTypes.STRING(255), allowNull: false },
+        avatar: { type: DataTypes.STRING(500), allowNull: true },
         roleId: { type: DataTypes.INTEGER, allowNull: true },
         status: { type: DataTypes.ENUM('active', 'block', 'delete'), defaultValue: 'active' },
         emailVerified: { type: DataTypes.BOOLEAN, defaultValue: false },

@@ -17,6 +17,13 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label small fw-bold mb-2" data-i18n="roles.permissions">الصلاحيات</label>
+                            <div class="pos-perm-all mb-3 pb-2 border-bottom">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="permAll">
+                                    <label class="form-check-label fw-bold" for="permAll" data-i18n="roles.allPermissions">كل الصلاحيات (All)</label>
+                                </div>
+                                <small class="text-muted d-block mt-1" data-i18n="roles.allPermissionsHint">يعطي نفس صلاحيات Owner — وصول كامل لكل شيء</small>
+                            </div>
                             <div id="permissionsGrid" class="pos-permissions-grid">
                                 <!-- Loaded via JS -->
                             </div>

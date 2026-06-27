@@ -38,10 +38,6 @@
                             <input type="text" name="companyName" class="form-control pos-auth-input" required>
                         </div>
                         <div class="mb-3">
-                            <label class="pos-auth-label" data-i18n="auth.companyEmail">بريد الشركة</label>
-                            <input type="email" name="companyEmail" class="form-control pos-auth-input">
-                        </div>
-                        <div class="mb-3">
                             <label class="pos-auth-label" data-i18n="auth.companyLogo">شعار الشركة</label>
                             <input type="file" name="logo" class="form-control pos-auth-input" accept="image/png,image/jpeg,image/webp">
                             <small class="text-muted" data-i18n="auth.logoHint">PNG أو JPG — اختياري</small>
@@ -56,7 +52,13 @@
                         </div>
                         <div class="mb-4">
                             <label class="pos-auth-label" data-i18n="auth.passwordLabel">كلمة المرور</label>
-                            <input type="password" name="password" class="form-control pos-auth-input" required minlength="8">
+                            <div class="pos-auth-field">
+                                <i class="fas fa-lock pos-auth-field-icon"></i>
+                                <input type="password" name="password" id="regPassword" class="form-control pos-auth-input" required minlength="8">
+                                <button type="button" class="pos-auth-eye" data-password-toggle="regPassword" aria-label="Show password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-pos-login w-100" id="registerBtn" data-i18n="auth.registerSubmit">إنشاء الحساب</button>
                     </form>

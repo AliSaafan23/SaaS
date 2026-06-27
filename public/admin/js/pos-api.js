@@ -28,6 +28,12 @@ const PosApi = {
     return `${this.formatNum(n)} ${cur}`;
   },
 
+  can(permission) {
+    const perms = window.__USER_PERMS__ || [];
+    if (!permission) return true;
+    return perms.includes("*") || perms.includes(permission);
+  },
+
   formatDate(d, opts = { dateStyle: "medium", timeStyle: "short" }) {
     if (!d) return this.t("common.emDash", "—");
     return new Date(d).toLocaleString(this.localeTag(), opts);
@@ -67,6 +73,11 @@ const PosApi = {
     if (res.status === 401 && !options.skipRedirect) {
       window.location.href = "/dashboard/login";
       return data;
+    }
+
+    if (res.status === 403 && !options.skipToast) {
+      const msg = data?.message || this.t("common.forbidden", "غير مصرح لك بهذا الإجراء");
+      this.toast?.(msg, "error");
     }
 
     return data;
@@ -361,17 +372,18 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "/dashboard/login";
   });
 
-  document.getElementById("sidebarToggle")?.addEventListener("click", () => {
-    document.querySelector(".pos-app")?.classList.toggle("sidebar-open");
+  // Sidebar drawer + theme toggle are handled by SaasShell on dashboard pages.
+  // Password show/hide toggle (works on auth pages too).
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-password-toggle]");
+    if (!btn) return;
+    const input = document.getElementById(btn.dataset.passwordToggle);
+    if (!input) return;
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    const icon = btn.querySelector("i");
+    if (icon) icon.className = show ? "fas fa-eye-slash" : "fas fa-eye";
   });
-
-  document.getElementById("sidebarBackdrop")?.addEventListener("click", () => {
-    document.querySelector(".pos-app")?.classList.remove("sidebar-open");
-  });
-
-  document
-    .getElementById("themeToggle")
-    ?.addEventListener("click", () => PosApi.toggleTheme());
 
   PosApi.initNavGroups();
   PosApi.initGlobalSearch();

@@ -1,4 +1,5 @@
 import { Customer, Subscription, Invoice, Plan } from '../../models/index.js';
+import { getRevenueChartData } from '../../helpers/dashboard/revenueChart.js';
 
 export default {
     login: (req, res) => {
@@ -22,12 +23,29 @@ export default {
 
     home: async (req, res) => {
         const tenantId = req.tenantId;
-        const [customerCount, subscriptionCount, activePlans, totalRevenue] = await Promise.all([
+        const [customerCount, subscriptionCount, planCount, openInvoices, totalRevenue, recentInvoices] = await Promise.all([
             Customer.count({ where: { tenantId } }),
             Subscription.count({ where: { tenantId, status: 'active' } }),
-            Plan.count({ where: { tenantId, isActive: true } }),
+            Plan.count({ where: { tenantId } }),
+            Invoice.count({ where: { tenantId, status: 'open' } }),
             Invoice.sum('amount', { where: { tenantId, status: 'paid' } }),
+            Invoice.findAll({
+                where: { tenantId },
+                include: [{ model: Customer, as: 'customer', attributes: ['name'] }],
+                order: [['issueDate', 'DESC'], ['id', 'DESC']],
+                limit: 6,
+            }),
         ]);
+
+        const locale = req.getLocale?.() === 'ar' ? 'ar-EG' : 'en-US';
+        const chart = await getRevenueChartData(tenantId, { granularity: 'monthly', locale });
+
+        const activity = recentInvoices.map((inv) => ({
+            type: inv.status === 'paid' ? 'payment' : 'invoice',
+            customer: inv.customer?.name || '—',
+            amount: Number(inv.amount || 0),
+            date: inv.issueDate,
+        }));
 
         res.render('admin/index/index', {
             pageTitleKey: 'pages.home',
@@ -36,9 +54,12 @@ export default {
             stats: {
                 customers: customerCount || 0,
                 subscriptions: subscriptionCount || 0,
-                plans: activePlans || 0,
-                revenue: totalRevenue || 0,
+                plans: planCount || 0,
+                openInvoices: openInvoices || 0,
+                revenue: Number(totalRevenue || 0),
             },
+            chart,
+            activity,
         });
     },
 
@@ -77,4 +98,7 @@ export default {
 
     roles: (req, res) =>
         res.render('admin/roles/index', { pageTitleKey: 'pages.roles', page: 'roles', user: req.tenantUser }),
+
+    profile: (req, res) =>
+        res.render('admin/profile/index', { pageTitleKey: 'profile.title', page: 'profile', user: req.tenantUser }),
 };

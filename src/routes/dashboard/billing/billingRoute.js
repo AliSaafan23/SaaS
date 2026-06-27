@@ -6,7 +6,16 @@ import { TENANT_PERMISSIONS } from "../../../config/tenantPermissions.js";
 
 const router = express.Router();
 
-router.get("/invoices", asyncHandler(billingController.listInvoices));
+router.get(
+  "/invoices",
+  requirePermission(TENANT_PERMISSIONS.BILLING_READ),
+  asyncHandler(billingController.listInvoices),
+);
+router.get(
+  "/revenue-chart",
+  billingValidation.validateRevenueChart(),
+  asyncHandler(billingController.revenueChart),
+);
 router.post(
   "/billing/run",
   requirePermission(TENANT_PERMISSIONS.BILLING_MANAGE),
@@ -19,7 +28,11 @@ router.post(
   billingValidation.validateCreatePayment(),
   asyncHandler(billingController.createPayment),
 );
-router.get("/payments", asyncHandler(billingController.listPayments));
+router.get(
+  "/payments",
+  requirePermission(TENANT_PERMISSIONS.BILLING_READ),
+  asyncHandler(billingController.listPayments),
+);
 router.post(
   "/revenue-recognition/run",
   requirePermission(TENANT_PERMISSIONS.BILLING_MANAGE),

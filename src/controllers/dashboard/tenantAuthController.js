@@ -13,7 +13,9 @@ import tenantAuth, {
   sendRegisterPending,
 } from "../../helpers/dashboard/tenantAuth.js";
 import returnObject from "../../helpers/dashboard/returnobject.js";
-import { UserToken } from "../../models/index.js";
+import { UserToken, TenantUser } from "../../models/index.js";
+import uploadFiles from "../../utils/common/uploadFiles.js";
+import deleteFiles from "../../utils/common/deleteFiles.js";
 
 export default {
   register: async (req, res) => {
@@ -106,5 +108,53 @@ export default {
         returnObject.tenantUserProfile(req.tenantUser),
       ),
     );
+  },
+
+  updateProfile: async (req, res) => {
+    try {
+      const user = await TenantUser.scope("withPassword").findOne({
+        where: { id: req.tenantUser.id, tenantId: req.tenantId },
+      });
+      if (!user) return errorHandler(res, "notFound", "userNotFound");
+
+      const { name, email, currentPassword, newPassword } = req.body;
+      const updates = {};
+
+      if (name) updates.name = name;
+
+      if (email && email !== user.email) {
+        const existing = await TenantUser.findOne({ where: { email } });
+        if (existing) return errorHandler(res, "fail", "emailAlreadyExists");
+        updates.email = email;
+      }
+
+      if (newPassword) {
+        const ok = await user.comparePassword(currentPassword || "");
+        if (!ok) return errorHandler(res, "fail", "currentPasswordWrong");
+        updates.password = newPassword;
+      }
+
+      if (req.files?.avatar) {
+        if (user.avatar) deleteFiles.removeFile(user.avatar, "users", "image");
+        const uploads = await uploadFiles.handleMultipleUploads(req, [
+          { name: "avatar", type: "image", dir: "users" },
+        ]);
+        updates.avatar = uploads.avatar;
+      }
+
+      await user.update(updates);
+
+      return res.send(
+        new ApiResponse(
+          "success",
+          i18n.__("profileUpdated"),
+          200,
+          returnObject.tenantUserProfile(user),
+        ),
+      );
+    } catch (err) {
+      console.error(err);
+      return errorHandler(res, "exception", "returnDeveloper");
+    }
   },
 };

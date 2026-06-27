@@ -6,6 +6,9 @@ const tenantLogoUrl = (logo) =>
 const customerAvatarUrl = (avatar) =>
     avatar ? `/assets/uploads/customers/${avatar}` : null;
 
+const userAvatarUrl = (avatar) =>
+    avatar ? (/^(https?:|\/)/.test(avatar) ? avatar : `/assets/uploads/users/${avatar}`) : null;
+
 export default {
     tenantUserProfile(user) {
         const u = toPlain(user);
@@ -14,6 +17,7 @@ export default {
             tenantId: u.tenantId,
             name: u.name,
             email: u.email,
+            avatar: userAvatarUrl(u.avatar),
             status: u.status,
             emailVerified: u.emailVerified,
             role: u.role
@@ -87,6 +91,9 @@ export default {
             periodEnd: i.periodEnd,
             issueDate: i.issueDate,
             revenueRecognizedAt: i.revenueRecognizedAt,
+            customerName: i.customer?.name,
+            customerAvatar: customerAvatarUrl(i.customer?.avatar),
+            planName: i.subscription?.plan?.name,
         };
     },
 
@@ -97,6 +104,8 @@ export default {
             invoiceId: p.invoiceId,
             amount: Number(p.amount),
             paymentDate: p.paymentDate,
+            customerName: p.invoice?.customer?.name,
+            customerAvatar: customerAvatarUrl(p.invoice?.customer?.avatar),
         };
     },
 };

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { TenantUser, Tenant, UserToken } from "../../models/index.js";
+import { TenantUser, Tenant, TenantRole, UserToken } from "../../models/index.js";
 
 const requireDashboardPage = async (req, res, next) => {
   try {
@@ -30,7 +30,10 @@ const requireDashboardPage = async (req, res, next) => {
     }
 
     const user = await TenantUser.findByPk(userId, {
-      include: [{ model: Tenant, as: "tenant" }],
+      include: [
+        { model: Tenant, as: "tenant" },
+        { model: TenantRole, as: "role" },
+      ],
     });
 
     if (!user || user.status !== "active" || user.tenant?.status !== "active") {

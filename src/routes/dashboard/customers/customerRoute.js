@@ -6,9 +6,10 @@ import { TENANT_PERMISSIONS } from "../../../config/tenantPermissions.js";
 
 const router = express.Router();
 
-router.get("/", asyncHandler(customerController.list));
+router.get("/", requirePermission(TENANT_PERMISSIONS.CUSTOMERS_READ), asyncHandler(customerController.list));
 router.get(
   "/:id",
+  requirePermission(TENANT_PERMISSIONS.CUSTOMERS_READ),
   customerValidation.validateIdParam(),
   asyncHandler(customerController.getById),
 );

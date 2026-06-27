@@ -62,6 +62,11 @@
   "amountRequired": "المبلغ مطلوب",
   "invalidAmount": "مبلغ غير صالح",
   "fromDateRequired": "تاريخ البداية مطلوب",
+  "toDateRequired": "تاريخ النهاية مطلوب",
+  "invalidGranularity": "نوع الفلترة غير صالح",
+  "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
+  "currentPasswordRequired": "كلمة المرور الحالية مطلوبة",
+  "currentPasswordWrong": "كلمة المرور الحالية غير صحيحة",
   "home": {
     "welcome": "مرحباً",
     "desc": "نظام إدارة اشتراكات SaaS متعدد الشركات مع محاسبة القيد المزدوج.",

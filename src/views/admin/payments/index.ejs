@@ -1,5 +1,6 @@
 <div class="saas-page saas-animate-in">
     <%- include('../../partials/page-header', { titleKey: 'payments.title', descKey: 'payments.desc' }) %>
+    <div class="saas-howto"><span class="saas-howto__icon"><i class="fas fa-circle-info"></i></span><p data-i18n="payments.howto"></p></div>
     <div id="payAlert" class="alert d-none saas-alert"></div>
 
     <div class="saas-panel">
@@ -33,6 +34,7 @@
                         <tr>
                             <th>#</th>
                             <th data-i18n="payments.invoiceId">فاتورة</th>
+                            <th data-i18n="payments.customer">العميل</th>
                             <th data-i18n="payments.amount">المبلغ</th>
                             <th data-i18n="payments.date">التاريخ</th>
                         </tr>
