@@ -1,3 +1,11 @@
 node_modules/
 .env
 .env.example
+
+# Local dev / review — not part of production deliverable
+docs/
+scripts/
+tests/
+check_models_temp.js
+vitest.config.js
+**/*temp*.js
