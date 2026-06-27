@@ -1,229 +1,324 @@
 <%
 const fmt = (n) => Number(n || 0).toLocaleString('en-US');
-const planName = user?.tenant?.planName || 'Free';
-const perms = user?.role?.permissions || [];
-const can = (p) => !p || perms.includes('*') || perms.includes(p);
+const s = stats || {};
 %>
+<style>
+    .hm-hero {
+        display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;
+        padding: 1.35rem 1.5rem; margin-bottom: 1.25rem; border-radius: 20px;
+        background: linear-gradient(135deg, rgba(99,102,241,.14), rgba(14,165,233,.08));
+        border: 1px solid var(--sp-border);
+    }
+    .hm-hero h1 { font-size: 1.45rem; font-weight: 900; color: var(--sp-text); margin: 0 0 .25rem; }
+    .hm-hero p { margin: 0; font-size: .85rem; color: var(--sp-muted); max-width: 520px; }
+    .hm-hero__actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .hm-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .85rem; margin-bottom: 1.25rem; }
+    @media (max-width: 1100px) { .hm-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .hm-kpi-grid { grid-template-columns: 1fr; } }
+    .hm-kpi {
+        padding: 1rem 1.1rem; border-radius: 16px;
+        background: var(--sp-surface); border: 1px solid var(--sp-border);
+        position: relative; overflow: hidden;
+    }
+    .hm-kpi::after {
+        content: ""; position: absolute; inset-inline-end: -20px; top: -20px;
+        width: 70px; height: 70px; border-radius: 50%;
+        background: var(--hm-accent, #6366f1); opacity: .1;
+    }
+    .hm-kpi__row { display: flex; align-items: center; justify-content: space-between; margin-bottom: .65rem; }
+    .hm-kpi__ico {
+        width: 40px; height: 40px; border-radius: 11px;
+        display: grid; place-items: center; color: #fff; font-size: 1rem;
+        background: var(--hm-accent, #6366f1);
+    }
+    .hm-kpi__chip {
+        font-size: .68rem; font-weight: 800; padding: .15rem .45rem; border-radius: 999px;
+        background: rgba(99,102,241,.12); color: var(--hm-accent, #6366f1);
+    }
+    .hm-kpi__label { font-size: .76rem; font-weight: 700; color: var(--sp-muted); }
+    .hm-kpi__val { font-size: 1.35rem; font-weight: 900; color: var(--sp-text); font-variant-numeric: tabular-nums; line-height: 1.15; }
+    .hm-kpi__sub { font-size: .72rem; color: var(--sp-muted); margin-top: .2rem; }
+    .hm-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 992px) { .hm-grid { grid-template-columns: 1fr; } }
+    .hm-chart-box { position: relative; height: 280px; }
+    .hm-fin-list { display: flex; flex-direction: column; gap: .65rem; }
+    .hm-fin-item {
+        display: flex; align-items: center; gap: .75rem; padding: .75rem .85rem;
+        border-radius: 12px; background: var(--sp-surface-2); border: 1px solid var(--sp-border);
+    }
+    .hm-fin-item__ico {
+        width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+        display: grid; place-items: center; color: #fff; font-size: .85rem;
+        background: var(--fi-accent, #6366f1);
+    }
+    .hm-fin-item__body { flex: 1; min-width: 0; }
+    .hm-fin-item__name { font-size: .78rem; font-weight: 700; color: var(--sp-muted); }
+    .hm-fin-item__val { font-size: 1.05rem; font-weight: 900; color: var(--sp-text); font-variant-numeric: tabular-nums; }
+    .hm-fin-item__bar { height: 4px; border-radius: 999px; background: var(--sp-border); margin-top: .35rem; overflow: hidden; }
+    .hm-fin-item__bar span { display: block; height: 100%; border-radius: 999px; background: var(--fi-accent, #6366f1); }
+    .hm-debtor {
+        display: flex; align-items: center; gap: .7rem; padding: .65rem 0;
+        border-bottom: 1px solid var(--sp-border);
+    }
+    .hm-debtor:last-child { border-bottom: none; }
+    .hm-debtor__av {
+        width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+        display: grid; place-items: center; overflow: hidden;
+        background: rgba(239,68,68,.12); color: #ef4444; font-size: .8rem;
+    }
+    .hm-debtor__av img { width: 100%; height: 100%; object-fit: cover; }
+    .hm-debtor__name { flex: 1; font-weight: 800; font-size: .88rem; color: var(--sp-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hm-debtor__amt { font-weight: 900; color: #ef4444; font-variant-numeric: tabular-nums; font-size: .9rem; }
+    .hm-tx { display: flex; align-items: flex-start; gap: .7rem; padding: .7rem 0; border-bottom: 1px solid var(--sp-border); }
+    .hm-tx:last-child { border-bottom: none; }
+    .hm-tx__dot {
+        width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+        display: grid; place-items: center; font-size: .75rem;
+    }
+    .hm-tx__dot.pay { background: rgba(34,197,94,.15); color: #16a34a; }
+    .hm-tx__dot.inv { background: rgba(245,158,11,.15); color: #d97706; }
+    .hm-tx__title { font-weight: 800; font-size: .86rem; color: var(--sp-text); }
+    .hm-tx__meta { font-size: .74rem; color: var(--sp-muted); margin-top: .15rem; }
+    .hm-quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+    @media (max-width: 992px) { .hm-quick { grid-template-columns: repeat(2, 1fr); } }
+    .hm-quick a {
+        display: flex; flex-direction: column; gap: .35rem; padding: .9rem;
+        border-radius: 14px; text-decoration: none; color: inherit;
+        background: var(--sp-surface-2); border: 1px solid var(--sp-border);
+        transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .hm-quick a:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -18px rgba(15,23,42,.4); border-color: var(--pos-primary); }
+    .hm-quick__ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-size: .9rem; }
+    .hm-quick h4 { margin: 0; font-size: .88rem; font-weight: 800; color: var(--sp-text); }
+    .hm-quick p { margin: 0; font-size: .72rem; color: var(--sp-muted); line-height: 1.4; }
+</style>
+
 <div class="saas-page">
     <!-- HERO -->
-    <section class="sp-hero sp-reveal">
-        <span class="sp-hero__blob b1"></span>
-        <span class="sp-hero__blob b2"></span>
-        <span class="sp-hero__blob b3"></span>
-        <div class="sp-hero__content">
-            <span class="sp-hero__badge"><i class="fas fa-bolt"></i> SaaS Billing</span>
-            <h1><span data-i18n="home.welcome">مرحباً</span><span>، <%= user?.name || '' %></span></h1>
-            <p data-i18n="home.desc">نظام إدارة اشتراكات SaaS متعدد الشركات مع محاسبة القيد المزدوج.</p>
-            <div class="sp-hero__meta">
-                <div class="sp-hero__meta-item">
-                    <small data-i18n="home.tenant">الشركة</small>
-                    <strong><%= user?.tenant?.name || '—' %></strong>
-                </div>
-                <div class="sp-hero__meta-item">
-                    <small data-i18n="home.totalRevenue">إجمالي الإيرادات</small>
-                    <strong><%= fmt(stats.revenue) %> USD</strong>
-                </div>
-                <div class="sp-hero__meta-item">
-                    <small data-i18n="nav.subscriptions">الاشتراكات النشطة</small>
-                    <strong><%= fmt(stats.subscriptions) %></strong>
-                </div>
-            </div>
-            <a href="/dashboard/ui/subscriptions" class="sp-hero__cta">
-                <i class="fas fa-plus"></i> <span data-i18n="subscriptions.add">اشتراك جديد</span>
-            </a>
+    <section class="hm-hero sp-reveal">
+        <div>
+            <h1><span data-i18n="home.welcome">مرحباً</span>، <%= user?.name || '' %></h1>
+            <p data-i18n="home.overviewDesc">لوحة تحكم شاملة لمتابعة الاشتراكات والتحصيل والوضع المالي لشركتك.</p>
         </div>
-        <div class="sp-hero__art" aria-hidden="true">
-            <span class="sp-float f1"><i class="fas fa-layer-group"></i></span>
-            <span class="sp-float f2"><i class="fas fa-chart-pie"></i></span>
-            <span class="sp-float f3"><i class="fas fa-wallet"></i></span>
+        <div class="hm-hero__actions">
+            <a href="/dashboard/ui/invoices" class="btn saas-btn-soft saas-btn-sm"><i class="fas fa-file-invoice-dollar me-1"></i><span data-i18n="home.runBilling">تشغيل الفوترة</span></a>
+            <a href="/dashboard/ui/reports" class="btn saas-btn-primary saas-btn-sm"><i class="fas fa-chart-line me-1"></i><span data-i18n="nav.reports">التقارير</span></a>
         </div>
     </section>
 
-    <!-- STAT CARDS -->
-    <div class="sp-stat-grid">
-        <div class="sp-stat sp-reveal">
-            <div class="sp-stat__top">
-                <div class="sp-stat__icon pos-icon-cyan"><i class="fas fa-users"></i></div>
-                <span class="sp-stat__trend up"><i class="fas fa-arrow-up"></i> 12%</span>
+    <!-- KPIs -->
+    <div class="hm-kpi-grid">
+        <div class="hm-kpi sp-reveal" style="--hm-accent:#0ea5e9">
+            <div class="hm-kpi__row">
+                <span class="hm-kpi__ico"><i class="fas fa-hand-holding-dollar"></i></span>
+                <span class="hm-kpi__chip"><%= s.collectionRate %>%</span>
             </div>
-            <div class="sp-stat__label" data-i18n="nav.customers">العملاء</div>
-            <div class="sp-stat__value" data-countup="<%= stats.customers %>">0</div>
+            <div class="hm-kpi__label" data-i18n="home.kpiCollected">إجمالي المحصّل</div>
+            <div class="hm-kpi__val" data-countup="<%= s.revenue %>" data-suffix=" USD">0</div>
+            <div class="hm-kpi__sub"><span data-i18n="home.kpiInvoiced">مفوتر</span>: <%= fmt(s.totalInvoiced) %> USD</div>
         </div>
-        <div class="sp-stat sp-reveal">
-            <div class="sp-stat__top">
-                <div class="sp-stat__icon pos-icon-indigo"><i class="fas fa-sync-alt"></i></div>
-                <span class="sp-stat__trend up"><i class="fas fa-arrow-up"></i> 8%</span>
+        <div class="hm-kpi sp-reveal" style="--hm-accent:#10b981">
+            <div class="hm-kpi__row">
+                <span class="hm-kpi__ico"><i class="fas fa-chart-line"></i></span>
             </div>
-            <div class="sp-stat__label" data-i18n="nav.subscriptions">الاشتراكات النشطة</div>
-            <div class="sp-stat__value" data-countup="<%= stats.subscriptions %>">0</div>
+            <div class="hm-kpi__label" data-i18n="home.kpiRecognized">الإيراد المعترف به</div>
+            <div class="hm-kpi__val" data-countup="<%= s.recognizedRevenue %>" data-suffix=" USD">0</div>
+            <div class="hm-kpi__sub" data-i18n="home.kpiRecognizedHint">بعد اعتراف الإيراد</div>
         </div>
-        <div class="sp-stat sp-reveal">
-            <div class="sp-stat__top">
-                <div class="sp-stat__icon pos-icon-green"><i class="fas fa-dollar-sign"></i></div>
-                <span class="sp-stat__trend up"><i class="fas fa-arrow-up"></i> 23%</span>
+        <div class="hm-kpi sp-reveal" style="--hm-accent:#ef4444">
+            <div class="hm-kpi__row">
+                <span class="hm-kpi__ico"><i class="fas fa-file-circle-exclamation"></i></span>
+                <span class="hm-kpi__chip"><%= fmt(s.debtorsCount) %> <span data-i18n="home.debtorsShort">مدين</span></span>
             </div>
-            <div class="sp-stat__label" data-i18n="home.totalRevenue">إجمالي الإيرادات</div>
-            <div class="sp-stat__value" data-countup="<%= stats.revenue %>" data-suffix=" USD">0</div>
+            <div class="hm-kpi__label" data-i18n="home.kpiOutstanding">مديونيات مستحقة</div>
+            <div class="hm-kpi__val" data-countup="<%= s.outstanding %>" data-suffix=" USD">0</div>
+            <div class="hm-kpi__sub"><%= fmt(s.openInvoices) %> <span data-i18n="home.openInvoices">فواتير مفتوحة</span></div>
         </div>
-        <div class="sp-stat sp-reveal">
-            <div class="sp-stat__top">
-                <div class="sp-stat__icon pos-icon-amber"><i class="fas fa-file-invoice-dollar"></i></div>
-                <span class="sp-stat__trend down"><i class="fas fa-clock"></i></span>
+        <div class="hm-kpi sp-reveal" style="--hm-accent:#8b5cf6">
+            <div class="hm-kpi__row">
+                <span class="hm-kpi__ico"><i class="fas fa-sync-alt"></i></span>
             </div>
-            <div class="sp-stat__label" data-i18n="home.openInvoices">فواتير مفتوحة</div>
-            <div class="sp-stat__value" data-countup="<%= stats.openInvoices %>">0</div>
+            <div class="hm-kpi__label" data-i18n="nav.subscriptions">اشتراكات نشطة</div>
+            <div class="hm-kpi__val" data-countup="<%= s.subscriptions %>">0</div>
+            <div class="hm-kpi__sub"><%= fmt(s.customers) %> <span data-i18n="nav.customers">عملاء</span> · <%= fmt(s.plans) %> <span data-i18n="nav.plans">خطط</span></div>
         </div>
     </div>
 
-    <div class="row g-4">
-        <!-- REVENUE CHART -->
-        <div class="col-lg-8">
-            <div class="saas-panel sp-reveal h-100">
-                <div class="saas-panel__head sp-chart-head">
-                    <div class="saas-panel__title-wrap">
-                        <span class="saas-panel__icon pos-icon-violet"><i class="fas fa-chart-line"></i></span>
-                        <h3 data-i18n="home.revenueOverview">نظرة عامة على الإيرادات</h3>
-                    </div>
-                    <div class="sp-chart-toolbar">
-                        <div class="sp-chart-tabs" id="revenueChartTabs" role="tablist">
-                            <button type="button" class="sp-chart-tab" data-granularity="daily" data-i18n="home.filterDaily">يومي</button>
-                            <button type="button" class="sp-chart-tab active" data-granularity="monthly" data-i18n="home.filterMonthly">شهري</button>
-                            <button type="button" class="sp-chart-tab" data-granularity="yearly" data-i18n="home.filterYearly">سنوي</button>
-                            <button type="button" class="sp-chart-tab" data-granularity="custom" data-i18n="home.filterCustom">فترة</button>
-                        </div>
-                        <div class="sp-chart-custom d-none" id="revenueChartCustom">
-                            <input type="date" class="form-control form-control-sm" id="revenueChartFrom">
-                            <span class="sp-chart-sep">—</span>
-                            <input type="date" class="form-control form-control-sm" id="revenueChartTo">
-                            <button type="button" class="btn saas-btn-soft saas-btn-sm" id="revenueChartApply" data-i18n="home.applyFilter">تطبيق</button>
-                        </div>
-                        <span class="saas-badge saas-badge--info" id="revenueChartBadge"><%= chart.from %> → <%= chart.to %></span>
-                    </div>
+    <!-- CHARTS ROW -->
+    <div class="hm-grid">
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head sp-chart-head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-violet"><i class="fas fa-chart-column"></i></span>
+                    <h3 data-i18n="home.billingVsCollection">الفوترة مقابل التحصيل</h3>
                 </div>
-                <div class="saas-panel__body">
-                    <div class="sp-chart-summary">
-                        <span data-i18n="home.chartTotal">إجمالي الفترة</span>
-                        <strong id="revenueChartTotal"><%= fmt(chart.total || 0) %> USD</strong>
-                    </div>
-                    <div style="height: 280px; position: relative;">
-                        <div class="sp-chart-loading d-none" id="revenueChartLoading"><i class="fas fa-spinner fa-spin"></i></div>
-                        <canvas id="revenueChart"></canvas>
-                    </div>
+                <span class="saas-badge saas-badge--info" data-i18n="home.last6Months">آخر 6 أشهر</span>
+            </div>
+            <div class="saas-panel__body">
+                <div class="hm-chart-box">
+                    <canvas id="homeTrendChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- COMPANY OVERVIEW -->
-        <div class="col-lg-4">
-            <div class="saas-panel sp-reveal h-100">
-                <div class="saas-panel__head">
-                    <div class="saas-panel__title-wrap">
-                        <span class="saas-panel__icon pos-icon-blue"><i class="fas fa-building"></i></span>
-                        <h3 data-i18n="home.tenantInfo">معلومات الشركة</h3>
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-blue"><i class="fas fa-landmark"></i></span>
+                    <h3 data-i18n="home.financialHealth">الصحة المالية</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <%
+                const finMax = Math.max(Number(s.cash||0), Number(s.accountsReceivable||0), Number(s.deferredRevenue||0), 1);
+                const finRows = [
+                    { icon: 'fa-wallet', accent: '#10b981', labelKey: 'reports.cash', val: s.cash },
+                    { icon: 'fa-hand-holding-dollar', accent: '#6366f1', labelKey: 'reports.ar', val: s.accountsReceivable },
+                    { icon: 'fa-hourglass-half', accent: '#f59e0b', labelKey: 'reports.deferred', val: s.deferredRevenue },
+                ];
+                %>
+                <div class="hm-fin-list">
+                    <% finRows.forEach((r) => { const pct = Math.round((Math.abs(r.val) / finMax) * 100); %>
+                    <div class="hm-fin-item" style="--fi-accent:<%= r.accent %>">
+                        <span class="hm-fin-item__ico"><i class="fas <%= r.icon %>"></i></span>
+                        <div class="hm-fin-item__body">
+                            <div class="hm-fin-item__name" data-i18n="<%= r.labelKey %>"></div>
+                            <div class="hm-fin-item__val"><%= fmt(r.val) %> USD</div>
+                            <div class="hm-fin-item__bar"><span style="width:<%= pct %>%"></span></div>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+                <a href="/dashboard/ui/reports" class="btn saas-btn-soft w-100 mt-3 saas-btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i><span data-i18n="home.viewReports">عرض التقارير التفصيلية</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REVENUE CHART + DEBTORS -->
+    <div class="hm-grid">
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head sp-chart-head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-green"><i class="fas fa-chart-line"></i></span>
+                    <h3 data-i18n="home.revenueOverview">إيرادات التحصيل</h3>
+                </div>
+                <div class="sp-chart-toolbar">
+                    <div class="sp-chart-tabs" id="revenueChartTabs" role="tablist">
+                        <button type="button" class="sp-chart-tab" data-granularity="daily" data-i18n="home.filterDaily">يومي</button>
+                        <button type="button" class="sp-chart-tab active" data-granularity="monthly" data-i18n="home.filterMonthly">شهري</button>
+                        <button type="button" class="sp-chart-tab" data-granularity="yearly" data-i18n="home.filterYearly">سنوي</button>
+                        <button type="button" class="sp-chart-tab" data-granularity="custom" data-i18n="home.filterCustom">فترة</button>
+                    </div>
+                    <div class="sp-chart-custom d-none" id="revenueChartCustom">
+                        <input type="date" class="form-control form-control-sm" id="revenueChartFrom">
+                        <span class="sp-chart-sep">—</span>
+                        <input type="date" class="form-control form-control-sm" id="revenueChartTo">
+                        <button type="button" class="btn saas-btn-soft saas-btn-sm" id="revenueChartApply" data-i18n="home.applyFilter">تطبيق</button>
                     </div>
                 </div>
-                <div class="saas-panel__body">
-                    <div class="text-center mb-4">
-                        <% if (user?.tenant?.logo) { %>
-                            <img src="<%= /^(https?:|\/)/.test(user.tenant.logo) ? user.tenant.logo : '/assets/uploads/tenants/' + user.tenant.logo %>" alt="Logo" class="rounded-3 mb-2" style="max-height: 64px;">
-                        <% } else { %>
-                            <div class="sp-stat__icon pos-icon-blue mx-auto mb-2" style="width:64px;height:64px;font-size:1.5rem;"><i class="fas fa-building"></i></div>
-                        <% } %>
-                        <h5 class="mb-1" style="color:var(--sp-text);font-weight:800;"><%= user?.tenant?.name || '—' %></h5>
-                        <p class="mb-0" style="color:var(--sp-muted);font-size:.8rem;"><%= user?.tenant?.companyEmail || user?.email || '' %></p>
-                    </div>
+            </div>
+            <div class="saas-panel__body">
+                <div class="sp-chart-summary">
+                    <span data-i18n="home.chartTotal">إجمالي الفترة</span>
+                    <strong id="revenueChartTotal"><%= fmt(chart.total || 0) %> USD</strong>
+                    <span class="saas-badge saas-badge--info ms-2" id="revenueChartBadge"><%= chart.from %> → <%= chart.to %></span>
+                </div>
+                <div class="hm-chart-box">
+                    <div class="sp-chart-loading d-none" id="revenueChartLoading"><i class="fas fa-spinner fa-spin"></i></div>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-                    <div class="sp-progress-row">
-                        <div class="sp-progress-head"><span data-i18n="nav.customers">العملاء</span><span><%= fmt(stats.customers) %></span></div>
-                        <div class="sp-progress"><span class="sp-progress__bar" data-value="<%= Math.min(stats.customers * 5, 100) %>"></span></div>
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-rose"><i class="fas fa-users-rectangle"></i></span>
+                    <h3 data-i18n="home.topDebtors">أعلى العملاء مديونية</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <% if (!debtors || !debtors.length) { %>
+                    <div class="saas-empty"><i class="fas fa-circle-check"></i><div data-i18n="reports.noDebtors">لا توجد مديونيات</div></div>
+                <% } else { %>
+                    <% debtors.forEach((d) => { %>
+                    <div class="hm-debtor">
+                        <span class="hm-debtor__av">
+                            <% if (d.avatar) { %><img src="<%= d.avatar %>" alt=""><% } else { %><i class="fas fa-user"></i><% } %>
+                        </span>
+                        <span class="hm-debtor__name"><%= d.name || '—' %></span>
+                        <span class="hm-debtor__amt"><%= fmt(d.outstanding) %> USD</span>
                     </div>
-                    <div class="sp-progress-row">
-                        <div class="sp-progress-head"><span data-i18n="nav.subscriptions">الاشتراكات</span><span><%= fmt(stats.subscriptions) %></span></div>
-                        <div class="sp-progress"><span class="sp-progress__bar" data-value="<%= Math.min(stats.subscriptions * 10, 100) %>"></span></div>
-                    </div>
-                    <div class="sp-progress-row">
-                        <div class="sp-progress-head"><span data-i18n="nav.plans">الخطط</span><span><%= fmt(stats.plans) %></span></div>
-                        <div class="sp-progress"><span class="sp-progress__bar" data-value="<%= Math.min(stats.plans * 20, 100) %>"></span></div>
-                    </div>
+                    <% }) %>
+                    <a href="/dashboard/ui/reports" class="btn saas-btn-soft w-100 mt-2 saas-btn-sm" data-i18n="home.viewAllDebtors">عرض كل المديونيات</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
 
-                    <a href="/dashboard/ui/reports" class="btn saas-btn-soft w-100 mt-3">
-                        <i class="fas fa-chart-line me-2"></i> <span data-i18n="nav.reports">التقارير المالية</span>
+    <!-- ACTIVITY + QUICK ACTIONS -->
+    <div class="hm-grid">
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-green"><i class="fas fa-clock-rotate-left"></i></span>
+                    <h3 data-i18n="home.recentActivity">آخر الحركات المالية</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <% if (!activity || !activity.length) { %>
+                    <div class="saas-empty"><i class="fas fa-inbox"></i><div data-i18n="common.noData">لا توجد بيانات بعد</div></div>
+                <% } else { %>
+                    <% activity.forEach((a) => { %>
+                    <div class="hm-tx">
+                        <span class="hm-tx__dot <%= a.type === 'payment' ? 'pay' : 'inv' %>">
+                            <i class="fas <%= a.type === 'payment' ? 'fa-check' : 'fa-file-invoice' %>"></i>
+                        </span>
+                        <div>
+                            <div class="hm-tx__title"><%= a.customer %> · <%= fmt(a.amount) %> USD</div>
+                            <div class="hm-tx__meta">
+                                <%= a.ref %> ·
+                                <span data-i18n="status.<%= a.type === 'payment' ? 'paid' : 'open' %>"></span>
+                                · <%= a.date || '' %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="saas-panel sp-reveal">
+            <div class="saas-panel__head">
+                <div class="saas-panel__title-wrap">
+                    <span class="saas-panel__icon pos-icon-indigo"><i class="fas fa-bolt"></i></span>
+                    <h3 data-i18n="home.quickActions">إجراءات سريعة</h3>
+                </div>
+            </div>
+            <div class="saas-panel__body">
+                <div class="hm-quick">
+                    <a href="/dashboard/ui/subscriptions">
+                        <span class="hm-quick__ico pos-icon-indigo"><i class="fas fa-plus"></i></span>
+                        <h4 data-i18n="subscriptions.add">اشتراك جديد</h4>
+                        <p data-i18n="home.subsHint">ربط عميل بخطة</p>
                     </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4 mt-1">
-        <!-- QUICK ACTIONS -->
-        <div class="col-lg-8">
-            <div class="saas-panel sp-reveal h-100">
-                <div class="saas-panel__head">
-                    <div class="saas-panel__title-wrap">
-                        <span class="saas-panel__icon pos-icon-indigo"><i class="fas fa-bolt"></i></span>
-                        <h3 data-i18n="home.quickActions">إجراءات سريعة</h3>
-                    </div>
-                </div>
-                <div class="saas-panel__body">
-                    <div class="sp-quick-grid">
-                        <a href="/dashboard/ui/plans" class="sp-quick">
-                            <div class="sp-quick__icon pos-icon-violet"><i class="fas fa-layer-group"></i></div>
-                            <h4 data-i18n="nav.plans">الخطط</h4>
-                            <p data-i18n="home.plansHint">إنشاء خطط Bronze و Gold</p>
-                            <span class="sp-quick__arrow"><i class="fas fa-arrow-left"></i></span>
-                        </a>
-                        <a href="/dashboard/ui/customers" class="sp-quick">
-                            <div class="sp-quick__icon pos-icon-cyan"><i class="fas fa-users"></i></div>
-                            <h4 data-i18n="nav.customers">العملاء</h4>
-                            <p data-i18n="home.customersHint">إدارة عملاء الشركة</p>
-                            <span class="sp-quick__arrow"><i class="fas fa-arrow-left"></i></span>
-                        </a>
-                        <a href="/dashboard/ui/invoices" class="sp-quick">
-                            <div class="sp-quick__icon pos-icon-amber"><i class="fas fa-file-invoice-dollar"></i></div>
-                            <h4 data-i18n="nav.invoices">الفواتير</h4>
-                            <p data-i18n="home.invoicesHint">تشغيل الفوترة الشهرية</p>
-                            <span class="sp-quick__arrow"><i class="fas fa-arrow-left"></i></span>
-                        </a>
-                        <a href="/dashboard/ui/users" class="sp-quick">
-                            <div class="sp-quick__icon pos-icon-indigo"><i class="fas fa-user-shield"></i></div>
-                            <h4 data-i18n="nav.users">المستخدمين</h4>
-                            <p data-i18n="users.desc">إدارة فريق العمل والأدوار</p>
-                            <span class="sp-quick__arrow"><i class="fas fa-arrow-left"></i></span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RECENT ACTIVITY -->
-        <div class="col-lg-4">
-            <div class="saas-panel sp-reveal h-100">
-                <div class="saas-panel__head">
-                    <div class="saas-panel__title-wrap">
-                        <span class="saas-panel__icon pos-icon-green"><i class="fas fa-clock-rotate-left"></i></span>
-                        <h3 data-i18n="home.recentActivity">آخر النشاطات</h3>
-                    </div>
-                </div>
-                <div class="saas-panel__body">
-                    <% if (!activity || !activity.length) { %>
-                        <div class="saas-empty"><i class="fas fa-inbox"></i><div data-i18n="common.noData">لا توجد بيانات بعد</div></div>
-                    <% } else { %>
-                        <div class="sp-timeline">
-                            <% activity.forEach((a) => { %>
-                                <div class="sp-timeline__item">
-                                    <span class="sp-timeline__dot <%= a.type === 'payment' ? 'g' : 'a' %>"></span>
-                                    <div class="sp-timeline__title">
-                                        <%= a.customer %> · <%= fmt(a.amount) %> USD
-                                    </div>
-                                    <div class="sp-timeline__meta">
-                                        <i class="fas <%= a.type === 'payment' ? 'fa-check-circle' : 'fa-file-invoice' %>"></i>
-                                        <span data-i18n="status.<%= a.type === 'payment' ? 'paid' : 'open' %>"><%= a.type %></span>
-                                        · <%= a.date || '' %>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } %>
+                    <a href="/dashboard/ui/customers">
+                        <span class="hm-quick__ico pos-icon-cyan"><i class="fas fa-users"></i></span>
+                        <h4 data-i18n="nav.customers">العملاء</h4>
+                        <p data-i18n="home.customersHint">إدارة العملاء</p>
+                    </a>
+                    <a href="/dashboard/ui/payments">
+                        <span class="hm-quick__ico pos-icon-green"><i class="fas fa-wallet"></i></span>
+                        <h4 data-i18n="nav.payments">المدفوعات</h4>
+                        <p data-i18n="home.paymentsHint">تسجيل التحصيل</p>
+                    </a>
+                    <a href="/dashboard/ui/plans">
+                        <span class="hm-quick__ico pos-icon-violet"><i class="fas fa-layer-group"></i></span>
+                        <h4 data-i18n="nav.plans">الخطط</h4>
+                        <p data-i18n="home.plansHint">تسعير الاشتراكات</p>
+                    </a>
                 </div>
             </div>
         </div>
@@ -235,7 +330,9 @@ const can = (p) => !p || perms.includes('*') || perms.includes(p);
     document.addEventListener('DOMContentLoaded', () => {
         HomeChart.init({
             canvasId: 'revenueChart',
+            trendCanvasId: 'homeTrendChart',
             initial: <%- JSON.stringify(chart) %>,
+            trend: <%- JSON.stringify(trend) %>,
         });
     });
 </script>

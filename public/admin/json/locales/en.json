@@ -28,6 +28,14 @@
     "close": "Close",
     "forbidden": "You are not allowed to perform this action"
   },
+  "dialog": {
+    "confirmTitle": "Confirm action",
+    "deleteTitle": "Confirm delete",
+    "alertTitle": "Notice",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "ok": "OK"
+  },
   "errors": {
     "forbiddenTitle": "Access denied",
     "forbiddenDesc": "You don't have permission to access this page or perform this action."
@@ -286,7 +294,20 @@
     "filterCustom": "Custom",
     "applyFilter": "Apply",
     "chartTotal": "Period total",
-    "pickDateRange": "Select start and end dates"
+    "pickDateRange": "Select start and end dates",
+    "overviewDesc": "A complete dashboard to track subscriptions, collections, and your company's financial position.",
+    "runBilling": "Run billing",
+    "kpiCollected": "Total collected",
+    "kpiInvoiced": "Invoiced",
+    "kpiRecognized": "Recognized revenue",
+    "kpiRecognizedHint": "After revenue recognition in reports",
+    "kpiOutstanding": "Outstanding receivables",
+    "debtorsShort": "debtors",
+    "billingVsCollection": "Billing vs collections",
+    "financialHealth": "Financial health",
+    "viewReports": "View detailed reports",
+    "topDebtors": "Top customers by debt",
+    "viewAllDebtors": "View all receivables"
   },
   "status": {
     "active": "Active",

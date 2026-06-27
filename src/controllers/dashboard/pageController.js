@@ -1,5 +1,6 @@
-import { Customer, Subscription, Invoice, Plan } from '../../models/index.js';
+import { Customer, Subscription, Invoice, Plan, Payment } from '../../models/index.js';
 import { getRevenueChartData } from '../../helpers/dashboard/revenueChart.js';
+import { getReportsDashboard } from '../../helpers/accounting/reportsService.js';
 
 export default {
     login: (req, res) => {
@@ -23,42 +24,82 @@ export default {
 
     home: async (req, res) => {
         const tenantId = req.tenantId;
-        const [customerCount, subscriptionCount, planCount, openInvoices, totalRevenue, recentInvoices] = await Promise.all([
-            Customer.count({ where: { tenantId } }),
-            Subscription.count({ where: { tenantId, status: 'active' } }),
-            Plan.count({ where: { tenantId } }),
-            Invoice.count({ where: { tenantId, status: 'open' } }),
-            Invoice.sum('amount', { where: { tenantId, status: 'paid' } }),
-            Invoice.findAll({
-                where: { tenantId },
-                include: [{ model: Customer, as: 'customer', attributes: ['name'] }],
-                order: [['issueDate', 'DESC'], ['id', 'DESC']],
-                limit: 6,
-            }),
-        ]);
-
         const locale = req.getLocale?.() === 'ar' ? 'ar-EG' : 'en-US';
-        const chart = await getRevenueChartData(tenantId, { granularity: 'monthly', locale });
 
-        const activity = recentInvoices.map((inv) => ({
-            type: inv.status === 'paid' ? 'payment' : 'invoice',
-            customer: inv.customer?.name || '—',
-            amount: Number(inv.amount || 0),
-            date: inv.issueDate,
-        }));
+        const [dashboard, chart, planCount, subscriptionCount, recentInvoices, recentPayments] =
+            await Promise.all([
+                getReportsDashboard({ tenantId, locale, months: 6 }),
+                getRevenueChartData(tenantId, { granularity: 'monthly', locale }),
+                Plan.count({ where: { tenantId } }),
+                Subscription.count({ where: { tenantId, status: 'active' } }),
+                Invoice.findAll({
+                    where: { tenantId },
+                    include: [{ model: Customer, as: 'customer', attributes: ['name'] }],
+                    order: [['issueDate', 'DESC'], ['id', 'DESC']],
+                    limit: 10,
+                }),
+                Payment.findAll({
+                    where: { tenantId },
+                    include: [
+                        {
+                            model: Invoice,
+                            as: 'invoice',
+                            attributes: ['id'],
+                            include: [{ model: Customer, as: 'customer', attributes: ['name'] }],
+                        },
+                    ],
+                    order: [['paymentDate', 'DESC'], ['id', 'DESC']],
+                    limit: 10,
+                }),
+            ]);
+
+        const k = dashboard.kpis;
+        const activity = [
+            ...recentPayments.map((p) => ({
+                type: 'payment',
+                customer: p.invoice?.customer?.name || '—',
+                amount: Number(p.amount || 0),
+                date: p.paymentDate,
+                ref: `PAY-${p.id}`,
+            })),
+            ...recentInvoices.map((inv) => ({
+                type: inv.status === 'paid' ? 'payment' : 'invoice',
+                customer: inv.customer?.name || '—',
+                amount: Number(inv.amount || 0),
+                date: inv.issueDate,
+                ref: `INV-${inv.id}`,
+            })),
+        ]
+            .sort((a, b) => {
+                const da = new Date(a.date).getTime() || 0;
+                const db = new Date(b.date).getTime() || 0;
+                return db - da;
+            })
+            .slice(0, 8);
 
         res.render('admin/index/index', {
             pageTitleKey: 'pages.home',
             page: 'home',
             user: req.tenantUser,
             stats: {
-                customers: customerCount || 0,
+                customers: k.customersCount || 0,
                 subscriptions: subscriptionCount || 0,
                 plans: planCount || 0,
-                openInvoices: openInvoices || 0,
-                revenue: Number(totalRevenue || 0),
+                openInvoices: k.openInvoicesCount || 0,
+                paidInvoices: k.paidInvoicesCount || 0,
+                revenue: k.totalCollected || 0,
+                recognizedRevenue: k.recognizedRevenue || 0,
+                totalInvoiced: k.totalInvoiced || 0,
+                outstanding: k.outstanding || 0,
+                cash: k.cash || 0,
+                accountsReceivable: k.accountsReceivable || 0,
+                deferredRevenue: k.deferredRevenue || 0,
+                collectionRate: k.collectionRate || 0,
+                debtorsCount: k.debtorsCount || 0,
             },
             chart,
+            trend: dashboard.trend,
+            debtors: (dashboard.debtors || []).slice(0, 5),
             activity,
         });
     },

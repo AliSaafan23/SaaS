@@ -220,6 +220,15 @@ const PosApi = {
     });
   },
 
+  confirmDelete(message, { title } = {}) {
+    return this.confirm({
+      title: title ?? this.t("dialog.deleteTitle", "تأكيد الحذف"),
+      message: message ?? this.t("common.confirmDelete"),
+      variant: "danger",
+      confirmText: this.t("common.delete", "حذف"),
+    });
+  },
+
   notify({ title, message = "", type = "info", buttonText } = {}) {
     const map = {
       error: "danger",

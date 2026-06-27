@@ -69,12 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 fillForm(res.data);
             }
         } else if (btn.classList.contains('del')) {
-            if (confirm(PosApi.t('common.confirmDelete'))) {
-                const res = await PosApi.request(`/users/${id}`, { method: 'DELETE' });
-                if (res.success) {
-                    PosApi.showAlert(alertEl, res.message, 'success');
-                    load();
-                }
+            const ok = await PosApi.confirmDelete();
+            if (!ok) return;
+            const res = await PosApi.request(`/users/${id}`, { method: 'DELETE' });
+            if (res.success) {
+                PosApi.showAlert(alertEl, res.message, 'success');
+                load();
             }
         }
     });

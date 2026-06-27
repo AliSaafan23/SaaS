@@ -28,6 +28,14 @@
     "close": "إغلاق",
     "forbidden": "غير مصرح لك بهذا الإجراء"
   },
+  "dialog": {
+    "confirmTitle": "تأكيد الإجراء",
+    "deleteTitle": "تأكيد الحذف",
+    "alertTitle": "تنبيه",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "ok": "حسناً"
+  },
   "errors": {
     "forbiddenTitle": "غير مصرح",
     "forbiddenDesc": "غير مصرح لك بهذا الإجراء — ليس لديك الصلاحية المطلوبة للوصول لهذه الصفحة."
@@ -286,7 +294,20 @@
     "filterCustom": "فترة محددة",
     "applyFilter": "تطبيق",
     "chartTotal": "إجمالي الفترة",
-    "pickDateRange": "اختر تاريخ البداية والنهاية"
+    "pickDateRange": "اختر تاريخ البداية والنهاية",
+    "overviewDesc": "لوحة تحكم شاملة لمتابعة الاشتراكات والتحصيل والوضع المالي لشركتك.",
+    "runBilling": "تشغيل الفوترة",
+    "kpiCollected": "إجمالي المحصّل",
+    "kpiInvoiced": "مفوتر",
+    "kpiRecognized": "الإيراد المعترف به",
+    "kpiRecognizedHint": "بعد اعتراف الإيراد في التقارير",
+    "kpiOutstanding": "مديونيات مستحقة",
+    "debtorsShort": "مدين",
+    "billingVsCollection": "الفوترة مقابل التحصيل",
+    "financialHealth": "الصحة المالية",
+    "viewReports": "عرض التقارير التفصيلية",
+    "topDebtors": "أعلى العملاء مديونية",
+    "viewAllDebtors": "عرض كل المديونيات"
   },
   "status": {
     "active": "نشط",
